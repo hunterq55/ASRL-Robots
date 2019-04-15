@@ -7,7 +7,7 @@ class Motor : public Encoder, public PID, public Adafruit_MotorShield
 {
 	public:
 
-	Motor(byte phaseA, byte phaseB, unsigned int encoderCPR, double *input,
+	Motor(uint8_t phaseA, uint8_t phaseB, unsigned int encoderCPR, double *input,
 		  double *output,double *setpoint,double Kp,double Ki,double Kd,int ControllerDirection);
 
 	void setEncoderFreq(int);

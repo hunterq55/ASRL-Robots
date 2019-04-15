@@ -1,14 +1,14 @@
 #include<FinalMotorLibrary.h>
 
 byte motorNum = 1;  //A GLOBAL VARIABLE!
-Adafruit_MotorShield AFMS = Adafruit_MotorShield();
+//Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 //Serial.begin(9600);
 
-Motor::Motor(byte phaseA, byte phaseB, unsigned int encoderCPR,double *input,double *output, double *setpoint,double Kp,double Ki,double Kd,int ControllerDirection) : Encoder(phaseA, phaseB), PID(input,output,setpoint,Kp,Ki,Kd,ControllerDirection)
+Motor::Motor(uint8_t phaseA, uint8_t phaseB, unsigned int encoderCPR,double *input,double *output, double *setpoint,double Kp,double Ki,double Kd,int ControllerDirection) : Encoder(phaseA, phaseB), PID(input,output,setpoint,Kp,Ki,Kd,ControllerDirection)
 {
 	//Serial
-	Serial.begin(9600);
-	Adafruit_MotorShield AFMS_TEMP = AFMS;
+	//Serial.begin(9600);
+	Adafruit_MotorShield AFMS_TEMP;
 	AFMS_TEMP.begin();
 	
 	//Encoder Setup
@@ -23,11 +23,11 @@ Motor::Motor(byte phaseA, byte phaseB, unsigned int encoderCPR,double *input,dou
 	SetOutputLimits(-255,255);
 	
 	_pmotor = AFMS_TEMP.getMotor(motorNum);
-	motorNum = motorNum++;
+	motorNum++;
 	
-	Serial.println("WORD");
-	Serial.println("Motor Number:");
-	Serial.println(motorNum);
+	//Serial.println("WORD");
+	//Serial.println("Motor Number:");
+	//Serial.println(motorNum);
 
 }
 
@@ -38,13 +38,13 @@ void Motor::setDuty(uint8_t speed)
 		speed = speed*-1;
 		_pmotor->setSpeed(speed);
 		_pmotor->run(BACKWARD);
-		Serial.println(speed);
+		//Serial.println(speed);
 	}
 	else
 	{
 		_pmotor->setSpeed(speed);
 		_pmotor->run(FORWARD);
-		Serial.println(speed);
+		//Serial.println(speed);
 	}
 	
 }
