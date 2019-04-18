@@ -12,10 +12,12 @@ class Motor : public Encoder, public PID, public Adafruit_MotorShield
 
 	void setEncoderFreq(int);
 	int getEncoderFreq();
+	void setMotor(Adafruit_DCMotor*);
 	
 	//Read Encoder Functions
 
 	float getCountsSec();
+
 
 	float getDeg();
 	float getDegSec();
