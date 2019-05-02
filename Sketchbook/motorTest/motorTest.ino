@@ -1,27 +1,46 @@
-#include <revisedMotorHeader.h>
+#include <revisedMotor.h>
 
+double setpoint = (3.0*3.14),setpoint2 = 3.0;
 
-double input,output,setpoint = 3.0,input2,output2,setpoint2 = 3.0;
-double Kp = 2.5,Ki = 62.5,Kd = 0.0;
-Adafruit_MotorShield *AFMS = new Adafruit_MotorShield();
+double input1, output1,input2, output2,input3, output3;
 
-rMotor Motor1 = rMotor(2,23,3072,&input,&output,&setpoint,Kp,Ki,Kd,DIRECT);
+double Kp = 1.25,Ki = 31.25,Kd = 0.0;
+Adafruit_MotorShield AFMS = Adafruit_MotorShield();
+
+rMotor Motor1 = rMotor(1,2,23,3072,&input1,&output1,&setpoint,Kp,Ki,Kd,DIRECT);
+rMotor Motor2 = rMotor(2,19,27,3072,&input2,&output2,&setpoint,Kp,Ki,Kd,DIRECT);
+rMotor Motor3 = rMotor(3,18,25,3072,&input3,&output3,&setpoint,Kp,Ki,Kd,DIRECT);
 
 
 void setup()
 {
-    AFMS->begin();
+    Serial.begin(9600);
+    
+    AFMS.begin();
 
-    Motor1.setAfms(AFMS);
-
+    Motor1.setAfms(&AFMS);
     Motor1.registerMotor();
 
-    Serial.begin(9600);
-    Serial.println("A lot of words");
+    Motor2.setAfms(&AFMS);
+    Motor2.registerMotor();
 
+    Motor3.setAfms(&AFMS);
+    Motor3.registerMotor();
+    
+
+    delay(2000);
+
+    //Motor1.setDuty(0);
 }
 
 void loop()
 {
-    Motor1.setDuty(150);
+
+    Motor1.updateMotor(); 
+    //Motor1.printPIDInfo();
+    Motor2.updateMotor();
+    //Motor2.printPIDInfo();
+    Motor3.updateMotor(); 
+    //Motor3.printPIDInfo();
+    
 }
