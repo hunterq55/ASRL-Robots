@@ -1,52 +1,101 @@
-#include<FinalMotorLibrary.h>
+#include"FinalMotorLibrary.h"
 
-byte motorNum = 1;  //A GLOBAL VARIABLE!
-//Adafruit_MotorShield AFMS = Adafruit_MotorShield();
-//Serial.begin(9600);
 
-Motor::Motor(uint8_t phaseA, uint8_t phaseB, unsigned int encoderCPR,double *input,double *output, double *setpoint,double Kp,double Ki,double Kd,int ControllerDirection) : Encoder(phaseA, phaseB), PID(input,output,setpoint,Kp,Ki,Kd,ControllerDirection)
+
+Motor::Motor(int id, uint8_t phaseA, uint8_t phaseB, unsigned int encoderCPR, double *input,double *output, double *setpoint,double Kp,double Ki,double
+ Kd,int ControllerDirection)
 {
-	//Serial
-	//Serial.begin(9600);
-	Adafruit_MotorShield AFMS_TEMP;
-	AFMS_TEMP.begin();
-	
-	//Encoder Setup
+    encoder = new Encoder(phaseA, phaseB);
+    pid = new PID(input,output,setpoint,Kp,Ki,Kd,ControllerDirection);
+    motorID = id;
+    numMotors = 0;
+    pidOut = output;
+    pidIn = input;
+    setPointIn = setpoint;
+
+
+    pid->SetMode(1);
+
+    //Encoder Setup
     _phaseA = phaseA;
     _phaseB = phaseB;
     _encoderCPR = encoderCPR;
-	setEncoderFreq(20);//time between updates for encoder
-	
-	//PID Setup
-	SetSampleTime(20);//time between updates for encoder
-	SetMode(1);
-	SetOutputLimits(-255,255);
-	
-	_pmotor = AFMS_TEMP.getMotor(motorNum);
-	motorNum++;
-	
-	//Serial.println("WORD");
-	//Serial.println("Motor Number:");
-	//Serial.println(motorNum);
+    setEncoderFreq(20);//time between updates for encoder
 
 }
 
-void Motor::setDuty(uint8_t speed)
+void Motor::printPIDInfo()
 {
-	if(speed < 0)
-	{	
-		speed = speed*-1;
-		_pmotor->setSpeed(speed);
-		_pmotor->run(BACKWARD);
-		//Serial.println(speed);
-	}
-	else
-	{
-		_pmotor->setSpeed(speed);
-		_pmotor->run(FORWARD);
-		//Serial.println(speed);
-	}
-	
+    Serial.println("PID Data:");
+    Serial.print("Motor ID = ");
+    Serial.println(motorID);
+    Serial.print("Input = ");
+    Serial.println(*pidIn);
+    Serial.print("Output = ");
+    Serial.println(*pidOut);
+    Serial.print("Set Point = ");
+    Serial.println(*setPointIn);
+    Serial.print("Rad per second = ");
+    Serial.println(getRadSec());
+    Serial.println("");
+    Serial.println("");
+
+}
+
+
+void Motor::updateMotor()
+{
+
+    setpidIn(getRadSec());
+    pid->Compute();
+    setDuty(getpidOut());
+
+}
+
+void Motor::setDuty(int speed)
+{
+    if(speed < 0)
+    {
+        speed = speed*-1;
+        _pmotor->setSpeed(speed);
+        _pmotor->run(BACKWARD);
+        //Serial.println(speed);
+    }
+    else
+    {
+        _pmotor->setSpeed(speed);
+        _pmotor->run(FORWARD);
+        //Serial.println(speed);
+    }
+
+}
+
+
+
+
+void Motor::registerMotor()
+{
+    if(!AFMS)
+    {
+        //If we get Here the motor shield has not been set
+    }
+
+    if(!_pmotor)
+    {
+        //if we get here than we need to create a new motor with the shield
+
+
+        if(getNumMotors() == 4)
+        {
+            //If we get here than we cant register anymore motors since we are already at 4
+            return;
+        }
+
+        _pmotor = AFMS->getMotor(motorID);
+
+        addMotorCount();
+
+    }
 }
 
 void Motor::setEncoderFreq(int freq)    //Sets sample time in ms for velocity and acceleration calculations//
@@ -56,47 +105,41 @@ void Motor::setEncoderFreq(int freq)    //Sets sample time in ms for velocity an
 
 int Motor::getEncoderFreq()
 {
-	return _freq;
+    return _freq;
 }
 
 
+
 float Motor::getCountsSec() //Calculates counts per second over given sample time//
-{	
+{
 
     unsigned long now = millis();
     if((now - _lastTime) >= _freq)
     {
-        _counts = read();
+        _counts = encoder->read();
         _countsSec = (_counts - _lastCount) * (1000.0/_freq);
 
         _lastTime = now;
         _lastCount = _counts;
     }
     return _countsSec;
-	
-	/*
-	//CURRENT CODE
-	long oldCount = read();
-	delay(_freq);
-	long newCount = read();
-	long countDiff = newCount-oldCount;
-	_countsSec = countDiff/_freq;
-	*/
-}
-	
-float Motor::getDeg()   //Returns degrees 0-360 of motor based on counts//
-{
-    _deg = (read()%3072)*(360.0/3072.0);
-    return _deg;
+
+    /*
+    //CURRENT CODE
+    long oldCount = read();
+    delay(_freq);
+    long newCount = read();
+    long countDiff = newCount-oldCount;
+    _countsSec = countDiff/_freq;
+    */
 }
 
-/*
-float Motor::getDegSec()
+
+float Motor::getDeg()   //Returns degrees 0-360 of motor based on counts//
 {
-    _degSec = (getCountsSec()%3072)*(360.0/3072.0);
-    return _degSec;
+    _deg = (encoder->read()%3072)*(360.0/3072.0);
+    return _deg;
 }
-*/
 
 float Motor::getRad()
 {
@@ -112,7 +155,7 @@ float Motor::getRadSec()
 
 float Motor::getRevs()
 {
-    _revs = read()/_encoderCPR;
+    _revs = encoder->read()/_encoderCPR;
     return _revs;
 }
 
@@ -121,6 +164,47 @@ float Motor::getRevsSec()
     _revsSec = getCountsSec()/_encoderCPR;
     return _revsSec;
 }
+
+
+Adafruit_DCMotor *Motor::getPmotor() const {
+    return _pmotor;
+}
+
+void Motor::setPmotor(Adafruit_DCMotor *pmotor) {
+    _pmotor = pmotor;
+}
+
+
+void Motor::setAfms(Adafruit_MotorShield *afms) {
+    AFMS = afms;
+}
+
+
+
+int Motor::getNumMotors() {
+    return numMotors;
+}
+
+void Motor::addMotorCount() {
+    numMotors++;
+}
+
+double Motor::getpidOut()
+{
+    return *pidOut;
+}
+
+void Motor::setpidIn(double in)
+{
+    *pidIn = in;
+}
+
+double Motor::getSetPoint()
+{
+    return *setPointIn;
+}
+
+
 
 
 

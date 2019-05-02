@@ -3,72 +3,105 @@
 #include "PID_v1.h"
 #include "Adafruit_MotorShield.h"
 
-class Motor : public Encoder, public PID, public Adafruit_MotorShield
+
+
+class Motor
 {
-	public:
 
-	Motor(uint8_t phaseA, uint8_t phaseB, unsigned int encoderCPR, double *input,
-		  double *output,double *setpoint,double Kp,double Ki,double Kd,int ControllerDirection);
+public:
 
-	void setEncoderFreq(int);
-	int getEncoderFreq();
-	void setMotor(Adafruit_DCMotor*);
-	
-	//Read Encoder Functions
-
-	float getCountsSec();
+    Motor(int id, uint8_t phaseA, uint8_t phaseB, unsigned int encoderCPR, double *input,double *output, double *setpoint,double Kp,double Ki,double Kd,int ControllerDirection);
 
 
-	float getDeg();
-	float getDegSec();
+    Encoder *encoder;
+    PID *pid;
 
-	float getRad();
-	float getRadSec();
 
-	float getRevs();
-	float getRevsSec();
-	
-	//Set Motor Functions
-	
-	//Adafruit Motor
-	
-	void setDuty(uint8_t);
 
-	private:
-	
-	//pins
+    //Getters and setters
+    Adafruit_DCMotor *getPmotor() const;
+
+    void setPmotor(Adafruit_DCMotor *pmotor);
+
+    void setAfms(Adafruit_MotorShield *afms);
+
+    int getNumMotors();
+
+    void updateMotor();
+
+    void registerMotor();
+
+    void setDuty(int);
+
+    float getCountsSec();
+
+    double getpidOut();
+
+    void setEncoderFreq(int freq);
+
+    int getEncoderFreq();
+
+    double getSetPoint();
+
+    void setpidIn(double in);
+
+    void printPIDInfo();
+
+
+
+
+    float getDeg();
+    float getDegSec();
+
+    float getRad();
+    float getRadSec();
+
+    float getRevs();
+    float getRevsSec();
+
+
+private:
+
+    Adafruit_DCMotor *_pmotor;
+
+    Adafruit_MotorShield *AFMS;
+
+    void addMotorCount();
+
+    int numMotors;
+
+    int motorID;
+
     byte _phaseA;
     byte _phaseB;
-	
-	//motor attributes
+
+    double* pidOut;
+    double* pidIn;
+    double* setPointIn;
+
+    //motor attributes
     unsigned int _encoderCPR;
 
-	//encoder measurements
+    //encoder measurements
     int _freq;
-	long _counts;
+    long _counts;
     long _lastCount;
-	unsigned long _lastTime = 0; //Keeps track of last calculation time for counts/second.
+    unsigned long _lastTime = 0; //Keeps track of last calculation time for counts/second.
 
-	float _countsSec;
-	float _lastCountsSec;
-	unsigned long _lastTime1; //Keeps track of last calculation time for counts/second^2
+    float _countsSec;
+    float _lastCountsSec;
+    unsigned long _lastTime1; //Keeps track of last calculation time for counts/second^2
 
 
-	float _deg;
-	float _degSec;
+    float _deg;
+    float _degSec;
 
-	float _rad;
-	float _radSec;
+    float _rad;
+    float _radSec;
 
-	float _revs;
-	float _revsSec;
-	
-	//addresses for PID
-	
-	//addresses for adafruit motor
-	
-	Adafruit_DCMotor *_pmotor;
-	
+    float _revs;
+    float _revsSec;
+
 
 };
 
