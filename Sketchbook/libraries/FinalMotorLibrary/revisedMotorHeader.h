@@ -4,12 +4,14 @@
 #include "Adafruit_MotorShield.h"
 
 
+
 class rMotor
 {
 
 public:
 
     rMotor(uint8_t phaseA, uint8_t phaseB, double *input,double *output, double *setpoint,double Kp,double Ki,double Kd,int ControllerDirection);
+
 
     Encoder encoder;
     PID pid;
@@ -28,6 +30,7 @@ public:
     void registerMotor();
 
     void setDuty(uint8_t);
+
 
 
 

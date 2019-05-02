@@ -30,6 +30,8 @@ void rMotor::setDuty(uint8_t speed)
 }
 
 
+
+
 void rMotor::registerMotor()
 {
     if(!AFMS)
