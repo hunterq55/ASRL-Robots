@@ -72,6 +72,7 @@ private:
 
     int motorID;
 
+
     byte _phaseA;
     byte _phaseB;
 

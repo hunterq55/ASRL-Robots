@@ -14,6 +14,7 @@ Motor::Motor(int id, uint8_t phaseA, uint8_t phaseB, unsigned int encoderCPR, do
     setPointIn = setpoint;
 
 
+
     pid->SetMode(1);
 
     //Encoder Setup
