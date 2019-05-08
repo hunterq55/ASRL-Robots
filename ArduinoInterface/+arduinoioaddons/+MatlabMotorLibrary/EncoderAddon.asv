@@ -6,7 +6,7 @@ classdef EncoderAddon < arduinoio.LibraryBase
     GET_COUNTS = hex2dec('02')
     MOTOR_CREATE = hex2dec('03')
     GET_COUNTSSEC = hex2dec('04')
-    SET_RADSEC = hex2dec('05')
+    
     end
     
     properties(Access = protected, Constant = true)
@@ -33,7 +33,7 @@ classdef EncoderAddon < arduinoio.LibraryBase
     end
     
     
-    methods(Access = public)
+    methods(Access = public) %Hidden, %wat
         function obj = EncoderAddon(parentObj,inputPins)
             obj.Parent = parentObj;
             obj.Pins = inputPins;
@@ -61,6 +61,7 @@ classdef EncoderAddon < arduinoio.LibraryBase
          end
     end
     
+    //getters
     methods(Access = public)
         function [rad] = getRad(obj)
             cmdID = obj.GET_RAD;
@@ -95,11 +96,14 @@ classdef EncoderAddon < arduinoio.LibraryBase
 %              
 %         end
     end
+    
+    //setters
     methods(Access = public)
-         function [] = setRadSec(obj,radSec)
-            cmdID = obj.SET_RADSEC;
-            inputs = [radSec];
-            sendCommandCustom(obj,cmdID,inputs);
+         function [] = getRad(obj)
+            cmdID = obj.GET_RAD;
+            inputs = [];
+            output = sendCommandCustom(obj,cmdID,inputs);
+            rad = typecast(uint8(output(1:4)),'single');
          end
     end
 end

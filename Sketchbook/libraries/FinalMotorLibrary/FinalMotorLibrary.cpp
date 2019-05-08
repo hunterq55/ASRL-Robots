@@ -126,7 +126,7 @@ float Motor::getCountsSec() //Calculates counts per second over given sample tim
     return _countsSec;
 
     /*
-    //CURRENT CODE
+    //OTHER
     long oldCount = read();
     delay(_freq);
     long newCount = read();
