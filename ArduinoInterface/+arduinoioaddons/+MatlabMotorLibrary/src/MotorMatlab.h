@@ -20,9 +20,9 @@ const char PID_BUGS[]        PROGMEM = "PID Output Voltage : %d\n";
 
 //AHH GLOBAL VARIABLES
 double Kp = 1.25,Ki = 31.25,Kd = 0.0;
-double inputRadSec1, outputVoltage1, setpointRadSec1 = 3.0;
-double inputRadSec2, outputVoltage2, setpointRadSec2 = 3.0;
-double inputRadSec3, outputVoltage3, setpointRadSec3 = 3.0;
+double inputRadSec1, outputVoltage1, setpointRadSec1 = 5.0;
+double inputRadSec2, outputVoltage2, setpointRadSec2 = 5.0;
+double inputRadSec3, outputVoltage3, setpointRadSec3 = 5.0;
 
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
@@ -39,13 +39,20 @@ class MotorMatlab : public LibraryBase //add-on class
         a.registerLibrary(this);
     }
     
-    void loop()
+    void setup()
     {
+        AFMS.begin();
+    }
+    
+    void loop()
+    {   
+        
         if(pMotor[0] != NULL)
         {
             pMotor[0]->updateMotor();
-            pMotor[0]->printPIDInfo();
+            //pMotor[0]->printPIDInfo();
         }
+         
         
         if(pMotor[1] != NULL)
         {
@@ -55,6 +62,7 @@ class MotorMatlab : public LibraryBase //add-on class
         if(pMotor[2] != NULL)
         {
             pMotor[2]->updateMotor();
+            //pMotor[2]->printPIDInfo();
         }
     }
     

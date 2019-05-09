@@ -20,11 +20,11 @@ const char PID_BUGS[]        PROGMEM = "PID Output Voltage : %d\n";
 
 //AHH GLOBAL VARIABLES
 double Kp = 1.25,Ki = 31.25,Kd = 0.0;
-double inputRadSec1, outputVoltage1, setpointRadSec1 = 5.0;
-double inputRadSec2, outputVoltage2, setpointRadSec2 = 5.0;
-double inputRadSec3, outputVoltage3, setpointRadSec3 = 5.0;
+double inputRadSec1, outputVoltage1, setpointRadSec1 = 3.0;
+double inputRadSec2, outputVoltage2, setpointRadSec2 = 3.0;
+double inputRadSec3, outputVoltage3, setpointRadSec3 = 3.0;
 
-Adafruit_MotorShield AFMS = Adafruit_Motorshield();
+Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
 class MotorMatlab : public LibraryBase //add-on class
 {
@@ -39,13 +39,20 @@ class MotorMatlab : public LibraryBase //add-on class
         a.registerLibrary(this);
     }
     
-    void loop()
+    void setup()
     {
+        AFMS.begin();
+    }
+    
+    void loop()
+    {   
+        /*
         if(pMotor[0] != NULL)
         {
             pMotor[0]->updateMotor();
-            //debugPrint(PID_BUGS,outputVoltage1);
+            //pMotor[0]->printPIDInfo();
         }
+         */
         
         if(pMotor[1] != NULL)
         {
@@ -89,6 +96,8 @@ class MotorMatlab : public LibraryBase //add-on class
                     pMotor[ID[0]] = new Motor(2,pinNumbers[0],pinNumbers[1],
                                            3072,&inputRadSec2,&outputVoltage2,&setpointRadSec2,
                                            Kp,Ki,Kd,DIRECT);
+                    pMotor[ID[0]]->setAfms(&AFMS);
+                    pMotor[ID[0]]->registerMotor();
                     debugPrint(MSG_CREATE,ID[0],pinNumbers[0],pinNumbers[1],3702,Kp,Ki,Kd);
                 }
                 else if(ID[0] == 2)
@@ -96,6 +105,8 @@ class MotorMatlab : public LibraryBase //add-on class
                     pMotor[ID[0]] = new Motor(3,pinNumbers[0],pinNumbers[1],
                                            3072,&inputRadSec3,&outputVoltage3,&setpointRadSec3,
                                            Kp,Ki,Kd,DIRECT);
+                    pMotor[ID[0]]->setAfms(&AFMS);
+                    pMotor[ID[0]]->registerMotor();
                     debugPrint(MSG_CREATE,ID[0],pinNumbers[0],pinNumbers[1],3702,Kp,Ki,Kd);
                 }
                 
