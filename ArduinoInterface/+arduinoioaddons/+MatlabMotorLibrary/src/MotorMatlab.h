@@ -49,30 +49,28 @@ class MotorMatlab : public LibraryBase
         AFMS.begin();
     }
     
-    /*
     void loop()
     {
         //This loop will bring the motors to a desired setpoint by updating
         //the PID, as defined earlier in the code.
         if(mPointer[0] != NULL)
         {
-            //mPointer[0]->updateMotor();
-            mPointer[0]->setDuty(50);
+            mPointer[0]->updateMotor();
+            //mPointer[0]->setDuty(50);
         }
         
         if(mPointer[1] != NULL)
         {
-            //mPointer[1]->updateMotor();
-            mPointer[1]->setDuty(50);
+            mPointer[1]->updateMotor();
+            //mPointer[1]->setDuty(50);
         }
         
         if(mPointer[2] != NULL)
         {
-            //mPointer[2]->updateMotor();
-            mPointer[2]->setDuty(50);
+            mPointer[2]->updateMotor();
+            //mPointer[2]->setDuty(50);
         }
     }
-     */
     
     public:
     
@@ -143,7 +141,9 @@ class MotorMatlab : public LibraryBase
             }
             case SET_RADSEC:
             {
+                
                 byte ID = dataIn[0];
+                /*
                 int pwm = 0;
                 
                 //Inputs is an array of 4 byes representing a single 32 bit
@@ -155,9 +155,8 @@ class MotorMatlab : public LibraryBase
                 pwm = ((dataIn[3] << 16) | pwm);
                 pwm = ((dataIn[4] << 24) | pwm);
                 
-                debugPrint(MSG_SETPOINT,pwm);
+                //debugPrint(MSG_SETPOINT,pwm);         
                 
-                /*
                 if(ID == 0)
                 {
                      setpointRadSec1 = dataIn[1];
@@ -173,6 +172,9 @@ class MotorMatlab : public LibraryBase
                 
                 setpointRadSec3 = 1.5;
                 */
+                debugPrint(MSG_READ,ID,5);
+                sendResponseMsg(cmdID,0,0);
+                setpointRadSec2 = 5.0;
                 break;
             }
             /*
