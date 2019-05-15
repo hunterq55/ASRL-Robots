@@ -1,14 +1,17 @@
+#include <chrono>
 #include "ASRLFileLogger.h"
 
 
-logger::logger(std::string filename)
+logger::logger(std::string fname)
 {
+    filename = fname;
     openFile();
 }
 
 void logger::openFile()
 {
-    file.open(filename, std::ios::out);
+    file.open(filename);
+
 }
 
 void logger::closeFile()
@@ -18,20 +21,12 @@ void logger::closeFile()
 
 void logger::logMessage(std::string message)
 {
+    std::time_t result = std::time(nullptr);;
+    file << result;
+    file << "\n";
     file << message;
     file << "\n";
 }
 
-int main()
-{
-    logger *log = new logger("Squishy.txt");
-
-    log->logMessage("This is a message that im trying to log!!!\nThis is a sample message after a new line");
-
-    log->closeFile();
-
-    return 0;
-
-}
 
 
