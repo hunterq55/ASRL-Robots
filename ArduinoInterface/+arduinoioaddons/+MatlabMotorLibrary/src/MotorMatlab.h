@@ -20,6 +20,7 @@ const char MSG_SETPOINT[]       PROGMEM = "Setpoint recieved: %d\n";
 #define GET_RADSEC 0x01
 #define GET_COUNTSSEC 0x04
 #define SET_RADSEC 0x05
+#define UPDATE_MOTORS 0x06
 
 //GLOBAL VARIABLES
 double Kp = 1.25,Ki = 31.25,Kd = 0.0;
@@ -143,39 +144,56 @@ class MotorMatlab : public LibraryBase
             {
                 
                 byte ID = dataIn[0];
-                /*
-                int pwm = 0;
+                byte radSec[4];
                 
-                //Inputs is an array of 4 byes representing a single 32 bit
-                //signed integer which must be reconstructed with bitwise 
-                //operations.
-                
-                pwm = (dataIn[1] | pwm);
-                pwm = ((dataIn[2] << 8) | pwm);
-                pwm = ((dataIn[3] << 16) | pwm);
-                pwm = ((dataIn[4] << 24) | pwm);
-                
-                //debugPrint(MSG_SETPOINT,pwm);         
+                radSec[0] = dataIn[1];
+                radSec[1] = dataIn[2];
+                radSec[2] = dataIn[3];
+                radSec[3] = dataIn[4];          
                 
                 if(ID == 0)
                 {
-                     setpointRadSec1 = dataIn[1];
+                     setpointRadSec1 = *((float*)(radSec));
                 }
                 else if(ID == 1)
                 {
-                    setpointRadSec2 = dataIn[1];
+                    setpointRadSec2 = *((float*)(radSec));
                 }
                 else if(ID == 2)
                 {
-                    setpointRadSec3 = dataIn[1];
-                }
-                
-                setpointRadSec3 = 1.5;
-                */
-                debugPrint(MSG_READ,ID,5);
+                    setpointRadSec3 = *((float*)(radSec));
+                }        
+
                 sendResponseMsg(cmdID,0,0);
-                setpointRadSec2 = 5.0;
                 break;
+            }
+            case UPDATE_MOTORS:
+            {
+                byte radSec1[4];
+                byte radSec2[4];
+                byte radSec3[4];
+                
+                radSec1[0] = dataIn[0];
+                radSec1[1] = dataIn[1];
+                radSec1[2] = dataIn[2];
+                radSec1[3] = dataIn[3];
+                
+                radSec2[0] = dataIn[4];
+                radSec2[1] = dataIn[5];
+                radSec2[2] = dataIn[6];
+                radSec2[3] = dataIn[7];
+                
+                radSec3[0] = dataIn[8];
+                radSec3[1] = dataIn[9];
+                radSec3[2] = dataIn[10];
+                radSec3[3] = dataIn[11];
+                
+                setpointRadSec1 = *((float*)(radSec1));
+                setpointRadSec2 = *((float*)(radSec2));
+                setpointRadSec3 = *((float*)(radSec3));
+                
+                sendResponseMsg(cmdID,0,0);
+                break;           
             }
             /*
             case GET_COUNTSSEC:

@@ -1,6 +1,6 @@
 #include <FinalMotorLibrary.h>
 
-double setpoint = (3.0*3.14),setpoint2 = 1.0;
+double setpoint = (3.0*3.14),setpoint2 = -1.0;
 
 double input1, output1,input2, output2,input3, output3;
 
@@ -36,15 +36,25 @@ void setup()
 
 void loop()
 {
+    //long counts1 = Motor1.encoder->read();
+    //long counts2 = Motor2.encoder->read();
+    //long counts3 = Motor3.encoder->read();
 
-    //Motor1.updateMotor(); 
-    Motor1.setDuty(50);
-    //Motor1.printPIDInfo();
-    //Motor2.updateMotor();
-    Motor2.setDuty(50);
+    //Serial.print("Counts 1:");
+    //Serial.println(counts1);
+    //Serial.print("Counts 2:");
+    //Serial.println(counts2);
+    //Serial.print("Counts 3:");
+    //Serial.println(counts3);
+    
+    Motor1.updateMotor(); 
+    //Motor1.setDuty(50);
+   // Motor1.printPIDInfo();
+    Motor2.updateMotor();
+    //Motor2.setDuty(50);
     //Motor2.printPIDInfo();
-    // Motor3.updateMotor(); 
-    Motor3.setDuty(50);
+    Motor3.updateMotor(); 
+    //Motor3.setDuty(50);
     //Motor3.printPIDInfo();
     
 }

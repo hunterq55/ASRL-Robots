@@ -66,7 +66,9 @@ bool PID::Compute()
       double input = *myInput;
       double error = *mySetpoint - input;
       double dInput = (input - lastInput);
-      outputSum+= (ki * error);
+      outputSum = outputSum + (ki * error);
+	  double temp = ki*error;
+	 
 
       /*Add Proportional on Measurement, if P_ON_M is specified*/
       if(!pOnE) outputSum-= kp * dInput;
@@ -76,11 +78,19 @@ bool PID::Compute()
 
       /*Add Proportional on Error, if P_ON_E is specified*/
 	   double output;
-      if(pOnE) output = kp * error;
-      else output = 0;
+      if(pOnE) 
+	  {
+		  
+		  output = kp * error;
+	  }
+      else 
+	  {
+		  output = 0;
+	  }
 
       /*Compute Rest of PID Output*/
       output += outputSum - kd * dInput;
+	  //Serial.println(output);
 
 	    if(output > outMax) output = outMax;
       else if(output < outMin) output = outMin;
