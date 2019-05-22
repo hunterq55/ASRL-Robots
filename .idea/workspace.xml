@@ -12,16 +12,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9056bcb7-c4c1-48fd-b00b-a7b3973848c9" name="Default Changelist" comment="Refactored library">
-      <change beforePath="$PROJECT_DIR$/Sketchbook/Motor_Library_Repair_Code/Motor_Library_Repair_Code.ino" beforeDir="false" afterPath="$PROJECT_DIR$/Sketchbook/Motor_Library_Repair_Code/Motor_Library_Repair_Code.ino" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/ASRLFileLogger.h" beforeDir="false" afterPath="$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/ASRLFileLogger.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/FinalMotorLibrary.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/FinalMotorLibrary.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/FinalMotorLibrary.h" beforeDir="false" afterPath="$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/FinalMotorLibrary.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sketchbook/libraries/PID/PID_v1.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Sketchbook/libraries/PID/PID_v1.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sketchbook/libraries/PID/PID_v1.h" beforeDir="false" afterPath="$PROJECT_DIR$/Sketchbook/libraries/PID/PID_v1.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sketchbook/libraries/revisedMotorHeader/revisedMotorClass.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sketchbook/libraries/revisedMotorHeader/revisedMotorHeader.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sketchbook/libraries/revisionLib/revisedMotor.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sketchbook/libraries/revisionLib/revisedMotor.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sketchbook/motorTest/motorTest.ino" beforeDir="false" afterPath="$PROJECT_DIR$/Sketchbook/motorTest/motorTest.ino" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sketchbook/motorTest/logger/ASRLFileLogger.h" beforeDir="false" afterPath="$PROJECT_DIR$/Sketchbook/motorTest/logger/ASRLFileLogger.h" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -74,51 +68,26 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/FinalMotorLibrary.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="284">
-              <caret line="155" column="24" selection-start-line="155" selection-start-column="24" selection-end-line="155" selection-end-column="24" />
+            <state relative-caret-position="-5">
+              <caret line="70" column="1" selection-start-line="70" selection-start-column="1" selection-end-line="70" selection-end-column="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/FinalMotorLibrary.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="45">
+              <caret line="3" column="33" selection-start-line="3" selection-start-column="33" selection-end-line="3" selection-end-column="33" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/FinalMotorLibrary.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" selection-start-line="4" selection-end-line="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Sketchbook/motorTest/logger/ASRLFileLogger.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="615">
-              <caret line="41" selection-start-line="41" selection-end-line="41" />
-              <folding>
-                <element signature="e#0#17#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Sketchbook/motorTest/logger/ASRLFileLogger.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/ASRLFileLogger.h">
           <provider selected="true" editor-type-id="text-editor">
             <state>
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
+              <caret column="18" selection-start-column="18" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -127,7 +96,7 @@
         <entry file="file://$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/ASRLFileLogger.cpp">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="450">
-              <caret line="30" column="65" lean-forward="true" selection-start-line="30" selection-start-column="65" selection-end-line="30" selection-end-column="65" />
+              <caret line="30" column="65" selection-start-line="30" selection-start-column="65" selection-end-line="30" selection-end-column="65" />
               <folding>
                 <element signature="e#0#17#0" expanded="true" />
               </folding>
@@ -176,8 +145,10 @@
         <option value="$PROJECT_DIR$/Sketchbook/libraries/revisionLib/FinalMotorLibrary.cpp" />
         <option value="$PROJECT_DIR$/Sketchbook/motorTest/motorTest.ino" />
         <option value="$PROJECT_DIR$/Sketchbook/motorTest/logger/ASRLFileLogger.cpp" />
-        <option value="$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/FinalMotorLibrary.cpp" />
         <option value="$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/FinalMotorLibrary.h" />
+        <option value="$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/FinalMotorLibrary.cpp" />
+        <option value="$PROJECT_DIR$/Sketchbook/motorTest/logger/ASRLFileLogger.h" />
+        <option value="$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/ASRLFileLogger.h" />
       </list>
     </option>
   </component>
@@ -247,6 +218,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -283,7 +255,7 @@
       <workItem from="1556208987771" duration="31591000" />
       <workItem from="1556827991078" duration="1236000" />
       <workItem from="1557848635660" duration="3990000" />
-      <workItem from="1558538901721" duration="3446000" />
+      <workItem from="1558538901721" duration="4481000" />
     </task>
     <task id="LOCAL-00001" summary="Created motor class revision">
       <created>1556805407908</created>
@@ -359,7 +331,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="40263000" />
+    <option name="totallyTimeSpent" value="41298000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1680" height="969" extended-state="6" />
@@ -500,34 +472,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/ASRLFileLogger.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/ASRLFileLogger.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="30" column="65" lean-forward="true" selection-start-line="30" selection-start-column="65" selection-end-line="30" selection-end-column="65" />
-          <folding>
-            <element signature="e#0#17#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Sketchbook/motorTest/logger/ASRLFileLogger.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Sketchbook/motorTest/logger/ASRLFileLogger.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="615">
@@ -538,17 +482,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/FinalMotorLibrary.cpp">
+    <entry file="file://$PROJECT_DIR$/Sketchbook/motorTest/logger/ASRLFileLogger.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="284">
-          <caret line="155" column="24" selection-start-line="155" selection-start-column="24" selection-end-line="155" selection-end-column="24" />
+        <state relative-caret-position="465">
+          <caret line="31" column="2" lean-forward="true" selection-start-line="31" selection-start-column="2" selection-end-line="31" selection-end-column="2" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/FinalMotorLibrary.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
+        <state relative-caret-position="45">
+          <caret line="3" column="33" selection-start-line="3" selection-start-column="33" selection-end-line="3" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/FinalMotorLibrary.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-5">
+          <caret line="70" column="1" selection-start-line="70" selection-start-column="1" selection-end-line="70" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/ASRLFileLogger.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="30" column="65" selection-start-line="30" selection-start-column="65" selection-end-line="30" selection-end-column="65" />
+          <folding>
+            <element signature="e#0#17#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/ASRLFileLogger.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="18" selection-start-column="18" selection-end-column="18" />
         </state>
       </provider>
     </entry>

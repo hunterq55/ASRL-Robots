@@ -28,24 +28,18 @@ Motor::Motor(int id, uint8_t phaseA, uint8_t phaseB, unsigned int encoderCPR, do
 
 void Motor::printPIDInfo()
 {
-    std::ostringstream strs;
 
     out->logMessage("PID Data:");
 
-    strs << motorID;
-    out->logMessage("Motor ID = " + strs.str());
+    out->logMessage("Motor ID = " + std::to_string(motorID));
 
-    strs << *pidIn;
-    out->logMessage("Input = " + strs.str());
+    out->logMessage("Input = " + std::to_string(*pidIn));
 
-    strs << *pidOut;
-    out->logMessage("Output = " + strs.str());
+    out->logMessage("Output = " + std::to_string(*pidOut));
 
-    strs << *setPointIn;
-    out->logMessage("Set Point = " + strs.str());
+    out->logMessage("Set Point = " + std::to_string(*setPointIn));
 
-    strs << getRadSec();
-    out->logMessage("Rad per second = " + strs.str());
+    out->logMessage("Rad per second = " + std::to_string(getRadSec()));
 
     out->logMessage("\n");
 
@@ -144,7 +138,7 @@ float Motor::getCountsSec() //Calculates counts per second over given sample tim
 {
 
     unsigned long now = millis();
-    std::ostringstream strs;
+
     if((now - _lastTime) >= _freq)
     {
         _counts = encoder->read();
@@ -153,12 +147,12 @@ float Motor::getCountsSec() //Calculates counts per second over given sample tim
         _lastTime = now;
         _lastCount = _counts;
 
-        strs << motorID;
-        out->logMessage("Motor " + strs.str() + " response:");
-        strs << _countsSec;
-        out->logMessage("Velocity = " + strs.str());
-        strs << _counts;
-        out->logMessage("Encoder Count = " + strs.str());
+
+        out->logMessage("Motor " + std::to_string(motorID) + " response:");
+
+        out->logMessage("Velocity = " + std::to_string(_countsSec));
+
+        out->logMessage("Encoder Count = " + std::to_string(_counts));
 
     }
     return _countsSec;
