@@ -11,6 +11,8 @@
 %Rotation matrix definitions
 L = .115;
 theta = 0;
+index = 0;
+R = .05;
 
 pTheta1 = -sin(theta);
 pTheta2 = cos(theta);
@@ -22,12 +24,17 @@ pTheta7 = sin((pi/3)+theta);
 pTheta8 = -cos((pi/3)+theta);
 pTheta9 = L;
 
-timerval = tic;
-while(1)
-    
-    if (timerval >= .02)
-        %xPath = cos(.25*toc);
-        %yPath = sin(.25*toc);
+%Outer loop gains
+Kp = 5;
+Ki = .2;
+
+tic;
+while(1)  
+    if (toc >= .02*index)
+        
+        xPath = cos(.25*toc);
+        yPath = sin(.25*toc);
+        thetaPath = 0;
         
         xPathPrime = -.25*sin(.25*toc);
         yPathPrime = .25*cos(.25*toc);
@@ -37,11 +44,22 @@ while(1)
         metSec2 = pTheta4*(xPathPrime) + pTheta5*(yPathPrime) + pTheta6*(thetaPathPrime);
         metSec3 = pTheta7*(xPathPrime) + pTheta8*(yPathPrime) + pTheta9*(thetaPathPrime);
         
+        %outer loop
+        xError = getX() - xPath;
+        yError = getY() - yPath;
+        thetaError = getTheta() - thetaPath;
+        
+        xErrorSum = xErrorSum + xError*.02;
+        yErrorSum = yErrorSum + yError*.02;
+        thetaErrorSum = thetaError + thetaError*.02;
+        
         setpointRadSec1 = metSec1/R;
         setpointRadSec2 = metSec2/R;
         setpointRadSec3 = metSec3/R;
         
         disp(setpointRadSec1);
         Motor1.updateMotors([setpointRadSec1,setpointRadSec2,setpointRadSec3]);
+        
+        index = index + 1;
     end   
 end

@@ -1,5 +1,5 @@
-a = arduino;
-%a = arduino('com3','Mega2560','Libraries','MatlabMotorLibrary/EncoderAddon','ForceBuild',true,'TraceOn',true);
+%a = arduino;
+a = arduino('com3','Mega2560','Libraries','MatlabMotorLibrary/EncoderAddon','ForceBuild',true,'TraceOn',true);
 %a = arduino('98D311FC1C8E','Mega2560','Libraries','MatlabMotorLibrary/EncoderAddon','ForceBuild',true,'TraceOn',true);
 Motor1 = addon(a,'MatlabMotorLibrary/EncoderAddon',{'D2','D23'});
 Motor2 = addon(a,'MatlabMotorLibrary/EncoderAddon',{'D19','D27'});
