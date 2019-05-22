@@ -1,5 +1,3 @@
-function ClosedLoopCircleTracking
-
 %%Setup
 
 %Bluetooth address = 98D311FC1C8E
@@ -20,13 +18,9 @@ natnetclient.connect;
 
 if ( natnetclient.IsConnected == 0 )
 	fprintf( 'Client failed to connect\n' )
-	fprintf( '\tMake sure the host is connected to the network\n' )
-	fprintf( '\tand that the host and client IP addresses are correct\n\n' ) 
-	return
-end
-
-if ( model.RigidBodyCount < 1 )
-	return
+		fprintf( '\tMake sure the host is connected to the network\n' )
+		fprintf( '\tand that the host and client IP addresses are correct\n\n' ) 
+		return
 end
 
 %Rotation matrix definitions
@@ -65,37 +59,22 @@ while(1)
         metSec2 = pTheta4*(xPathPrime) + pTheta5*(yPathPrime) + pTheta6*(thetaPathPrime);
         metSec3 = pTheta7*(xPathPrime) + pTheta8*(yPathPrime) + pTheta9*(thetaPathPrime);
         
-        %%Outer loop
-        
-        %NatNet  
-        data = natnetclient.getFrame; % method to get current frame
-		
-		if (isempty(data.RigidBody(1)))
-			fprintf( '\tPacket is empty/stale\n' )
-			fprintf( '\tMake sure the server is in Live mode or playing in playback\n\n')
-			return
-        end
-        
-        xPosition = data.RigidBody(1).x*1000;
-        yPosition =  data.RigidBody(1).y*1000;
-        thetaPosition = 0;
-        
-        xError = xPosition - xPath;
-        yError = yPosition - yPath;
-        thetaError = thetaPosition - thetaPath;
+        %outer loop
+        xError = getX() - xPath;
+        yError = getY() - yPath;
+        thetaError = getTheta() - thetaPath;
         
         xErrorSum = xErrorSum + xError*.02;
         yErrorSum = yErrorSum + yError*.02;
-        thetaErrorSum = thetaErrorSum + thetaError*.02;
+        thetaErrorSum = thetaError + thetaError*.02;
         
         setpointRadSec1 = metSec1/R;
         setpointRadSec2 = metSec2/R;
         setpointRadSec3 = metSec3/R;
         
-        
+        disp(setpointRadSec1);
         Motor1.updateMotors([setpointRadSec1,setpointRadSec2,setpointRadSec3]);
         
         index = index + 1;
     end   
-end
 end
