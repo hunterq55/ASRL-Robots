@@ -12,6 +12,7 @@ Motor::Motor(int id, uint8_t phaseA, uint8_t phaseB, unsigned int encoderCPR, do
     pidOut = output;
     pidIn = input;
     setPointIn = setpoint;
+    out = new logger("Squishy.txt");
 
 
 
@@ -27,6 +28,31 @@ Motor::Motor(int id, uint8_t phaseA, uint8_t phaseB, unsigned int encoderCPR, do
 
 void Motor::printPIDInfo()
 {
+    std::ostringstream strs;
+
+    out->logMessage("PID Data:");
+
+    strs << motorID;
+    out->logMessage("Motor ID = " + strs.str());
+
+    strs << *pidIn;
+    out->logMessage("Input = " + strs.str());
+
+    strs << *pidOut;
+    out->logMessage("Output = " + strs.str());
+
+    strs << *setPointIn;
+    out->logMessage("Set Point = " + strs.str());
+
+    strs << getRadSec();
+    out->logMessage("Rad per second = " + strs.str());
+
+    out->logMessage("\n");
+
+
+
+
+    /*
     Serial.println("PID Data:");
     Serial.print("Motor ID = ");
     Serial.println(motorID);
@@ -40,8 +66,11 @@ void Motor::printPIDInfo()
     Serial.println(getRadSec());
     Serial.println("");
     Serial.println("");
+     */
 
 }
+
+
 
 
 void Motor::updateMotor()
@@ -115,6 +144,7 @@ float Motor::getCountsSec() //Calculates counts per second over given sample tim
 {
 
     unsigned long now = millis();
+    std::ostringstream strs;
     if((now - _lastTime) >= _freq)
     {
         _counts = encoder->read();
@@ -122,6 +152,14 @@ float Motor::getCountsSec() //Calculates counts per second over given sample tim
 
         _lastTime = now;
         _lastCount = _counts;
+
+        strs << motorID;
+        out->logMessage("Motor " + strs.str() + " response:");
+        strs << _countsSec;
+        out->logMessage("Velocity = " + strs.str());
+        strs << _counts;
+        out->logMessage("Encoder Count = " + strs.str());
+
     }
     return _countsSec;
 

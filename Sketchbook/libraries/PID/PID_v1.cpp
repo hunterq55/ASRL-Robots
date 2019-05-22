@@ -30,6 +30,7 @@ PID::PID(double* Input, double* Output, double* Setpoint,
 
     SampleTime = 100;							//default Controller Sample Time is 0.1 seconds
 
+
     PID::SetControllerDirection(ControllerDirection);
     PID::SetTunings(Kp, Ki, Kd, POn);
 
@@ -57,9 +58,16 @@ PID::PID(double* Input, double* Output, double* Setpoint,
  **********************************************************************************/
 bool PID::Compute()
 {
-   if(!inAuto) return false;
+
+   if(!inAuto)
+   {
+       return false;
+   }
    unsigned long now = millis();
    unsigned long timeChange = (now - lastTime);
+
+
+
    if(timeChange>=SampleTime)
    {
       /*Compute all the working error variables*/
@@ -89,9 +97,17 @@ bool PID::Compute()
       /*Remember some variables for next time*/
       lastInput = input;
       lastTime = now;
+
+
 	    return true;
    }
-   else return false;
+   else
+   {
+       return false;
+   }
+
+
+
 }
 
 /* SetTunings(...)*************************************************************

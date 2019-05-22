@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="GroundVehicle"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="GroundVehicle">
+				<Option output="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug/GroundVehicle" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/Adafruit_Motor_Shield_V2_Library"/>
+					<Add directory="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/Adafruit_Motor_Shield_V2_Library/utility"/>
+					<Add directory="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/Encoder-master"/>
+					<Add directory="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/Encoder-master/utility"/>
+					<Add directory="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/FinalMotorLibrary"/>
+					<Add directory="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/PID"/>
+					<Add directory="/usr/local/Cellar/gcc/8.3.0/lib/gcc/8/gcc/x86_64-apple-darwin18.2.0/8.3.0/../../../../../../include/c++/8.3.0"/>
+					<Add directory="/usr/local/Cellar/gcc/8.3.0/lib/gcc/8/gcc/x86_64-apple-darwin18.2.0/8.3.0/../../../../../../include/c++/8.3.0/x86_64-apple-darwin18.2.0"/>
+					<Add directory="/usr/local/Cellar/gcc/8.3.0/lib/gcc/8/gcc/x86_64-apple-darwin18.2.0/8.3.0/../../../../../../include/c++/8.3.0/backward"/>
+					<Add directory="/usr/local/Cellar/gcc/8.3.0/lib/gcc/8/gcc/x86_64-apple-darwin18.2.0/8.3.0/include"/>
+					<Add directory="/usr/local/Cellar/gcc/8.3.0/lib/gcc/8/gcc/x86_64-apple-darwin18.2.0/8.3.0/include-fixed"/>
+					<Add directory="/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug/Makefile&quot;  VERBOSE=1 GroundVehicle"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="GroundVehicle/fast">
+				<Option output="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug/GroundVehicle" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/Adafruit_Motor_Shield_V2_Library"/>
+					<Add directory="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/Adafruit_Motor_Shield_V2_Library/utility"/>
+					<Add directory="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/Encoder-master"/>
+					<Add directory="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/Encoder-master/utility"/>
+					<Add directory="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/FinalMotorLibrary"/>
+					<Add directory="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/PID"/>
+					<Add directory="/usr/local/Cellar/gcc/8.3.0/lib/gcc/8/gcc/x86_64-apple-darwin18.2.0/8.3.0/../../../../../../include/c++/8.3.0"/>
+					<Add directory="/usr/local/Cellar/gcc/8.3.0/lib/gcc/8/gcc/x86_64-apple-darwin18.2.0/8.3.0/../../../../../../include/c++/8.3.0/x86_64-apple-darwin18.2.0"/>
+					<Add directory="/usr/local/Cellar/gcc/8.3.0/lib/gcc/8/gcc/x86_64-apple-darwin18.2.0/8.3.0/../../../../../../include/c++/8.3.0/backward"/>
+					<Add directory="/usr/local/Cellar/gcc/8.3.0/lib/gcc/8/gcc/x86_64-apple-darwin18.2.0/8.3.0/include"/>
+					<Add directory="/usr/local/Cellar/gcc/8.3.0/lib/gcc/8/gcc/x86_64-apple-darwin18.2.0/8.3.0/include-fixed"/>
+					<Add directory="/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug/Makefile&quot;  VERBOSE=1 GroundVehicle/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/Motor_Library_Repair_Code/Motor_Library_Repair_Code.ino">
+			<Option target="GroundVehicle"/>
+		</Unit>
+		<Unit filename="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/Print_Tests/Print_Tests.ino">
+			<Option target="GroundVehicle"/>
+		</Unit>
+		<Unit filename="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/Adafruit_Motor_Shield_V2_Library/Adafruit_MotorShield.cpp">
+			<Option target="GroundVehicle"/>
+		</Unit>
+		<Unit filename="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/Adafruit_Motor_Shield_V2_Library/Adafruit_MotorShield.h">
+			<Option target="GroundVehicle"/>
+		</Unit>
+		<Unit filename="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/Adafruit_Motor_Shield_V2_Library/utility/Adafruit_MS_PWMServoDriver.cpp">
+			<Option target="GroundVehicle"/>
+		</Unit>
+		<Unit filename="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/Adafruit_Motor_Shield_V2_Library/utility/Adafruit_MS_PWMServoDriver.h">
+			<Option target="GroundVehicle"/>
+		</Unit>
+		<Unit filename="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/Encoder-master/Encoder.cpp">
+			<Option target="GroundVehicle"/>
+		</Unit>
+		<Unit filename="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/Encoder-master/Encoder.h">
+			<Option target="GroundVehicle"/>
+		</Unit>
+		<Unit filename="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/Encoder-master/utility/direct_pin_read.h">
+			<Option target="GroundVehicle"/>
+		</Unit>
+		<Unit filename="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/Encoder-master/utility/interrupt_config.h">
+			<Option target="GroundVehicle"/>
+		</Unit>
+		<Unit filename="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/Encoder-master/utility/interrupt_pins.h">
+			<Option target="GroundVehicle"/>
+		</Unit>
+		<Unit filename="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/FinalMotorLibrary/FinalMotorLibrary.cpp">
+			<Option target="GroundVehicle"/>
+		</Unit>
+		<Unit filename="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/FinalMotorLibrary/FinalMotorLibrary.h">
+			<Option target="GroundVehicle"/>
+		</Unit>
+		<Unit filename="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/FinalMotorLibrary/revisedMotorClass.cpp">
+			<Option target="GroundVehicle"/>
+		</Unit>
+		<Unit filename="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/FinalMotorLibrary/revisedMotorClass.h">
+			<Option target="GroundVehicle"/>
+		</Unit>
+		<Unit filename="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/FinalMotorLibrary/revisedMotorHeader.h">
+			<Option target="GroundVehicle"/>
+		</Unit>
+		<Unit filename="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/PID/PID_v1.cpp">
+			<Option target="GroundVehicle"/>
+		</Unit>
+		<Unit filename="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/Sketchbook/libraries/PID/PID_v1.h">
+			<Option target="GroundVehicle"/>
+		</Unit>
+		<Unit filename="/Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
