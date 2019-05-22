@@ -20,6 +20,8 @@
 % This sample connects to the server and displays rigid body data.
 % natnet.p, needs to be located on the Matlab Path.
 
+%REMEMBER BE SURE TO CHECK WHAT AXIS MOTIVE IS USING AS THE VERTICAL AXIS
+
 function NatNetPollingSample
 	fprintf( 'NatNet Polling Sample Start\n' )
 
@@ -69,8 +71,8 @@ function NatNetPollingSample
 			fprintf( 'Z:%0.1fm\n', data.RigidBody( i ).z * 1 )
             
             x(idx) = data.RigidBody(i).x;
-            y(idx) = data.RigidBody(i).y; %remember in this case the y is the vertical axis
-            z(idx) = data.RigidBody(i).z; %we will be using x and z for the predicted path
+            y(idx) = data.RigidBody(i).y; 
+            z(idx) = data.RigidBody(i).z; 
             time(idx) = data.Timestamp;
             
             
