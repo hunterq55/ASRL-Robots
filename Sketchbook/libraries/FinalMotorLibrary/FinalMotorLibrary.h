@@ -3,6 +3,8 @@
 #include "PID_v1.h"
 #include "Adafruit_MotorShield.h"
 
+#include "ASRLFileLogger.h"
+
 
 
 class Motor
@@ -15,6 +17,7 @@ public:
 
     Encoder *encoder;
     PID *pid;
+    logger *out;
 
 
 
@@ -46,6 +49,7 @@ public:
     void setpidIn(double in);
 
     void printPIDInfo();
+
 
 
 

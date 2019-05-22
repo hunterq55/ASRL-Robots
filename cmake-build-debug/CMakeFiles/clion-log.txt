@@ -1,0 +1,16 @@
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=/usr/local/Cellar/gcc/8.3.0/bin/gcc-8 -DCMAKE_CXX_COMPILER=/usr/local/Cellar/gcc/8.3.0/bin/g++-8 -G "CodeBlocks - Unix Makefiles" /Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle
+-- Configuring done
+CMake Error at CMakeLists.txt:13 (add_executable):
+  Cannot find source file:
+
+    Sketchbook/libraries/FinalMotorLibrary/revisedMotorHeader.h
+
+  Tried extensions .c .C .c++ .cc .cpp .cxx .cu .m .M .mm .h .hh .h++ .hm
+  .hpp .hxx .in .txx
+
+
+CMake Error at CMakeLists.txt:13 (add_executable):
+  No SOURCES given to target: GroundVehicle
+
+
+-- Build files have been written to: /Users/devindraizin/Desktop/Things/Programming/GitHub/GroundVehicle/cmake-build-debug
