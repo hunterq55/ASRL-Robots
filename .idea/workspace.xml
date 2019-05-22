@@ -11,12 +11,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9056bcb7-c4c1-48fd-b00b-a7b3973848c9" name="Default Changelist" comment="Refactored library">
-      <change beforePath="$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/ASRLFileLogger.h" beforeDir="false" afterPath="$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/ASRLFileLogger.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/FinalMotorLibrary.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/FinalMotorLibrary.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/FinalMotorLibrary.h" beforeDir="false" afterPath="$PROJECT_DIR$/Sketchbook/libraries/FinalMotorLibrary/FinalMotorLibrary.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sketchbook/motorTest/logger/ASRLFileLogger.h" beforeDir="false" afterPath="$PROJECT_DIR$/Sketchbook/motorTest/logger/ASRLFileLogger.h" afterDir="false" />
-    </list>
+    <list default="true" id="9056bcb7-c4c1-48fd-b00b-a7b3973848c9" name="Default Changelist" comment="Refactored library" />
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -255,7 +250,7 @@
       <workItem from="1556208987771" duration="31591000" />
       <workItem from="1556827991078" duration="1236000" />
       <workItem from="1557848635660" duration="3990000" />
-      <workItem from="1558538901721" duration="4481000" />
+      <workItem from="1558538901721" duration="4705000" />
     </task>
     <task id="LOCAL-00001" summary="Created motor class revision">
       <created>1556805407908</created>
@@ -331,7 +326,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41298000" />
+    <option name="totallyTimeSpent" value="41522000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1680" height="969" extended-state="6" />
