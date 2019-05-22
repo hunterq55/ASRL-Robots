@@ -53,7 +53,8 @@ function NatNetPollingSample
 	% Poll for the rigid body data a regular intervals (~1 sec) for 10 sec.
 	fprintf( '\nPrinting rigid body frame data approximately every second for 10 seconds...\n\n' )
 	for idx = 1 : 10  
-		java.lang.Thread.sleep( 996 ); %time in milliseconds for delay of transmitted data
+		%java.lang.Thread.sleep( 996 ); %time in milliseconds for delay of transmitted data
+		java.lang.Thread.sleep( 20 );
 		data = natnetclient.getFrame; % method to get current frame
 		
 		if (isempty(data.RigidBody(1)))
