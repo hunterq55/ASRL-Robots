@@ -16,12 +16,12 @@ if ( model.RigidBodyCount < 1 )
 	return
 end
 
-%Platform geometry
+%Platform Geometry
 L = .115;
 theta = 0;
 R = .05;
 
-%Rotation matrix
+%Rotation Matrix
 pTheta = [-sin(theta)               cos(theta)          L;
           -sin((pi/3)-theta)       -cos((pi/3)-theta)   L;
            sin((pi/3)+theta)       -cos((pi/3)+theta)   L;];
@@ -34,6 +34,8 @@ Ki = .2;
 %Main Loop
 timestep = .02;
 index = 0;
+errorSum = 0;
+
 tic;
 while(1)  
     if (toc >= timestep*index)       
@@ -52,8 +54,11 @@ while(1)
         error = position - trajectory;
         errorSum = errorSum + error*timestep;
         
+        setpointMetSec = pTheta*(trajectoryPrime - Kp*error - Ki*errorSum);
+        setpointRadSec = setpointMetSec/R;
         
-        Motor1.updateMotors();
+        Motor1.updateMotors(setpointRadSec);
+        index = index + 1;
     end
 end
 
