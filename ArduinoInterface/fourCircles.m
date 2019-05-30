@@ -1,3 +1,7 @@
+function [pos,e,traj] = fourCircles(Motor1)
+
+pause(5);
+
 %NatNet Connection
 natnetclient = natnet;
 natnetclient.HostIP = '127.0.0.1';
@@ -28,11 +32,16 @@ pTheta = [-sin(theta)               cos(theta)          L;
            sin((pi/3)+theta)       -cos((pi/3)+theta)   L;];
 
 %PID
-Kp = 5*.1*.1*.1;
-Ki = .2*.1*.1;
+Kp = 5*.1;
+Ki = .2*.1;
 
-% Kp = 0;
-% Ki = 0;
+Kp = [.5 0 0;
+      0 -.5 0;
+      0 0 -.5;];
+Ki = [.02 0 0;
+      0 -.02 0;
+      0 0 -.02;];
+
 
 %Main Loop
 timestep = .02;
@@ -40,7 +49,7 @@ index = 0;
 errorSum = 0;
 
 tic;
-while(1)  
+while(toc <= 2*pi*4)  %will do one complete cycles
     if (toc >= timestep*index)   
        
         trajectory = [cos(.25*toc);sin(.25*toc);0;];
@@ -64,7 +73,7 @@ while(1)
         a = EulerAngles(q,'zyx');
         theta = a(2);
 
-        position = [data.RigidBody(1).x;data.RigidBody(1).z;theta;];
+        position = [data.RigidBody(1).x;-data.RigidBody(1).z;theta;];
         error = position - trajectory;
         errorSum = errorSum + error*timestep;
 
@@ -85,8 +94,25 @@ while(1)
         %disp(trajectory);
         
         index = index + 1;
+        pos(:,index) = position;
+        e(:,index) = error;
+        traj(:,index) = trajectory;
     end
 end
 
-       
+Motor1.updateMotors([0.0,0.0,0.0])
+
+e = transpose(e);
+pos = transpose(pos);
+traj = transpose(traj);
+plot(e);
+legend('X','Z','Theta');
+
+% plot(pos);
+% hold on;
+% plot(traj);
+% hold off;
+
+end
+
 
