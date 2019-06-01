@@ -1,11 +1,7 @@
 function [pos,e,traj] = fourCircles(Motor1)
 %This function takes a motor object as an input. It will have to be motor 1
 %(the motor with the yellow coloring on the wheel) in order for the
-%ordering to be correct. fourCircles returns pos (3-element column
-%vector with measured position in x, z, and theta), e (3-element column vector with
-%difference in x, z, and theta between measured and reference
-%trajectories), and traj (3-element column vector of the reference
-%trajectory in x, z, and theta).
+%ordering to be correct.
 
 %Wait five seconds for setup time
 pause(5);
@@ -77,21 +73,27 @@ while(toc <= 2*pi*4*numCircles)
         qRot = quaternion(0,0,0,1);
         q = mtimes(q,qRot);
         a = EulerAngles(q,'zyx');
-        theta = a(2); %yaw angle/rotation about the vertical
+        theta = a(2);
 
         position = [data.RigidBody(1).x;-data.RigidBody(1).z;theta;];
         error = position - trajectory;
         errorSum = errorSum + error*timestep;
 
         
-        pTheta = [-sin(theta)               cos(theta)          L;
-                  -sin((pi/3)-theta)       -cos((pi/3)-theta)   L;
-                   sin((pi/3)+theta)       -cos((pi/3)+theta)   L;];
+                pTheta = [-sin(theta)               cos(theta)          L;
+          -sin((pi/3)-theta)       -cos((pi/3)-theta)   L;
+           sin((pi/3)+theta)       -cos((pi/3)+theta)   L;];
         
         setpointMetSec = pTheta*(trajectoryPrime - Kp*error - Ki*errorSum);
         setpointRadSec = setpointMetSec/R;
         
         Motor1.updateMotors(setpointRadSec);
+        
+        %Display Funct ions
+        %disp(position);
+        %disp(setpointRadSec);
+        disp(error);
+        %disp(trajectory);
         
         index = index + 1;
         pos(:,index) = position;
@@ -100,10 +102,8 @@ while(toc <= 2*pi*4*numCircles)
     end
 end
 
-%Set motors back to zero
 Motor1.updateMotors([0.0,0.0,0.0])
 
-%Plot data
 e = transpose(e);
 pos = transpose(pos);
 traj = transpose(traj);
