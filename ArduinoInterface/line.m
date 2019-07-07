@@ -1,13 +1,7 @@
-function [pos,e,traj] = fourCircles(Motor1)
-%This function takes a motor object as an input. It will have to be motor 1
-%(the motor with the yellow coloring on the wheel) in order for the
-%ordering to be correct. fourCircles returns pos (3-element column
-%vector with measured position in x, z, and theta), e (3-element column vector with
-%difference in x, z, and theta between measured and reference
-%trajectories), and traj (3-element column vector of the reference
-%trajectory in x, z, and theta).
+function [pos,e,traj,time] = line(Motor1)
 
-%Wait five seconds for setup time
+%example [position,error,trajectory,time] = line(Motor1)
+
 pause(5);
 
 %NatNet Connection
@@ -30,12 +24,12 @@ if ( model.RigidBodyCount < 1 )
 end
 
 %Platform Geometry
-L = .115; %distance from platform centroid to wheel
+L = .13; %distance from platform centroid to wheel
 R = .05;  %radius of the wheel
 
 %PID
-Kp = 5;
-Ki = .2;
+Kp = 8;
+Ki = .4;
 
 Kp = [Kp 0 0;
       0 Kp 0;
@@ -50,16 +44,15 @@ timestep = .02; %This is currently set equal to the interval for calculating
                 %platform velocity and the inner loop PID update interval.
 index = 0;
 errorSum = 0;   %A forward euler integration will be performed.
-numCircles = 4; %Determines the number of circles the platform will cycle
-                %through before stopping.
+
                 
 tic;
-while(toc <= 2*pi*4*numCircles)
+while(toc < 10)
     
-    if (toc >= timestep*index)      
+    if (toc >= timestep*index)
         
-        trajectory = [cos(.25*toc);sin(.25*toc);0;]; %Circle set to 1 meter radius, 8pi period.
-        trajectoryPrime = [-.25*sin(.25*toc);.25*cos(.25*toc);0;]; %Trajectory derivative
+        trajectory = [-.1*toc + 1;0;0;]; %Line set to run 10 seconds, 1 meter to the left
+        trajectoryPrime = [-.1;0;0;]; %Trajectory derivative
     
         data = natnetclient.getFrame;	
 		if (isempty(data.RigidBody(1)))
@@ -94,27 +87,15 @@ while(toc <= 2*pi*4*numCircles)
         Motor1.updateMotors(setpointRadSec);
         
         index = index + 1;
-        pos(:,index) = position;
-        e(:,index) = error;
-        traj(:,index) = trajectory;
+        time(index,:) = toc;
+        pos(index,:) = position;
+        e(index,:) = error;
+        traj(index,:) = trajectory;
     end
 end
 
 %Set motors back to zero
-Motor1.updateMotors([0.0,0.0,0.0])
-
-%Plot data
-e = transpose(e);
-pos = transpose(pos);
-traj = transpose(traj);
-plot(e);
-legend('X','Z','Theta');
-
-% plot(pos);
-% hold on;
-% plot(traj);
-% hold off;
+Motor1.updateMotors([0.0,0.0,0.0]);
 
 end
-
 
