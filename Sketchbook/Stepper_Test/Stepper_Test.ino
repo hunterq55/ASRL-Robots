@@ -11,7 +11,7 @@
 #include <AccelStepper.h>
 
 // Define a stepper and the pins it will use
-AccelStepper stepper(2,2,3);
+AccelStepper stepper(1,2,3);
 
 // This defines the analog input pin for reading the control voltage
 // Tested with a 10k linear pot between 5v and GND
@@ -23,7 +23,7 @@ void setup()
 
 void loop()
 {
-  stepper.setSpeed(500);
-  stepper.move(1000);
-  stepper.runSpeedToPosition();
+  stepper.moveTo(-4000);
+  stepper.setSpeed(-4000);
+  stepper.run();
 }
