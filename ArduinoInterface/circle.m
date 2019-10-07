@@ -39,6 +39,9 @@ R = .05;  %radius of the wheel
 Kp = 8;
 Ki = .4;
 
+Kp = 0;
+Ki = 0;
+
 Kp = [Kp 0 0;
       0 Kp 0;
       0 0 -Kp;]; %Gains for theta must be negative, not sure why yet
