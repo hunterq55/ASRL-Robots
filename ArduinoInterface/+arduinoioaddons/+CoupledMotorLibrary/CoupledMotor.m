@@ -8,7 +8,10 @@ classdef CoupledMotor < arduinoio.LibraryBase
     GET_COUNTSSEC = hex2dec('04')
     SET_RADSEC = hex2dec('05')
     UPDATE_MOTORS = hex2dec('06');
-    UPDATE_STEPPERS = hex2dec('07');
+    
+    STEPPER_CREATE = hex2dec('07');
+    SET_RADSEC_STEPPER = hex2dec('08');
+    UPDATE_STEPPERS = hex2dec('09');
     end
     
     properties(Access = private, Constant = true)
@@ -24,7 +27,8 @@ classdef CoupledMotor < arduinoio.LibraryBase
     end
     
     properties(Access = private)
-        ResourceOwner = 'CoupledMotorLibrary/CoupledMotor';
+        motorResourceOwner = 'Motor';
+        stepperResourceOwner = 'Stepper';
     end
     
     properties(Access = private)
@@ -40,23 +44,34 @@ classdef CoupledMotor < arduinoio.LibraryBase
     
     
     methods(Access = public)
-        function obj = CoupledMotor(parentObj,inputPins)
+        function obj = Motor(parentObj,inputPins)
             obj.Parent = parentObj;
             obj.Pins = inputPins;
-            count = getResourceCount(obj.Parent,obj.ResourceOwner);
+            count = getResourceCount(obj.Parent,obj.resourceOwnerMotor);
             if count > 3
                 error('You can only have 4 Motors');
             end
             incrementResourceCount(obj.Parent,obj.ResourceOwner);
-            obj.ID = getFreeResourceSlot(parentObj, obj.ResourceOwner);
+            obj.ID = getFreeResourceSlot(parentObj, obj.resourceOwnerMotor);
             createMotor(obj,inputPins);
-        end     
+        end
+        function obj = Stepper(parentObj, inputPins)
+            obj.Parent = parentObj;
+            obj.Pins = inputPins;
+            count = getResourceCount(obj.Parent,obj.resourceOwnerStepper);
+            if count > 6
+                error('You can only have 6 steppers');
+            end
+            incrementResourceCount(obj.Parent,obj.ResourceOwner);
+            obj.ID = getFreeResourceSlot(parentObj, obj.resourceOwnerStepper);
+            createStepper(obj,inputPins);
+        end
         function createMotor(obj,inputPins)
             try
                 cmdID = obj.MOTOR_CREATE;
                 
                 for iLoop = inputPins
-                    configurePinResource(obj.Parent,iLoop{:},obj.ResourceOwner,'Reserved');
+                    configurePinResource(obj.Parent,iLoop{:},obj.resourceOwnerMotor,'Reserved');
                 end
                 
                 terminals = getTerminalsFromPins(obj.Parent,inputPins);
@@ -64,7 +79,21 @@ classdef CoupledMotor < arduinoio.LibraryBase
             catch e
                 throwAsCaller(e);
             end
-         end
+        end
+        function createStepper(obj,inputPins)
+            try
+                cmdID = obj.STEPPER_CREATE;
+                
+                for iLoop = inputPins
+                    configurePinResource(obj.Parent,iLoop{:},obj.resourceOwnerStepper,'Reserved');
+                end
+                
+                terminals = getTerminalsFromPins(obj.Parent,inputPins);
+                sendCommandCustom(obj,cmdID,terminals');
+            catch e
+                throwAsCaller(e);
+            end
+        end
     end
     
     methods(Access = public)
@@ -115,6 +144,12 @@ classdef CoupledMotor < arduinoio.LibraryBase
              input3 = [typecast(single(radSecArray(3)),'uint8')];
              
              sendCommand(obj, obj.LibraryName,cmdID,[input1,input2,input3]);
+         end
+         
+         function [] = setRadSecStepper(obj,radSec)
+             cmdID = obj.SET_RADSEC_STEPPER;
+             inputs = [typecast(single(radSec),'uint8')];
+             sendCommandCustom(obj,cmdID,inputs);
          end
          
          function [] = updateSteppers(obj,radSecArray)
