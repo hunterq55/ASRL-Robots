@@ -21,6 +21,7 @@ const char MSG_SETPOINT[]       PROGMEM = "Setpoint recieved: %d\n";
 #define GET_COUNTSSEC 0x04
 #define SET_RADSEC 0x05
 #define UPDATE_MOTORS 0x06
+#define SET_PWM 0x07
 
 //GLOBAL VARIABLES
 double Kp = 2.5,Ki = 60.25,Kd = 0.0;
@@ -35,46 +36,51 @@ Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 class MotorMatlab : public LibraryBase
 {
     public:
-    
+
     Motor* mPointer[MAX_MOTORS];
-    
+
+    int mode = 1;
+
     public:
     MotorMatlab(MWArduinoClass& a)
     {
         libName = "MatlabMotorLibrary/EncoderAddon";
         a.registerLibrary(this);
     }
-    
+
     void setup()
     {
         AFMS.begin();
     }
-    
+
     void loop()
     {
         //This loop will bring the motors to a desired setpoint by updating
         //the PID, as defined earlier in the code.
-        if(mPointer[0] != NULL)
+        if (mode == 0)
         {
-            mPointer[0]->updateMotor();
-            //mPointer[0]->setDuty(50);
-        }
-        
-        if(mPointer[1] != NULL)
-        {
-            mPointer[1]->updateMotor();
-            //mPointer[1]->setDuty(50);
-        }
-        
-        if(mPointer[2] != NULL)
-        {
-            mPointer[2]->updateMotor();
-            //mPointer[2]->setDuty(50);
+          if(mPointer[0] != NULL)
+          {
+              mPointer[0]->updateMotor();
+              //mPointer[0]->setDuty(50);
+          }
+
+          if(mPointer[1] != NULL)
+          {
+              mPointer[1]->updateMotor();
+              //mPointer[1]->setDuty(50);
+          }
+
+          if(mPointer[2] != NULL)
+          {
+              mPointer[2]->updateMotor();
+              //mPointer[2]->setDuty(50);
+          }
         }
     }
-    
+
     public:
-    
+
     void commandHandler(byte cmdID,byte* dataIn,unsigned int payload_size)
     {
         switch (cmdID)
@@ -88,7 +94,7 @@ class MotorMatlab : public LibraryBase
                 {
                     pinNumbers[i] = dataIn[i+1];
                 }
-                
+
                 if(ID == 0)
                 {
                     mPointer[ID] = new Motor(1,pinNumbers[0],pinNumbers[1],
@@ -116,41 +122,41 @@ class MotorMatlab : public LibraryBase
                     mPointer[ID]->registerMotor();
                     debugPrint(MSG_CREATE,ID,pinNumbers[0],pinNumbers[1],3702,Kp,Ki,Kd);
                 }
-                
+
                 sendResponseMsg(cmdID,0,0);
                 break;
             }
             case GET_COUNTS:
             {
                 byte ID = dataIn[0];
-                
+
                 if(mPointer[ID] == NULL)
                     break;
-                
+
                 int32_t count = mPointer[ID]->encoder->read();
                 byte result[4];
-                
+
                 result[0] = (count & 0x000000ff);
                 result[1] = (count & 0x0000ff00) >> 8;
                 result[2] = (count & 0x00ff0000) >> 16;
                 result[3] = (count & 0xff000000) >> 24;
-                
+
                 debugPrint(MSG_READ,ID,count);
-                
+
                 sendResponseMsg(cmdID,result,4);
                 break;
             }
             case SET_RADSEC:
             {
-                
+
                 byte ID = dataIn[0];
                 byte radSec[4];
-                
+
                 radSec[0] = dataIn[1];
                 radSec[1] = dataIn[2];
                 radSec[2] = dataIn[3];
-                radSec[3] = dataIn[4];          
-                
+                radSec[3] = dataIn[4];
+
                 if(ID == 0)
                 {
                      setpointRadSec1 = *((float*)(radSec));
@@ -162,7 +168,7 @@ class MotorMatlab : public LibraryBase
                 else if(ID == 2)
                 {
                     setpointRadSec3 = *((float*)(radSec));
-                }        
+                }
 
                 sendResponseMsg(cmdID,0,0);
                 break;
@@ -172,28 +178,69 @@ class MotorMatlab : public LibraryBase
                 byte radSec1[4];
                 byte radSec2[4];
                 byte radSec3[4];
-                
+
                 radSec1[0] = dataIn[0];
                 radSec1[1] = dataIn[1];
                 radSec1[2] = dataIn[2];
                 radSec1[3] = dataIn[3];
-                
+
                 radSec2[0] = dataIn[4];
                 radSec2[1] = dataIn[5];
                 radSec2[2] = dataIn[6];
                 radSec2[3] = dataIn[7];
-                
+
                 radSec3[0] = dataIn[8];
                 radSec3[1] = dataIn[9];
                 radSec3[2] = dataIn[10];
                 radSec3[3] = dataIn[11];
-                
+
                 setpointRadSec1 = *((float*)(radSec1));
                 setpointRadSec2 = *((float*)(radSec2));
                 setpointRadSec3 = *((float*)(radSec3));
-                
+
                 sendResponseMsg(cmdID,0,0);
-                break;           
+                break;
+            }
+            case SET_PWM;
+            {
+              int pwm1[4], pwm2[4], pwm3[4];
+
+              pwm1[0] = dataIn[1];
+              pwm1[1] = dataIn[2];
+              pwm1[2] = dataIn[3];
+              pwm1[4] = dataIn[4];
+
+              pwm2[0] = dataIn[5];
+              pwm2[1] = dataIn[6];
+              pwm2[2] = dataIn[7];
+              pwm2[4] = dataIn[8];
+
+              pwm3[0] = dataIn[9];
+              pwm3[1] = dataIn[10];
+              pwm3[2] = dataIn[11];
+              pwm3[4] = dataIn[12];
+
+              v1 = *((int*)pwm1);
+              v2 = *((int*)pwm2);
+              v3 = *((int*)pwm3);
+
+              if(mPointer[0] != NULL)
+              {
+                  mPointer[0]->setDuty(v1);
+              }
+
+              if(mPointer[1] != NULL)
+              {
+                  mPointer[1]->setDuty(v2);
+              }
+
+              if(mPointer[2] != NULL)
+              {
+                  mPointer[2]->setDuty(v3);
+              }
+
+              sendResponseMsg(cmdID,0,0);
+              break;
             }
             /*
             case GET_COUNTSSEC:
@@ -204,22 +251,22 @@ class MotorMatlab : public LibraryBase
                 int32_t oldCount[numEncoders];
                 int32_t newCount[numEncoders];
                 int32_t countDiff[numEncoders];
-                
+
                 for(size_t i = 0; i < numEncoders; i++)
                     {
                         ID = dataIn[i+1];
                         oldCount[i] = mPointer[ID].read();
                     }
-                
+
                 delay(getEncoderFreq());
-                
+
                 for(size_t i = 0; i < numEncoders; i++)
                     {
                         ID = dataIn[i+1];
                         newCount[i] = mPointer[ID].read();
                         countDiff[i] = newCount[i] - oldCount[i];
                     }
-                
+
                 for(size_t i =0; i < numEncoders; i = i+4)
                 {
                     result[i] = (count & 0x000000ff);
@@ -235,29 +282,29 @@ class MotorMatlab : public LibraryBase
             {
                 byte ID = dataIn[0];
                 double count = mPointer[ID]->getRad();
-                
+
                 byte result[4];
-                
+
                 result[0] = (count & 0x000000ff);
                 result[1] = (count & 0x0000ff00) >> 8;
                 result[2] = (count & 0x00ff0000) >> 16;
                 result[3] = (count & 0xff000000) >> 24;
-                
+
                 sendResponseMsg(cmdID,result,4);
                 break;
-            }    
+            }
             case GET_RADSEC:
             {
                 byte ID = dataIn[0];
                 int32_t count = mPointer[ID]->getRadSec();
-                
+
                 byte result[4];
-                
+
                 result[0] = (count & 0x000000ff);
                 result[1] = (count & 0x0000ff00) >> 8;
                 result[2] = (count & 0x00ff0000) >> 16;
                 result[3] = (count & 0xff000000) >> 24;
-                
+
                 sendResponseMsg(cmdID,result,4);
                 break;
             }
@@ -270,5 +317,5 @@ class MotorMatlab : public LibraryBase
         }
     }
 };
-	
+
 #endif

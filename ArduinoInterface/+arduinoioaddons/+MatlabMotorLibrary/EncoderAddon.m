@@ -1,5 +1,5 @@
 classdef EncoderAddon < arduinoio.LibraryBase
-    
+
     properties(Access = private, Constant = true)
     GET_RAD = hex2dec('00')
     GET_RADSEC = hex2dec('01')
@@ -8,8 +8,9 @@ classdef EncoderAddon < arduinoio.LibraryBase
     GET_COUNTSSEC = hex2dec('04')
     SET_RADSEC = hex2dec('05')
     UPDATE_MOTORS = hex2dec('06');
+    SET_PWM = hex2dec('07');
     end
-    
+
     properties(Access = protected, Constant = true)
         LibraryName = 'MatlabMotorLibrary/EncoderAddon'
         DependentLibraries = {}
@@ -17,23 +18,23 @@ classdef EncoderAddon < arduinoio.LibraryBase
         CppHeaderFile = fullfile(arduinoio.FilePath(mfilename('fullpath')), 'src', 'MotorMatlab.h')
         CppClassName = 'MotorMatlab'
     end
-    
+
     properties(Access = private)
         ResourceOwner = 'MatlabMotorLibrary/EncoderAddon';
     end
-    
+
     properties(Access = private)
         ID
     end
-    
+
     methods(Access = protected)
         function output = sendCommandCustom(obj, commandID, inputs)
             % Change from 1-based indexing in MATLAB to 0-based indexing in C++
-            output = sendCommand(obj, obj.LibraryName, commandID, [obj.ID-1, inputs]); 
+            output = sendCommand(obj, obj.LibraryName, commandID, [obj.ID-1, inputs]);
         end
     end
-    
-    
+
+
     methods(Access = public)
         function obj = EncoderAddon(parentObj,inputPins)
             obj.Parent = parentObj;
@@ -45,15 +46,15 @@ classdef EncoderAddon < arduinoio.LibraryBase
             incrementResourceCount(obj.Parent,obj.ResourceOwner);
             obj.ID = getFreeResourceSlot(parentObj, obj.ResourceOwner);
             createMotor(obj,inputPins);
-        end     
+        end
         function createMotor(obj,inputPins)
             try
                 cmdID = obj.MOTOR_CREATE;
-                
+
                 for iLoop = inputPins
                     configurePinResource(obj.Parent,iLoop{:},obj.ResourceOwner,'Reserved');
                 end
-                
+
                 terminals = getTerminalsFromPins(obj.Parent,inputPins);
                 sendCommandCustom(obj,cmdID,terminals');
             catch e
@@ -61,7 +62,7 @@ classdef EncoderAddon < arduinoio.LibraryBase
             end
          end
     end
-    
+
     methods(Access = public)
         function [rad] = getRad(obj)
             cmdID = obj.GET_RAD;
@@ -79,21 +80,21 @@ classdef EncoderAddon < arduinoio.LibraryBase
             cmdID = obj.GET_COUNTS;
             inputs = [];
             output = sendCommandCustom(obj,cmdID,inputs);
-            count = typecast(uint8(output(1:4)), 'int32');   
+            count = typecast(uint8(output(1:4)), 'int32');
         end
 %         function [countsSec] = getCountsSec(obj)
 %             cmdID = obj.GET_COUNTSSEC;
 %             numEncoders = length(obj);
 %             data = zeros(1, numEncoders+1);
 %             data(1) = numEncoders;
-%             
+%
 %             for index = 1:numEncoders
 %                 data(index+1) = obj(index).ID-1;
 %             end
-%             
+%
 %             output = sendCommandCustom(obj(1), cmdID, data);
 %             radSec = zeros(1, numEncoders);
-%              
+%
 %         end
     end
     methods(Access = public)
@@ -102,15 +103,23 @@ classdef EncoderAddon < arduinoio.LibraryBase
             inputs = [typecast(single(radSec),'uint8')];
             sendCommandCustom(obj,cmdID,inputs);
          end
-         
+
          function [] = updateMotors(obj,radSecArray)
              cmdID = obj.UPDATE_MOTORS;
              input1 = [typecast(single(radSecArray(1)),'uint8')];
              input2 = [typecast(single(radSecArray(2)),'uint8')];
              input3 = [typecast(single(radSecArray(3)),'uint8')];
-             
+
              sendCommand(obj, obj.LibraryName,cmdID,[input1,input2,input3]);
          end
+
+         function [] = setPWM(obj,pwmArray)
+             cmdID = obj.SET_PWM;
+
+             input1 = [typecast(int16(pwmArray(1)),'uint8')];
+             input2 = [typecast(int16(pwmArray(2)),'uint8')];
+             input3 = [typecast(int16(pwmArray(3)),'uint8')];
+
+             sendCommand(obj, obj.LibraryName,cmdID,[input1,input2,input3]);
     end
 end
-
