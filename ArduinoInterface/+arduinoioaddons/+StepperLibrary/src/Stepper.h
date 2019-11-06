@@ -325,6 +325,19 @@ class Stepper : public LibraryBase
                 sPointer[4]->setCurrentPosition(0);
                 sPointer[5]->setCurrentPosition(0);
                 
+                steps[0] = 0;
+                stepsSec[0] = 0.0;
+                steps[1] = 0;
+                stepsSec [1] = 0.0;
+                steps[2] = 0;
+                stepsSec[2] = 0.0;
+                steps[3] = 0;
+                stepsSec[3] = 0.0;
+                steps[4] = 0;
+                stepsSec[4] = 0.0;
+                steps[5] = 0;
+                stepsSec[5] = 0.0;
+                
                 sendResponseMsg(cmdID,0,0);
                 break;
             }

@@ -75,8 +75,9 @@ classdef Stepper < arduinoio.LibraryBase
     
     methods(Access = public)
         function [] = calibrate(obj)
-            cmdID = obj.CALIBRATE;            
-            sendCommand(obj,obj.LibraryName,cmdID);
+            cmdID = obj.CALIBRATE;          
+            inputs = [];
+            sendCommand(obj,obj.LibraryName,cmdID,inputs);
         end
     end
 
