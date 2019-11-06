@@ -1,5 +1,5 @@
 %Steps/radian for each motor
-STEPPER_CONSTANT1 = 1/(.022368421*(pi/180))
+STEPPER_CONSTANT1 = 1/(.022368421*(pi/180));
 STEPPER_CONSTANT2 = 1/(.018082192*(pi/180));
 STEPPER_CONSTANT3 = 1/(.017834395*(pi/180));
 STEPPER_CONSTANT4 = 1/(.021710526*(pi/180));
@@ -32,4 +32,5 @@ Stepper4.setStates([j4Zero*STEPPER_CONSTANT4; 200]);   %Positive is clockwise
 Stepper5.setStates([-j5Zero*STEPPER_CONSTANT5; -200]); %Negative is clockwise
 Stepper6.setStates([j6Zero*STEPPER_CONSTANT6; 200]);  %Positive is clockwise
 
+delay(15);
 Stepper1.calibrate();
