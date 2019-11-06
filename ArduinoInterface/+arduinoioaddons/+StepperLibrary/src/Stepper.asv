@@ -18,7 +18,7 @@ const char MSG_STATES[]       PROGMEM = "New position (%ld) and velocity set for
 #define UPDATE_STEPPERS 0x03
 #define SET_STATES 0x04
 #define UPDATE_STATES 0x05
-#define CALIBRATE 0x06
+//#define CALIBRATE 0x06
 
 class Stepper : public LibraryBase
 {
@@ -316,6 +316,7 @@ class Stepper : public LibraryBase
                  sendResponseMsg(cmdID,0,0);
                  break;
             }
+            /*
             case CALIBRATE:
             {
                 sPointer[0]->setCurrentPosition(0);
@@ -325,8 +326,10 @@ class Stepper : public LibraryBase
                 sPointer[4]->setCurrentPosition(0);
                 sPointer[5]->setCurrentPosition(0);
                 
-                sendResponseMsg(cmdID,
+                sendResponseMsg(cmdID,0,0);
+                break;
             }
+             */
             default:
             {
                 break;
