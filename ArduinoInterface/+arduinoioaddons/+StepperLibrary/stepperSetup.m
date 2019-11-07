@@ -26,10 +26,10 @@ Stepper5 = addon(a,'StepperLibrary/Stepper',{'D10','D11'})
 Stepper6 = addon(a,'StepperLibrary/Stepper',{'D12','D13'})
 
 Stepper1.setStates([-j1Zero*STEPPER_CONSTANT1, -200]); %Negative is clockwise
-Stepper2.setStates([-j2Zero*STEPPER_CONSTANT2; -200]);%Negative is clockwise
+Stepper2.setStates([-j2Zero*STEPPER_CONSTANT2; -200]); %Negative is clockwise
 Stepper3.setStates([j3Zero*STEPPER_CONSTANT3; 200]);   %Negative is clockwise
 Stepper4.setStates([j4Zero*STEPPER_CONSTANT4; 200]);   %Positive is clockwise
 Stepper5.setStates([-j5Zero*STEPPER_CONSTANT5; -200]); %Negative is clockwise
-Stepper6.setStates([j6Zero*STEPPER_CONSTANT6; 200]);  %Positive is clockwise
+Stepper6.setStates([j6Zero*STEPPER_CONSTANT6; 200]);   %Positive is clockwise
 
 Stepper1.calibrate();
