@@ -3,9 +3,10 @@ function [total,J(1),J(2),J(3),J(4),J(5),J(6)] = validateTrajectory(trajectory)
 %   trajectory is specified as a 13 column array, with the first column = time,
 %   the subsequent 6 columns = angular position of each joint in radians,
 %   and the final 6 columns = angular velocity of each joint in radians/sec.
-%   total will return 1 if valid, 0 if invalid. The remaining 6 return values
-%   will return 1 if the trajectory is valid for that joint, otherwise the
-%   the difference between the trajectory and the limit.
+%   total will return 1 if entire trajectory is valid, 0 otherwise. The
+%   remaining 6 return values will return 1 if the trajectory is valid for that
+%   joint, otherwise the difference between the trajectory and the limit for the
+%   largest trajectory overshoot for that joint.
 
 degToRad = (pi/180);
 
@@ -47,7 +48,7 @@ total = 1;
 for i = 1:6
   if abs(J(i)) > 0;
     total = 0;
-    break;
+    break
   end
 end
 
