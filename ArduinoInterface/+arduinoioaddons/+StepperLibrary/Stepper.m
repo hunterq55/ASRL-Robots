@@ -9,6 +9,7 @@ classdef Stepper < arduinoio.LibraryBase
     UPDATE_STATES = hex2dec('05');
     
     CALIBRATE = hex2dec('06');
+    READ = hex2dec('07');
     end
     
     properties(Access = private, Constant = true)
@@ -85,8 +86,14 @@ classdef Stepper < arduinoio.LibraryBase
          function [] = setRadSec(obj,radSec)
              cmdID = obj.SET_RADSEC;
              inputs = [typecast(single(radSec),'uint8')];
-             sendCommandCustom(obj,cmdID,inputs);
+             output = sendCommandCustom(obj,cmdID,inputs);
          end     
+         function [steps] = read(obj)
+            cmdID = obj.READ;
+            inputs = [];
+            output = sendCommandCustom(obj,cmdID,inputs);
+            steps = typecast(uint8(output(1:4)),'int32');
+         end  
          function [] = updateSteppers(obj,radSecArray)
              cmdID = obj.UPDATE_STEPPERS;
              

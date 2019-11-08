@@ -342,14 +342,7 @@ class Stepper : public LibraryBase
                 byte ID = dataIn[0];
                 long position = sPointer[ID]->currentPosition();
                 
-                byte result[4];
-                result[0] = (position & 0x000000ff);
-                result[1] = (position & 0x0000ff00);
-                result[2] = (position & 0x00ff0000);
-                result[4] = (position & 0xff000000);
-                
-                sendResponseMsg(cmdID,result,4);
-                break;
+                byte posArray[4]
             }
             default:
             {
