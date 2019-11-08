@@ -12,19 +12,25 @@ degToRad = (pi/180);
 
 % Counter clockwise limits from the zero
 CCWLimit(1) = (170)*degToRad;
-CCWLimit(2) = (42)*degToRad;
-CCWLimit(3) = (89)*degToRad;
+CCWLimit(2) = (0)*degToRad;
+CCWLimit(3) = (0)*degToRad;
 CCWLimit(4) = (165)*degToRad;
 CCWLimit(5) = (105)*degToRad;
 CCWLimit(6) = (155)*degToRad;
 
+% CCWLimit(2) = (42)*degToRad;
+% CCWLimit(3) = (89)*degToRad;
+
 % Clockwise limits from the zero
 CWLimit(1) = -(170)*degToRad;
-CWLimit(2) = -(90)*degToRad;
-CWLimit(3) = -(51)*degToRad;
+CWLimit(2) = -(132)*degToRad;
+CWLimit(3) = -(141)*degToRad;
 CWLimit(4) = -(165)*degToRad;
 CWLimit(5) = -(105)*degToRad;
 CWLimit(6) = -(155)*degToRad;
+
+% CWLimit(2) = -(90)*degToRad;
+% CWLimit(3) = -(51)*degToRad;
 
 J = zeros(6,1);
 
@@ -46,7 +52,7 @@ end
 
 total = 1;
 for i = 1:6
-  if abs(J(i)) > 0;
+  if abs(J(i)) > 0
     total = 0;
     break
   end
