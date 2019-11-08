@@ -28,15 +28,19 @@ class Stepper : public LibraryBase
     AccelStepper* sPointer[MAX_STEPPERS];
 
     int posMode = 0;
+
+    // Expressed in Joint frame
     long steps[6] = {0,0,0,0,0,0};
     float stepsSec[6] = {0.0,0.0,0.0,0.0,0.0,0.0};
 
-    //Steps per degree for each motor
+    // Steps per degree for each motor
     float stepsDeg[6] = {1/.022368421,1/.018082192,
-                                      1/.017834395,1/.021710526,
-                                      1/.095401639,1/.046792453};
-    //Limits of each joint, degrees from zero
-    float limits[6] = {170.0,132.0,141.0,165.0,-105.0,-155.0};
+                         1/.017834395,1/.021710526,
+                         1/.095401639,1/.046792453};
+
+    // Limits of each joint, degrees from zero. Expressed in Motor frame.
+    // J2,J3,and J5 reversed here.
+    float limits[6] = {170.0,132.0,-141.0,165.0,105.0,-155.0};
 
     public:
 
@@ -62,13 +66,15 @@ class Stepper : public LibraryBase
             }
             if(sPointer[1] != NULL)
             {
-                //J2 is reversed
+                // J2 is reversed
+                // Make transformation to Motor frame
                 sPointer[1]->moveTo(-steps[1]);
                 sPointer[1]->setSpeed(stepsSec[1]);
                 sPointer[1]->runSpeedToPosition();
             }
             if(sPointer[2] != NULL)
-            {   //J3 is reversed
+            {   // J3 is reversed
+                // Make transformation to Motor frame
                 sPointer[2]->moveTo(-steps[2]);
                 sPointer[2]->setSpeed(-stepsSec[2]);
                 sPointer[2]->runSpeedToPosition();
@@ -80,7 +86,8 @@ class Stepper : public LibraryBase
                 sPointer[3]->runSpeedToPosition();
             }
             if(sPointer[4] != NULL)
-            {   //J5 is reversed
+            {   // J5 is reversed
+                // Make transformation to Motor frame
                 sPointer[4]->moveTo(-steps[4]);
                 sPointer[4]->setSpeed(-stepsSec[4]);
                 sPointer[4]->runSpeedToPosition();
@@ -329,8 +336,16 @@ class Stepper : public LibraryBase
             {
                 for(int i = 0;i < 6;i++)
                 {
+                  // Set current position in Motor frame
                   sPointer[i]->setCurrentPosition((long)(limits[i]*stepsDeg[i]));
-                  steps[i] = (long)(limits[i]*stepsDeg[i]);
+
+                  // Check for reversed action
+                  if ((i == 1) || (i == 2) || (i == 4))
+                    // If reversed, must transform to Joint frame
+                    steps[i] = -(long)(limits[i]*stepsDeg[i]);
+                  else
+                    steps[i] = (long)(limits[i]*stepsDeg[i]);
+
                   stepsSec[i] = 0.0;
                 }
 
@@ -339,6 +354,7 @@ class Stepper : public LibraryBase
             }
             case READ:
             {
+                // Returns position in Motor frame
                 byte ID = dataIn[0];
                 int32_t position = sPointer[ID]->currentPosition();
                 
