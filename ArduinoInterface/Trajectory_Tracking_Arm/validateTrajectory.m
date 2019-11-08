@@ -1,4 +1,4 @@
-function [total,J(1),J(2),J(3),J(4),J(5),J(6)] = validateTrajectory(trajectory)
+function output = validateTrajectory(trajectory)
 %VALIDATETRAJECTORY Takes a trajectory in joint frames and determines validity.
 %   trajectory is specified as a 13 column array, with the first column = time,
 %   the subsequent 6 columns = angular position of each joint in radians,
@@ -26,7 +26,7 @@ CWLimit(4) = -(165)*degToRad;
 CWLimit(5) = -(105)*degToRad;
 CWLimit(6) = -(155)*degToRad;
 
-J(6) = zeros(6);
+J = zeros(6,1);
 
 for i = 1:6
   for j = 1:length(trajectory(:,i))
@@ -51,5 +51,7 @@ for i = 1:6
     break
   end
 end
+
+output = [total,J(1),J(2),J(3),J(4),J(5),J(6)];
 
 end
