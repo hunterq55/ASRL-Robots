@@ -340,7 +340,7 @@ class Stepper : public LibraryBase
                   sPointer[i]->setCurrentPosition((long)(limits[i]*stepsDeg[i]));
 
                   // Check for reversed action
-                  if (i == 1 || 2 || 4)
+                  if ((i == 1) || (i == 2) || (i == 4))
                     // If reversed, must transform to Joint frame
                     steps[i] = -(long)(limits[i]*stepsDeg[i]);
                   else
