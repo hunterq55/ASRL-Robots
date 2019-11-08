@@ -30,14 +30,12 @@ class Stepper : public LibraryBase
     long steps[6] = {0,0,0,0,0,0};
     float stepsSec[6] = {0.0,0.0,0.0,0.0,0.0,0.0};
 
-    private:
-
     //Steps per degree for each motor
-    static const float stepsDeg[6] = {1/.022368421,1/.018082192,
+    float stepsDeg[6] = {1/.022368421,1/.018082192,
                                       1/.017834395,1/.021710526,
                                       1/.095401639,1/.046792453};
     //Limits of each joint, degrees from zero
-    static const float limits[6] = {170.0,-132.0,141.0,165.0,-105.0,-155.0};
+    float limits[6] = {170.0,-132.0,141.0,165.0,-105.0,-155.0};
 
     public:
 
@@ -63,8 +61,9 @@ class Stepper : public LibraryBase
             }
             if(sPointer[1] != NULL)
             {
-                sPointer[1]->moveTo(steps[1]);
-                sPointer[1]->setSpeed(stepsSec[1]);
+                //J2 is reversed
+                sPointer[1]->moveTo(-steps[1]);
+                sPointer[1]->setSpeed(-stepsSec[1]);
                 sPointer[1]->runSpeedToPosition();
             }
             if(sPointer[2] != NULL)
@@ -329,7 +328,7 @@ class Stepper : public LibraryBase
             {
                 for(int i = 0;i < 6;i++)
                 {
-                  sPointer[i]->setCurrentPosition((long)limits[i]);
+                  sPointer[i]->setCurrentPosition((long)(limits[i]*stepsDeg[i]));
                   steps[i] = (long)(limits[i]*stepsDeg[i]);
                   stepsSec[i] = 0.0;
                 }

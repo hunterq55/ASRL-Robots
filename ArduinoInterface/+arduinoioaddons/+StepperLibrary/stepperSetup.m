@@ -11,8 +11,6 @@ Stepper5 = addon(a,'StepperLibrary/Stepper',{'D10','D11'})
 Stepper6 = addon(a,'StepperLibrary/Stepper',{'D12','D13'})
 
 Stepper1.calibrate();
-delay(5);
 
-Stepper1.updateStates[0,-90*pi/180,90*pi/180,0,-90*pi/180,0...
-                      .25,.25.,.25,.25,.25,.25];
-delay(25);
+%Stepper1.updateStates([0,-90*pi/180,90*pi/180,0,-90*pi/180,0,.25,.25,.25,.25,.25,.25]);
+%delay(25);
