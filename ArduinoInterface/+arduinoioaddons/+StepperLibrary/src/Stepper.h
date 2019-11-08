@@ -36,7 +36,7 @@ class Stepper : public LibraryBase
                                       1/.017834395,1/.021710526,
                                       1/.095401639,1/.046792453};
     //Limits of each joint, degrees from zero
-    float limits[6] = {170.0,-132.0,141.0,165.0,-105.0,-155.0};
+    float limits[6] = {170.0,132.0,141.0,165.0,-105.0,-155.0};
 
     public:
 
@@ -64,7 +64,7 @@ class Stepper : public LibraryBase
             {
                 //J2 is reversed
                 sPointer[1]->moveTo(-steps[1]);
-                sPointer[1]->setSpeed(-stepsSec[1]);
+                sPointer[1]->setSpeed(stepsSec[1]);
                 sPointer[1]->runSpeedToPosition();
             }
             if(sPointer[2] != NULL)
@@ -340,13 +340,13 @@ class Stepper : public LibraryBase
             case READ:
             {
                 byte ID = dataIn[0];
-                long position = sPointer[ID]->currentPosition();
+                int32_t position = sPointer[ID]->currentPosition();
                 
                 byte result[4];
                 result[0] = (position & 0x000000ff);
-                result[1] = (position & 0x0000ff00);
-                result[2] = (position & 0x00ff0000);
-                result[4] = (position & 0xff000000);
+                result[1] = (position & 0x0000ff00) >> 8;
+                result[2] = (position & 0x00ff0000) >> 16;
+                result[3] = (position & 0xff000000) >> 24;
                 
                 sendResponseMsg(cmdID,result,4);
                 break;
