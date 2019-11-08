@@ -32,7 +32,7 @@ for i = 1:6
   for j = 1:length(trajectory(:,i))
     if trajectory(j,i) >= CCWLimit(i)
       diff = trajectory(j,i) - CCWLimit(i);
-      if diff > abs(J(i)
+      if diff > abs(J(i))
         J(i) = diff;
       end
     elseif trajectory(j,i) <= CWLimit(i)
