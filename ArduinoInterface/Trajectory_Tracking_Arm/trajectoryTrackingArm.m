@@ -32,8 +32,4 @@ while(toc <= path(end,1))
         index = index + 1;
     end
 end
-
-% Set steppers back to zero
-Stepper1.updateStates([0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]);
-
 end
