@@ -36,7 +36,7 @@ class Stepper : public LibraryBase
     // Steps per degree for each motor
     float stepsDeg[6] = {1/.022368421,1/.018082192,
                          1/.017834395,1/.021710526,
-                         1/.095401639,1/.046792453};
+                         1/.045901639,1/.046792453};
 
     // Limits of each joint, degrees from zero. Expressed in Motor frame.
     // J2,J3,and J5 reversed here.

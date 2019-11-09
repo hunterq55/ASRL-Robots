@@ -18,7 +18,7 @@ classdef Stepper < arduinoio.LibraryBase
         STEPPER_CONSTANT2 = 1/(.018082192*(pi/180));
         STEPPER_CONSTANT3 = 1/(.017834395*(pi/180));
         STEPPER_CONSTANT4 = 1/(.021710526*(pi/180));
-        STEPPER_CONSTANT5 = 1/(.095401639*(pi/180));
+        STEPPER_CONSTANT5 = 1/(.045901639*(pi/180));
         STEPPER_CONSTANT6 = 1/(.046792453*(pi/180));
     end
     
