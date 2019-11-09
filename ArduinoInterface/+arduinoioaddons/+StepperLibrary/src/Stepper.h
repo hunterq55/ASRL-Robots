@@ -43,7 +43,7 @@ class Stepper : public LibraryBase
 
     // Limits of each joint, degrees from zero. Expressed in Motor frame.
     // J2,J3,and J5 reversed here.
-    float limits[6] = {170.0,132.0,-141.0,-165.0,105.0,-155.0};
+    float limits[6] = {170.0,132.0,-141.0,-155.0,105.0,-155.0};
 
     public:
 

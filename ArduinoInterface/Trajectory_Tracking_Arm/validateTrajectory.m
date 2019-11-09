@@ -24,7 +24,7 @@ degToRad = (pi/180);
 CCWLimit(1) = (170)*degToRad;
 CCWLimit(2) = (0)*degToRad;
 CCWLimit(3) = (0)*degToRad;
-CCWLimit(4) = (165)*degToRad;
+CCWLimit(4) = (155)*degToRad;
 CCWLimit(5) = (105)*degToRad;
 CCWLimit(6) = (155)*degToRad;
 
@@ -35,7 +35,7 @@ CCWLimit(6) = (155)*degToRad;
 CWLimit(1) = -(170)*degToRad;
 CWLimit(2) = -(132)*degToRad;
 CWLimit(3) = -(141)*degToRad;
-CWLimit(4) = -(165)*degToRad;
+CWLimit(4) = -(155)*degToRad;
 CWLimit(5) = -(105)*degToRad;
 CWLimit(6) = -(155)*degToRad;
 
