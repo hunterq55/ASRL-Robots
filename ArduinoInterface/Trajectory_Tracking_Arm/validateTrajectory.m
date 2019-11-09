@@ -35,14 +35,14 @@ CWLimit(6) = -(155)*degToRad;
 J = zeros(6,1);
 
 for i = 1:6
-  for j = 1:length(trajectory(:,i))
-    if trajectory(j,i) >= CCWLimit(i)
-      diff = trajectory(j,i) - CCWLimit(i);
+  for j = 1:length(trajectory(:,i+1))
+    if trajectory(j,i+1) >= CCWLimit(i)
+      diff = trajectory(j,i+1) - CCWLimit(i);
       if diff > abs(J(i))
         J(i) = diff;
       end
-    elseif trajectory(j,i) <= CWLimit(i)
-      diff = trajectory(j,i) - CWLimit(i);
+    elseif trajectory(j,i+1) <= CWLimit(i)
+      diff = trajectory(j,i+1) - CWLimit(i);
       if abs(diff) > abs(J(i))
         J(i) = diff;
       end
