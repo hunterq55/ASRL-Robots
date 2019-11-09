@@ -58,6 +58,6 @@ for i = 1:6
   end
 end
 
-output = [[total,J(1),J(2),J(3),J(4),J(5),J(6)];[total, J(1),J(2),J(3),J(4),J(5),J(6)]*180/pi];
+output = [[total,J(1),J(2),J(3),J(4),J(5),J(6)];[J(1),J(2),J(3),J(4),J(5),J(6)]*180/pi];
 
 end
