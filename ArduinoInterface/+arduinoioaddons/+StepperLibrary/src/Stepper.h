@@ -20,6 +20,7 @@ const char MSG_STATES[]       PROGMEM = "New position (%ld) and velocity set for
 #define UPDATE_STATES 0x05
 #define CALIBRATE 0x06
 #define READ 0x07
+#define SET 0x08
 
 class Stepper : public LibraryBase
 {
@@ -359,15 +360,74 @@ class Stepper : public LibraryBase
                 // Returns position in Motor frame
                 byte ID = dataIn[0];
                 int32_t position = sPointer[ID]->currentPosition();
-                
+
                 byte result[4];
                 result[0] = (position & 0x000000ff);
                 result[1] = (position & 0x0000ff00) >> 8;
                 result[2] = (position & 0x00ff0000) >> 16;
                 result[3] = (position & 0xff000000) >> 24;
-                
+
                 sendResponseMsg(cmdID,result,4);
                 break;
+            }
+            case SET:
+            {
+              byte newPosition1[4];
+              byte newPosition2[4];
+              byte newPosition3[4];
+              byte newPosition4[4];
+              byte newPosition5[4];
+              byte newPosition6[4];
+
+              newPosition1[0] = dataIn[0];
+              newPosition1[1] = dataIn[1];
+              newPosition1[2] = dataIn[2];
+              newPosition1[3] = dataIn[3];
+              newPosition2[0] = dataIn[4];
+              newPosition2[1] = dataIn[5];
+              newPosition2[2] = dataIn[6];
+              newPosition2[3] = dataIn[7];
+              newPosition3[0] = dataIn[8];
+              newPosition3[1] = dataIn[9];
+              newPosition3[2] = dataIn[10];
+              newPosition3[3] = dataIn[11];
+              newPosition4[0] = dataIn[12];
+              newPosition4[1] = dataIn[13];
+              newPosition4[2] = dataIn[14];
+              newPosition4[3] = dataIn[15];
+              newPosition5[0] = dataIn[16];
+              newPosition5[1] = dataIn[17];
+              newPosition5[2] = dataIn[18];
+              newPosition5[3] = dataIn[19];
+              newPosition6[0] = dataIn[20];
+              newPosition6[1] = dataIn[21];
+              newPosition6[2] = dataIn[22];
+              newPosition6[3] = dataIn[23];
+
+              // In Motor frame
+              sPointer[0]->setCurrentPosition(*((long*)newPosition1));
+              // Reversed
+              sPointer[1]->setCurrentPosition(-*((long*)newPosition2));
+              // Reversed
+              sPointer[2]->setCurrentPosition(-*((long*)newPosition3));
+              sPointer[3]->setCurrentPosition(*((long*)newPosition4));
+              // Reversed
+              sPointer[4]->setCurrentPosition(-*((long*)newPosition5));
+              sPointer[5]->setCurrentPosition(*((long*)newPosition6));
+
+              // In Joint frame
+              steps[0] = *((long*)newPosition1);
+              // Reversed
+              steps[1] = *((long*)newPosition2);
+              // Reversed
+              steps[2] = *((long*)newPosition1);
+              steps[3] = *((long*)newPosition1);
+              // Reversed
+              steps[4] = *((long*)newPosition1);
+              steps[5] = *((long*)newPosition1);
+
+              sendResponseMsg(cmdID,0,0);
+              break;
             }
             default:
             {
