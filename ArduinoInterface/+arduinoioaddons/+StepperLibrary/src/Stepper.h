@@ -38,7 +38,7 @@ class Stepper : public LibraryBase
     // Steps per degree for each motor
     float stepsDeg[6] = {1/.022368421,1/.018082192,
                          1/.017834395,1/.021710526,
-                         1/.095401639,1/.046792453};
+                         1/.045901639,1/.046792453};
 
     // Limits of each joint, degrees from zero. Expressed in Motor frame.
     // J2,J3,and J5 reversed here.
@@ -71,7 +71,7 @@ class Stepper : public LibraryBase
                 // J2 is reversed
                 // Make transformation to Motor frame
                 sPointer[1]->moveTo(-steps[1]);
-                sPointer[1]->setSpeed(-stepsSec[1]);
+                sPointer[1]->setSpeed(stepsSec[1]);
                 sPointer[1]->runSpeedToPosition();
             }
             if(sPointer[2] != NULL)
@@ -358,14 +358,14 @@ class Stepper : public LibraryBase
             {
                 // Returns position in Motor frame
                 byte ID = dataIn[0];
-                long position = sPointer[ID]->currentPosition();
-
+                int32_t position = sPointer[ID]->currentPosition();
+                
                 byte result[4];
                 result[0] = (position & 0x000000ff);
-                result[1] = (position & 0x0000ff00);
-                result[2] = (position & 0x00ff0000);
-                result[4] = (position & 0xff000000);
-
+                result[1] = (position & 0x0000ff00) >> 8;
+                result[2] = (position & 0x00ff0000) >> 16;
+                result[3] = (position & 0xff000000) >> 24;
+                
                 sendResponseMsg(cmdID,result,4);
                 break;
             }
