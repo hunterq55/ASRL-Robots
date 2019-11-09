@@ -27,6 +27,8 @@ class Stepper : public LibraryBase
 
     AccelStepper* sPointer[MAX_STEPPERS];
 
+    // posMode = 1 refers to position and velocity based control.
+    // posMode = 0 refers to velocity based control only.
     int posMode = 0;
 
     // Expressed in Joint frame
