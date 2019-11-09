@@ -15,8 +15,8 @@ classdef Stepper < arduinoio.LibraryBase
 
     properties(Access = private, Constant = true)
         %A collection of default positions
-        REST = (0,-110*pi/180,141*pi/180,0,0,0,...
-                .25,.25,.25,.25,.25,.25);
+        REST = [0,-110*pi/180,141*pi/180,0,0,0,...
+                .25,.25,.25,.25,.25,.25];
     end
 
     properties(Access = private, Constant = true)
@@ -161,8 +161,5 @@ classdef Stepper < arduinoio.LibraryBase
 
             sendCommand(obj,obj.LibraryName,cmdID,[input1,input2,input3,input4,input5,input6]);
         end
-     end
-
-
     end
 end
