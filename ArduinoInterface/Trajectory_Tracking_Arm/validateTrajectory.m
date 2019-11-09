@@ -23,7 +23,7 @@ degToRad = (pi/180);
 % Counter clockwise position limits from the zero
 CCWLimit(1) = (170)*degToRad;
 CCWLimit(2) = (0)*degToRad;
-CCWLimit(3) = (0)*degToRad;
+CCWLimit(3) = (141)*degToRad;
 CCWLimit(4) = (155)*degToRad;
 CCWLimit(5) = (105)*degToRad;
 CCWLimit(6) = (155)*degToRad;
@@ -34,7 +34,7 @@ CCWLimit(6) = (155)*degToRad;
 % Clockwise position limits from the zero
 CWLimit(1) = -(170)*degToRad;
 CWLimit(2) = -(132)*degToRad;
-CWLimit(3) = -(141)*degToRad;
+CWLimit(3) = -(0)*degToRad;
 CWLimit(4) = -(155)*degToRad;
 CWLimit(5) = -(105)*degToRad;
 CWLimit(6) = -(155)*degToRad;
@@ -63,10 +63,10 @@ end
 JDot = zeros(6,1)
 for i = 7:12
   for j = 1:length(trajectory(:,i+1))
-    if abs(trajectory(j,i+1)*STEPPER_CONSTANT(j-6)) >= speedLimit
-      diff = abs(trajectory(j,i+1)*STEPPER_CONSTANT(j-6)) - speedLimit;
-      if diff > JDot(j-6)
-        JDot(j-6) = diff;
+    if abs(trajectory(j,i+1)*STEPPER_CONSTANT(i-6)) >= speedLimit
+      diff = abs(trajectory(j,i+1)*STEPPER_CONSTANT(i-6)) - speedLimit;
+      if diff > JDot(i-6)
+        JDot(i-6) = diff;
       end
   end
 end
