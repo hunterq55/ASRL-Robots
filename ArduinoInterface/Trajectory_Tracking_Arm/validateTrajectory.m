@@ -60,7 +60,7 @@ for i = 1:6
   end
 end
 
-JDot = zeros(6,1)
+JDot = zeros(6,1);
 for i = 7:12
   for j = 1:length(trajectory(:,i+1))
     if abs(trajectory(j,i+1)*STEPPER_CONSTANT(i-6)) >= speedLimit
