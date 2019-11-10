@@ -9,7 +9,7 @@ function output = validateTrajectory(trajectory)
 %   largest trajectory overshoot for that joint.
 
 % steps/radian for each joint
-STEPPER_CONSTANT(1) = [2561.45838425888];
+STEPPER_CONSTANT(1) = 2561.45838425888;
 STEPPER_CONSTANT(2) = [3168.63019224010];
 STEPPER_CONSTANT(3) = [3212.65619120146];
 STEPPER_CONSTANT(4) = [2639.07836747402];
