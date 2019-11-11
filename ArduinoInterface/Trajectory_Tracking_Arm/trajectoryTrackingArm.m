@@ -21,6 +21,7 @@ pause(15);
 % Main Loop
 index = 1;
 tic;
+disp('Start')
 while(toc <= path(end,1))
     if (toc >= path(index,1))
 
