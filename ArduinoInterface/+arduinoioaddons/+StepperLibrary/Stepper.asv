@@ -102,15 +102,15 @@ classdef Stepper < arduinoio.LibraryBase
             output = sendCommandCustom(obj,cmdID,inputs);
             steps = typecast(uint8(output(1:4)),'int32');
          end
-         function [stepsArray] = read_all(obj)
+         functions [stepsArray] = read_all(obj)
             cmdID = obj.READ_ALL;
             inputs = [];
             output = sendCommand(obj,cmdID,inputs);
-            
-            for i = [1 5 9 13 17]
-                stepsArray(i) = typecast(uint8(output(i,i+3)),'int32');
-            end
-         end
+            stepsArray(1) = typecast(uint8(output(1:4)),'int32');
+            stepsArray(2) = typecast(uint8(output(5:8)),'int32');
+            stepsArray(2) = typecast(uint8(output(5:8)),'int32');
+            stepsArray(2) = typecast(uint8(output(5:8)),'int32');
+            stepsArray(2) = typecast(uint8(output(5:8)),'int32');
             
          function [] = updateSteppers(obj,radSecArray)
              cmdID = obj.UPDATE_STEPPERS;

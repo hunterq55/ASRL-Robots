@@ -121,5 +121,6 @@ classdef EncoderAddon < arduinoio.LibraryBase
              input3 = [typecast(int16(pwmArray(3)),'uint8')];
 
              sendCommand(obj, obj.LibraryName,cmdID,[input1,input2,input3]);
+         end
     end
 end

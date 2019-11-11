@@ -35,9 +35,15 @@ classdef AR2Stepper
             %METHOD1 Summary of this method goes here
             %   Detailed explanation goes here
             commandID = obj.AR2STEPPER_CREATE;
+            
+            for iLoop = inputPins
+                configurePinResource(obj.Parent,iLoop{:},obj.ResourceOwner,'Reserved');
+            end
+
+            terminals = getTerminalsFromPins(obj.Parent,inputPins);
             inputs = [];
             
-            sendCommand(obj,commandID,inputs);
+            sendAR2Command(obj.Parent,commandID,inputs);
         end
     end
 end

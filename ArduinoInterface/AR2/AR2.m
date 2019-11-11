@@ -68,9 +68,9 @@ classdef AR2 < arduinoio.LibraryBase
     %% Private Methods
     methods(Access = private)
         function createAR2(obj)
-            commandID = AR2_CREATE;
-            
-            sendCommand();
+            cmdID = obj.AR2_CREATE;
+            inputs = [];
+            sendCommand(obj,obj.LibraryName,cmdID,inputs);
         end
     end
     
