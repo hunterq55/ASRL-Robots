@@ -5,6 +5,7 @@ classdef AR2 < arduinoio.LibraryBase
     properties(Access = private, Constant = true)
         % lotsa commands
         AR2_CREATE = hex2dec('00');
+        AR2_READ = hex2dec('01');
     end
     
     properties(Access = private)
@@ -48,12 +49,12 @@ classdef AR2 < arduinoio.LibraryBase
             obj.AR2Number = getFreeResourceSlot(parentObj, obj.ResourceOwner);
             
             
-            obj.Stepper(1) = AR2Stepper(obj,{'D2','D3'});
-            obj.Stepper(2) = AR2Stepper(obj,{'D4','D5'});
-            obj.Stepper(3) = AR2Stepper(obj,{'D6','D7'});
-            obj.Stepper(4) = AR2Stepper(obj,{'D8','D9'});
-            obj.Stepper(5) = AR2Stepper(obj,{'D10','D11'});
-            obj.Stepper(6) = AR2Stepper(obj,{'D12','D13'});
+            obj.Stepper(1) = AR2Stepper(obj,{'D2','D3'},obj.STEPPER_CONSTANT(1));
+            obj.Stepper(2) = AR2Stepper(obj,{'D4','D5'},obj.STEPPER_CONSTANT(2));
+            obj.Stepper(3) = AR2Stepper(obj,{'D6','D7'},obj.STEPPER_CONSTANT(3));
+            obj.Stepper(4) = AR2Stepper(obj,{'D8','D9'},obj.STEPPER_CONSTANT(4));
+            obj.Stepper(5) = AR2Stepper(obj,{'D10','D11'},obj.STEPPER_CONSTANT(5));
+            obj.Stepper(6) = AR2Stepper(obj,{'D12','D13'},obj.STEPPER_CONSTANT(6));
             
             createAR2(obj);     
         end
@@ -61,8 +62,17 @@ classdef AR2 < arduinoio.LibraryBase
     
     %% Public Methods
     methods(Access = public)
-        function doSomething(obj) 
+        function [stepsArray] = read(obj) 
+            cmdID = obj.AR2_READ;
+            inputs = [];
+            
+            output = sendCommand(obj,cmdID,inputs);
+            
+            for i = [1 5 9 13 17]
+                stepsArray(i) = typecast(uint8(output(i,i+3)),'int32');
+            end
         end
+        
     end
     
     %% Private Methods
@@ -77,7 +87,7 @@ classdef AR2 < arduinoio.LibraryBase
     %% Helper method to related classes
     methods (Access = {?AR2Stepper})
         function output = sendAR2Command(obj, commandID, inputs)
-            output = sendCommandCustom(obj, obj.LibraryName, commandID, inputs);
+            output = sendCommand(obj, obj.LibraryName, commandID, inputs);
         end
     end
 end

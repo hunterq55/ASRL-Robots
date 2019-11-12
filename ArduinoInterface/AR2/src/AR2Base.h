@@ -13,6 +13,10 @@ const char MSG_STATES[]       PROGMEM = "New position (%ld) and velocity set for
 #define MAX_STEPPERS 6
 
 //Available commands through MATLAB interface
+#define AR2STEPPER_CREATE 0x00
+#define AR2STEPPER_READ 0x01
+#define AR2STEPPER_SET_STATES 0x02
+
 #define STEPPER_CREATE 0x01
 #define SET_RADSEC 0x02
 #define UPDATE_STEPPERS 0x03
@@ -21,6 +25,7 @@ const char MSG_STATES[]       PROGMEM = "New position (%ld) and velocity set for
 #define CALIBRATE 0x06
 #define READ 0x07
 #define SET 0x08
+#define READ_ALL 0x09
 
 class Stepper : public LibraryBase
 {
@@ -142,7 +147,7 @@ class Stepper : public LibraryBase
     {
         switch (cmdID)
         {
-            case STEPPER_CREATE:
+            case AR2STEPPER_CREATE:
             {
                 byte ID, pinNumbers[2];
                 ID = dataIn[0];
@@ -160,40 +165,33 @@ class Stepper : public LibraryBase
                 sendResponseMsg(cmdID,0,0);
                 break;
             }
-            case SET_RADSEC:
+            case AR2STEPPER_READ:
             {
+                // Returns position in Motor frame
                 byte ID = dataIn[0];
-                byte radSec[4];
+                int32_t position = sPointer[ID]->currentPosition();
 
-                radSec[0] = dataIn[1];
-                radSec[1] = dataIn[2];
-                radSec[2] = dataIn[3];
-                radSec[3] = dataIn[4];
+                byte result[4];
+                result[0] = (position & 0x000000ff);
+                result[1] = (position & 0x0000ff00) >> 8;
+                result[2] = (position & 0x00ff0000) >> 16;
+                result[3] = (position & 0xff000000) >> 24;
 
-
-                sPointer[ID]->setSpeed(*((float*)(radSec)));
-
-                debugPrint(MSG_SPEED,ID);
-                sendResponseMsg(cmdID,0,0);
+                sendResponseMsg(cmdID,result,4);
                 break;
             }
-            case SET_STATES:
+            case AR2STEPPER_SET_STATES:
             {
                  byte ID = dataIn[0];
                  posMode = 1;
 
                  byte targetPosition[4];
                  byte targetVelocity[4];
-
-                 targetPosition[0] = dataIn[1];
-                 targetPosition[1] = dataIn[2];
-                 targetPosition[2] = dataIn[3];
-                 targetPosition[3] = dataIn[4];
-
-                 targetVelocity[0] = dataIn[5];
-                 targetVelocity[1] = dataIn[6];
-                 targetVelocity[2] = dataIn[7];
-                 targetVelocity[3] = dataIn[8];
+                 for(int i = 0;i < 4,i++)
+                 {
+                     targetPosition[i] = dataIn[i+1];
+                     targetVelocity[i] = dataIn[i+5];
+                 }
 
                  steps[ID] = *((long*)targetPosition);
                  stepsSec[ID] = *((float*)targetVelocity);
@@ -355,34 +353,22 @@ class Stepper : public LibraryBase
                 sendResponseMsg(cmdID,0,0);
                 break;
             }
-            case READ:
-            {
-                // Returns position in Motor frame
-                byte ID = dataIn[0];
-                int32_t position = sPointer[ID]->currentPosition();
-
-                byte result[4];
-                result[0] = (position & 0x000000ff);
-                result[1] = (position & 0x0000ff00) >> 8;
-                result[2] = (position & 0x00ff0000) >> 16;
-                result[3] = (position & 0xff000000) >> 24;
-
-                sendResponseMsg(cmdID,result,4);
-                break;
-            }
             case READ_ALL:
             {
                 int32_t position[6];
                 byte result[4*MAX_STEPPERS];
+                
                 for(int i = 0;i < MAX_STEPPERS;i++)
                 {
                     position[i] = sPointer[i]->currentPosition();
-                    result[i+1] = (position[i] & 0x000000ff);
-                    result[i+2] = (position & 0x0000ff00) >> 8;
-                    result[i+3] = (position & 0x00ff0000) >> 16;
-                    result[3] = (position & 0xff000000) >> 24;
                     
-                        
+                    result[4*i] = (position[i] & 0x000000ff);
+                    result[4*i+1] = (position[i] & 0x0000ff00) >> 8;
+                    result[4*i+2] = (position[i] & 0x00ff0000) >> 16;
+                    result[4*i+3] = (position[i] & 0xff000000) >> 24;
+                }
+                
+                sendResponseMsg(cmdID,result,4*MAX_STEPPERS);          
             }
             case SET:
             {
