@@ -15,7 +15,7 @@ classdef AR2 < arduinoio.LibraryBase
                 .25,.25,.25,.25,.25,.25];
         CALIBRATE = [170.0*pi/180,-132.0*pi/180,141.0*pi/180,...
                     -155.0*pi/180,-105.0*pi/180,-155.0*pi/180,...
-                    .25,.25.,25.,25.,.25,.25];
+                    .25,.25,.25,.25,.25,.25];
     end
 
     properties(Access = private)
@@ -37,11 +37,15 @@ classdef AR2 < arduinoio.LibraryBase
     end
 
     properties(Access = protected, Constant = true)
-        LibraryName = 'AR2'
+        LibraryName = 'AR2/AR2'
         DependentLibraries = {}
         ArduinoLibraryHeaderFiles = {'AccelStepper/AccelStepper.h'}
         CppHeaderFile = fullfile(arduinoio.FilePath(mfilename('fullpath')), 'src', 'AR2Base.h')
         CppClassName = 'AR2Base'
+    end
+    
+    properties(Access = private)
+        ResourceOwner = 'AR2/AR2';
     end
 
     %% Constructor
@@ -83,7 +87,7 @@ classdef AR2 < arduinoio.LibraryBase
             end
         end
         function [] = setStatesRad(obj,states)
-            cmdID = obj.AR2_SET_STATES
+            cmdID = obj.AR2_SET_STATES;
 
             for i = 1:6
                 inputs(i) = typecast(int32(statesArray(i)*obj.STEPPER_CONSTANT(i)),'uint8');
@@ -93,7 +97,7 @@ classdef AR2 < arduinoio.LibraryBase
             sendCommand(obj,obj.LibraryName,cmdID,[inputs(1),inputs(2),inputs(3),inputs(4),inputs(5),inputs(6),inputs(7),inputs(8),inputs(9),inputs(10),inputs(11),inputs(12)]);
         end
         function [] = setStatesSteps(obj,states)
-            cmdID = obj.AR2_SET_STATES
+            cmdID = obj.AR2_SET_STATES;
 
             for i = 1:6
                 inputs(i) = typecast(int32(statesArray(i)),'uint8');
