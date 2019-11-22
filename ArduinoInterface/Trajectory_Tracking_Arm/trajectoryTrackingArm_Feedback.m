@@ -32,7 +32,7 @@ statesArray = [path(1,2),path(1,3),path(1,4)...
                path(1,5),path(1,6),path(1,7)...
                .25,.25,.25,.25,.25,.25];
 Stepper1.updateStates(statesArray);
-pause(15);
+pause(10);
 
 %% Setup: For FK and IK Functions
 kp=10;    ki=0;    kd=0.0003;
