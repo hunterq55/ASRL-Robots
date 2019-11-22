@@ -1,6 +1,6 @@
 
-#ifndef Stepper_h
-#define Stepper_h
+#ifndef AR2Base_h
+#define AR2Base_h
 
 #include "LibraryBase.h"
 #include "AccelStepper.h"
@@ -20,7 +20,7 @@ const char MSG_STATES[]       PROGMEM = "New position (%ld) and velocity set for
 #define AR2_SET_STATES 0x04
 #define AR2_RESET 0x05
 
-class Stepper : public LibraryBase
+class AR2Base : public LibraryBase
 {
     public:
 
@@ -35,9 +35,9 @@ class Stepper : public LibraryBase
 
     public:
 
-    Stepper(MWArduinoClass& a)
+    AR2Base(MWArduinoClass& a)
     {
-        libName = "StepperLibrary/Stepper";
+        libName = "AR2/AR2";
         a.registerLibrary(this);
     }
 
@@ -109,11 +109,10 @@ class Stepper : public LibraryBase
             case AR2STEPPER_SET_STATES:
             {
                  byte ID = dataIn[0];
-                 posMode = 1;
-
+                 
                  byte targetPosition[4];
                  byte targetVelocity[4];
-                 for(int i = 0;i < 4,i++)
+                 for(int i = 0;i < 4;i++)
                  {
                      targetPosition[i] = dataIn[i+1];
                      targetVelocity[i] = dataIn[i+5];
@@ -146,8 +145,6 @@ class Stepper : public LibraryBase
             }
             case AR2_SET_STATES:
             {
-                 posMode = 1;
-
                  byte targetPosition[6][4];
                  byte targetVelocity[6][4];
 
@@ -162,7 +159,7 @@ class Stepper : public LibraryBase
 
                  for (int i = 0;i < 6;i++)
                  {
-                   steps[i] = *(long*)targetPosition[i]
+                   steps[i] = *((long*)targetPosition[i]);
                    stepsSec[i] = *((float*)targetVelocity[i]);
                  }
 

@@ -18,8 +18,15 @@ classdef AR2 < arduinoio.LibraryBase
                     .25,.25,.25,.25,.25,.25];
     end
 
-    properties(Access = private)
+    properties(Access = public)
         AR2Number
+        numSteppers
+    end
+    
+    methods(Access = public)
+        function numSteppers = getNumSteppers(obj)
+            numSteppers = obj.numSteppers;
+        end
     end
 
     properties(Access = private)
@@ -54,7 +61,8 @@ classdef AR2 < arduinoio.LibraryBase
             %AR2 Construct an instance of this class
             %   Detailed explanation goes here
             obj.Parent = parentObj;
-
+            
+            
             count = getResourceCount(obj.Parent,obj.ResourceOwner);
             if count > 1
                 error('You can only have 1 AR2(until you build another).');
@@ -63,12 +71,12 @@ classdef AR2 < arduinoio.LibraryBase
             obj.AR2Number = getFreeResourceSlot(parentObj, obj.ResourceOwner);
 
 
-            obj.Stepper(1) = AR2Stepper(obj,{'D2','D3'},obj.STEPPER_CONSTANT(1));
-            obj.Stepper(2) = AR2Stepper(obj,{'D4','D5'},obj.STEPPER_CONSTANT(2));
-            obj.Stepper(3) = AR2Stepper(obj,{'D6','D7'},obj.STEPPER_CONSTANT(3));
-            obj.Stepper(4) = AR2Stepper(obj,{'D8','D9'},obj.STEPPER_CONSTANT(4));
-            obj.Stepper(5) = AR2Stepper(obj,{'D10','D11'},obj.STEPPER_CONSTANT(5));
-            obj.Stepper(6) = AR2Stepper(obj,{'D12','D13'},obj.STEPPER_CONSTANT(6));
+            obj.Stepper(1) = arduinoioaddons.AR2.AR2Stepper(obj,{'D2','D3'},obj.STEPPER_CONSTANT(1));
+            obj.Stepper(2) = arduinoioaddons.AR2.AR2Stepper(obj,{'D4','D5'},obj.STEPPER_CONSTANT(2));
+            obj.Stepper(3) = arduinoioaddons.AR2.AR2Stepper(obj,{'D6','D7'},obj.STEPPER_CONSTANT(3));
+            obj.Stepper(4) = arduinoioaddons.AR2.AR2Stepper(obj,{'D8','D9'},obj.STEPPER_CONSTANT(4));
+            obj.Stepper(5) = arduinoioaddons.AR2.AR2Stepper(obj,{'D10','D11'},obj.STEPPER_CONSTANT(5));
+            obj.Stepper(6) = arduinoioaddons.AR2.AR2Stepper(obj,{'D12','D13'},obj.STEPPER_CONSTANT(6));
 
             createAR2(obj);
         end

@@ -2,7 +2,7 @@
 %Uncomment for arduinosetup with error messages/debug functionality
 %a = arduino('com4','Mega2560','Libraries','StepperLibrary/Stepper','ForceBuild',true,'TraceOn',true);
 
-a = arduino
+a = arduino;
 Stepper1 = addon(a,'StepperLibrary/Stepper',{'D2','D3'})
 Stepper2 = addon(a,'StepperLibrary/Stepper',{'D4','D5'})
 Stepper3 = addon(a,'StepperLibrary/Stepper',{'D6','D7'})
