@@ -1,5 +1,5 @@
 
-function [trajectory,time] = trajectoryTrackingArm_Feedback(path,refTraj,Stepper1,theta0)
+function [trajectory,time,error] = trajectoryTrackingArm_Feedback(path,refTraj,Stepper1,theta0)
 % This function takes a path, specified as 6 angle states followed by six
 % angular velocity states (rad,rad/s) for each joint.
 % Stepper1 is a stepper motor object for one of
@@ -36,8 +36,8 @@ pause(15);
 
 %% Setup: For FK and IK Functions
 kp=1;    ki=0;    kd=1;
-reference=zeros(length(refTraj(:,1)),1);
-referenceVel=zeros(length(refTraj(:,2)),1);
+reference=zeros(length(refTraj(:,1)),6);
+referenceVel=zeros(length(refTraj(:,2)),6);
 
 referenceVel(:,3)=refTraj(:,2);
 
@@ -75,7 +75,7 @@ while(toc <= path(end,1))
 			return
         end
             
-        trajectory(index,:) = [data.LabeledMarker(1).x;-data.LabeledMarker(1).z;data.LabeledMarker(1).y;]*1000;
+        trajectory(index,:) = [-data.LabeledMarker(1).x -data.LabeledMarker(1).z data.LabeledMarker(1).y 0 0 0]*1000;
         %Multiple by 1000 to convert from m to mm
         time(index,:) = toc;
 
@@ -92,7 +92,10 @@ while(toc <= path(end,1))
         
         if index == 1
             thetad=path(index,8:13);
+            error(index,:) = zeros(1,6);
+            trajectoryVel(index,:)=zeros(1,6);
         else
+            %path(1,1) is timestep assuming uniform frequency
             trajectoryVel(index,:)=(trajectory(index,:)-trajectory(index-1,:))/path(1,1);
             %error in velocity!!!
             error(index,:) = referenceVel(index,:)-trajectoryVel(index,:);
@@ -103,7 +106,7 @@ while(toc <= path(end,1))
             
             u=up+ui+ud;
             %PD part
-            correctedVel=referenceVel(index,:)+u;
+            correctedVel=referenceVel(index,:)-u;
         
             thetad=trajectoryIK(correctedVel',theta);
         
