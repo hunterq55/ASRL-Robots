@@ -1,5 +1,5 @@
 
-function [trajectory,time,error] = trajectoryTrackingArm_Feedback(path,refTraj,Stepper1,theta0)
+function [trajectory,reference,time,error] = trajectoryTrackingArm_Feedback(path,refTraj,Stepper1,theta0)
 % This function takes a path, specified as 6 angle states followed by six
 % angular velocity states (rad,rad/s) for each joint.
 % Stepper1 is a stepper motor object for one of
@@ -35,7 +35,7 @@ Stepper1.updateStates(statesArray);
 pause(10);
 
 %% Setup: For FK and IK Functions
-kp=10;    ki=0;    kd=0.0003;
+kp=0;    ki=0;    kd=0;
 reference=zeros(length(refTraj(:,1)),6);
 referenceVel=zeros(length(refTraj(:,2)),6);
 
@@ -60,8 +60,14 @@ for i=1:length(refTraj(:,1))
 end
 
 trajectory=zeros(length(path(:,1)),6);
+trajectoryGlobal=zeros(length(path(:,1)),6);
 trajectoryVel=zeros(length(path(:,1)),6);
 error=zeros(length(path(:,1)),6);
+time=path(:,1);
+data = natnetclient.getFrame;
+initWorld = [-data.LabeledMarker(1).x -data.LabeledMarker(1).z data.LabeledMarker(1).y 0 0 0]*1000;
+initWork=reference(1,:);
+offset=initWorld-initWork;
 %% Main Loop
 index = 1;
 tic;
@@ -75,7 +81,8 @@ while(toc <= path(end,1))
 			return
         end
             
-        trajectory(index,:) = [-data.LabeledMarker(1).x -data.LabeledMarker(1).z data.LabeledMarker(1).y 0 0 0]*1000;
+        trajectoryGlobal(index,:) = [-data.LabeledMarker(1).x -data.LabeledMarker(1).z data.LabeledMarker(1).y 0 0 0]*1000;
+        trajectory(index,:) = trajectoryGlobal(index,:) - offset;
         %Multiple by 1000 to convert from m to mm
         time(index,:) = toc;
 
@@ -94,11 +101,14 @@ while(toc <= path(end,1))
             thetad=path(index,8:13);
             error(index,:) = zeros(1,6);
             trajectoryVel(index,:)=zeros(1,6);
+        elseif index > 1 && index < 7
+            trajectoryVel(index,:)=(trajectory(index,:)-trajectory(index-1,:))/path(1,1);
+            error(index,:) = reference(index,:)-trajectory(index,:);
         else
             %path(1,1) is timestep assuming uniform frequency
-            trajectoryVel(index,:)=(trajectory(index,:)-trajectory(index-1,:))/path(1,1);
-            %error in velocity!!!
-            error(index,:) = referenceVel(index,:)-trajectoryVel(index,:);
+            trajectoryVel(index,:)=(10*trajectory(index-6,:)-72*trajectory(index-5,:)+225*trajectory(index-4,:)-400*trajectory(index-3,:)+450*trajectory(index-2,:)-360*trajectory(index-1,:)+147*trajectory(index,:))/60*path(1,1);
+            %error in pos!!!
+            error(index,:) = reference(index,:)-trajectory(index,:);
             %use PD Controller: ki=0
             up=kp*(error(index,:));
             ui=ki*(error(index,:)*path(1,1));
@@ -120,6 +130,9 @@ while(toc <= path(end,1))
         theta=theta+(thetad*path(1,1));
         
         index = index + 1;
+        toc
     end
 end
+data = natnetclient.getFrame;
+trajectory(end,:) = [-data.LabeledMarker(1).x -data.LabeledMarker(1).z data.LabeledMarker(1).y 0 0 0]*1000 - offset;
 end
