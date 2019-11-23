@@ -1,5 +1,5 @@
 
-function [trajectory,reference,time,error] = trajectoryTrackingArm_Feedback(path,refTraj,Stepper1,theta0)
+function [trajectory,reference,time,error,correctedVel] = trajectoryTrackingArm_Feedback(path,refTraj,Stepper1,theta0)
 % This function takes a path, specified as 6 angle states followed by six
 % angular velocity states (rad,rad/s) for each joint.
 % Stepper1 is a stepper motor object for one of
@@ -68,7 +68,9 @@ data = natnetclient.getFrame;
 initWorld = [-data.LabeledMarker(1).x -data.LabeledMarker(1).z data.LabeledMarker(1).y 0 0 0]*1000;
 initWork=reference(1,:);
 offset=initWorld-initWork;
+correctedVel=zeros(length(path(:,1)),6);
 %% Main Loop
+Ui = zeros(1,6);
 index = 1;
 tic;
 while(toc <= path(end,1))
@@ -109,19 +111,25 @@ while(toc <= path(end,1))
             trajectoryVel(index,:)=(10*trajectory(index-6,:)-72*trajectory(index-5,:)+225*trajectory(index-4,:)-400*trajectory(index-3,:)+450*trajectory(index-2,:)-360*trajectory(index-1,:)+147*trajectory(index,:))/60*path(1,1);
             %error in pos!!!
             error(index,:) = reference(index,:)-trajectory(index,:);
-            %use PD Controller: ki=0
-            up=kp*(error(index,:));
-            ui=ki*(error(index,:)*path(1,1));
-            ud=kd*((error(index,:)-error(index-1,:))/path(1,1));
-            
-            u=up+ui+ud;
-            %PD part
-            correctedVel=referenceVel(index,:)-u;
-        
-            thetad=trajectoryIK(correctedVel',theta);
-        
         end
-        statesArray = [theta(1),theta(2),theta(3)...
+        if index == 1
+            %use PD Controller: ki=0
+            Up=zeros(1,6);
+            Ui=zeros(1,6);
+            Ud=zeros(1,6);
+        else
+            Up=kp*(error(index,:));
+            Ui= Ui + ki*(error(index,:)*path(1,1));
+            Ud=kd*((error(index,:)-error(index-1,:))/path(1,1));
+        end   
+            u=Up+Ui+Ud;
+            %PD part
+            correctedVel(index,:)=referenceVel(index,:)-u;
+        
+            thetad=trajectoryIK(correctedVel(index,:)',theta);
+        
+       
+            statesArray = [theta(1),theta(2),theta(3)...
                        theta(4),theta(5),theta(6)...
                        thetad(1),thetad(2),thetad(3)...
                        thetad(4),thetad(5),thetad(6)];
