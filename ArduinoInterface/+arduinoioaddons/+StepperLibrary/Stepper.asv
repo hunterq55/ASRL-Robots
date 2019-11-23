@@ -1,4 +1,4 @@
-classdef Stepper < arduinoio.LibraryBase
+classdef Stepper < matlabshared.addon.LibraryBase
 
     properties(Access = private, Constant = true)
     STEPPER_CREATE = hex2dec('01');
@@ -33,7 +33,7 @@ classdef Stepper < arduinoio.LibraryBase
     properties(Access = protected, Constant = true)
         LibraryName = 'StepperLibrary/Stepper'
         DependentLibraries = {}
-        ArduinoLibraryHeaderFiles = {'AccelStepper/AccelStepper.h'}
+        LibraryHeaderFiles = {'AccelStepper/AccelStepper.h'}
         CppHeaderFile = fullfile(arduinoio.FilePath(mfilename('fullpath')), 'src', 'Stepper.h')
         CppClassName = 'Stepper'
     end
@@ -41,10 +41,11 @@ classdef Stepper < arduinoio.LibraryBase
     properties(Access = private)
         ResourceOwner = 'StepperLibrary/Stepper';
     end
-
+    properties(Access = protected)
+        Pins
+end
     properties(Access = private)
         ID
-        numSteppers
     end
 
     methods(Access = protected)
