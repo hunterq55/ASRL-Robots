@@ -44,10 +44,10 @@ referenceVel(:,3)=refTraj(:,2);
 theta0=path(1,2:7);
 theta=theta0;
 
-initialStatesWorld=manipFK(theta0);
+initialStatesWork=manipFK(theta0);
 
-reference(:,1)=initialStatesWorld(1);
-reference(:,2)=initialStatesWorld(2);
+reference(:,1)=initialStatesWork(1);
+reference(:,2)=initialStatesWork(2);
 reference(:,4)=0;
 reference(:,5)=0;
 reference(:,6)=0;
