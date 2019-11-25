@@ -1,5 +1,4 @@
-
-function [trajectory,reference,time,error,correctedVel,theta] = trajectoryTrackingArm_Feedback(path,refTraj,Stepper1)
+function [trajectory,reference,time,error,correctedVel] = optimizeGains(path,refTraj,Stepper1)
 % This function takes a path, specified as 6 angle states followed by six
 % angular velocity states (rad,rad/s) for each joint.
 % Stepper1 is a stepper motor object for one of
@@ -41,14 +40,17 @@ reference=zeros(length(refTraj(:,1)),6);
 referenceVel=zeros(length(refTraj(:,2)),6);
 
 referenceVel(:,3)=refTraj(:,2);
-theta=zeros(length(path(:,1)),6);
-theta0=path(1,2:7);
-theta(1)=theta0;
 
-initialStatesWork=manipFK(theta0);
+% thetad=zeros(6,1);
+% thetaOld=zeros(6,1);
+theta0 = [path(1,2),path(1,3),path(1,4),path(1,5),path(1,6),path(1,7)];
+theta = theta0;
 
-reference(:,1)=initialStatesWork(1);
-reference(:,2)=initialStatesWork(2);
+% Initial states workspace
+initialStatesWorld=manipFK(theta0);
+
+reference(:,1)=initialStatesWorld(1);
+reference(:,2)=initialStatesWorld(2);
 reference(:,4)=0;
 reference(:,5)=0;
 reference(:,6)=0;
@@ -105,7 +107,7 @@ while(toc <= path(end,1))
         elseif index > 1 && index < 7
             trajectoryVel(index,:)=(trajectory(index,:)-trajectory(index-1,:))/path(1,1);
             error(index,:) = reference(index,:)-trajectory(index,:);
-        elseif index > 6
+        else
             %path(1,1) is timestep assuming uniform frequency
             trajectoryVel(index,:)=(10*trajectory(index-6,:)-72*trajectory(index-5,:)+225*trajectory(index-4,:)-400*trajectory(index-3,:)+450*trajectory(index-2,:)-360*trajectory(index-1,:)+147*trajectory(index,:))/60*path(1,1);
             %error in pos!!!
@@ -125,16 +127,16 @@ while(toc <= path(end,1))
             %PD part
             correctedVel(index,:)=referenceVel(index,:)-u;
         
-            thetad=trajectoryIK(correctedVel(index,:)',theta(index,:));
+            thetad=trajectoryIK(correctedVel(index,:)',theta);
         
        
-            statesArray = [theta(index,1),theta(index,2),theta(index,3)...
-                       theta(index,4),theta(index,5),theta(index,6)...
+            statesArray = [theta(1),theta(2),theta(3)...
+                       theta(4),theta(5),theta(6)...
                        thetad(1),thetad(2),thetad(3)...
                        thetad(4),thetad(5),thetad(6)];
                     
         Stepper1.updateStates(statesArray);
-        theta(index+1,:)=theta(index,:)+(thetad*path(1,1));
+        theta=theta+(thetad*path(1,1));
         
         index = index + 1;
         toc
