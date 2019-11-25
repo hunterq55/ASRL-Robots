@@ -131,10 +131,20 @@ while(toc <= path(end,1))
             %PD part
             correctedVel(index,:)=referenceVel(index,:)-u;
             
-            if sum(abs(correctedVel(index,:)) > abs(1.2*referenceVel(index,:)))
+            if sum(abs(correctedVel(index,3)) > abs(1.2*referenceVel(index,3))) || sum(abs(correctedVel(index,1:2)) > [2 2])
                 indexf=indexf+1;
                 toofast(indexf,:)=[index correctedVel(index,:)];
-                correctedVel(index,:) = referenceVel(index,:) * 1.2;
+                correctedVel(index,3) = referenceVel(index,3) * 1.2;
+                if correctedVel(index,1) > 0
+                    correctedVel(index,1) = 2;
+                elseif correctedVel(index,1) < 0
+                    correctedVel(index,1) = -2;
+                end
+                if correctedVel(index,2) > 0
+                    correctedVel(index,2) = 2;
+                elseif correctedVel(index,2) < 0
+                    correctedVel(index,2) = -2;
+                end
             end
             
             thetad=trajectoryIK(correctedVel(index,:)',theta(index,:));

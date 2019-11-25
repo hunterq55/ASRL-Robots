@@ -73,7 +73,7 @@ offset = getTransformation(theta0);
 
 correctedVel=zeros(length(path(:,1)),6);
 indexf=0;
-toofast=zeros(1,2);
+toofast=zeros(1,7);
 %% Main Loop
 Ui = zeros(1,6);
 index = 1;
@@ -131,10 +131,12 @@ while(toc <= path(end,1))
             %PD part
             correctedVel(index,:)=referenceVel(index,:)-u;
             
-            if sum(abs(correctedVel(index,:)) > abs(1.2*referenceVel(index,:)))
+            if sum(abs(correctedVel(index,3)) > abs(1.2*referenceVel(index,3))) && sum(abs(correctedVel(index,1:2)) > [2 2])
                 indexf=indexf+1;
-                toofast(indexf)=[index correctedVel];
-                correctedVel(index,:) = referenceVel(index,:) * 1.2;
+                toofast(indexf,:)=[index correctedVel(index,:)];
+                correctedVel(index,3) = referenceVel(index,3) * 1.2;
+                if cor
+                correctedVel(index,1:2) = 2;
             end
             
             thetad=trajectoryIK(correctedVel(index,:)',theta(index,:));
