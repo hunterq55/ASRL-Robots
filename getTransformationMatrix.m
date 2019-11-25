@@ -3,7 +3,7 @@ function [offset] = getTransformationMatrix(theta,rotation)
 %frame to the AR2 workspace using the optiTrack camera system. Theta is
 %specified as a 6x1 matrix containing the current joint angle states.
 %   Detailed explanation goes here
-
+%rotation in degrees
 %% NatNet Connection
 natnetclient = natnet;
 natnetclient.HostIP = '127.0.0.1';
@@ -34,12 +34,14 @@ while toc <= 10
 			fprintf( '\tMake sure the server is in Live mode or playing in playback\n\n')
 			return
         end
-    statesWorld(index,1:6) = [data.LabeledMarker(1).x data.LabeledMarker(1).z data.LabeledMarker(1).y 0 0 0]*1000;
+    statesWorldPos(index,1:3) = [data.LabeledMarker(1).x data.LabeledMarker(1).z data.LabeledMarker(1).y]*1000;
+    statesWorldPosRot(index,1:3)=statesWorldPos(index,1:3)'\rot;
+    statesWorld(index,1:6) = [statesWorldPosRot(index,1:3) 0 0 0];
     index = index + 1;
 end
 
 averageStatesWorld = sum(statesWorld)/length(statesWorld);
-offset = averageStatesWorld\rot - initialStatesWork';
+offset = averageStatesWorld - initialStatesWork';
 
 end
 
