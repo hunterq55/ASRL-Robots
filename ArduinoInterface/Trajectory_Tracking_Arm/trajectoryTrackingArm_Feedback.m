@@ -1,5 +1,5 @@
 
-function [trajectory,reference,time,error,correctedVel,theta] = trajectoryTrackingArm_Feedback(path,refTraj,Stepper1)
+function [trajectory,reference,time,error,correctedVel,theta,toofast] = trajectoryTrackingArm_Feedback(path,refTraj,Stepper1)
 % This function takes a path, specified as 6 angle states followed by six
 % angular velocity states (rad,rad/s) for each joint.
 % Stepper1 is a stepper motor object for one of
@@ -36,14 +36,14 @@ Stepper1.updateStates(statesArray);
 pause(10);
 
 %% Setup: For FK and IK Functions
-kp=0;    ki=0;    kd=0;
+kp=1;    ki=1/25;    kd=0;
 reference=zeros(length(refTraj(:,1)),6);
 referenceVel=zeros(length(refTraj(:,2)),6);
 
 referenceVel(:,3)=refTraj(:,2);
 theta=zeros(length(path(:,1)),6);
 theta0=path(1,2:7);
-theta(1)=theta0;
+theta(1,:)=theta0;
 
 initialStatesWork=manipFK(theta0);
 
@@ -64,10 +64,16 @@ trajectoryVel=zeros(length(path(:,1)),6);
 error=zeros(length(path(:,1)),6);
 time=path(:,1);
 data = natnetclient.getFrame;
-initWorld = [-data.LabeledMarker(1).x -data.LabeledMarker(1).z data.LabeledMarker(1).y 0 0 0]*1000;
-initWork=reference(1,:);
-offset=initWorld-initWork;
+
+offset = getTransformation(theta0);
+
+% initWorld = [-data.LabeledMarker(1).x -data.LabeledMarker(1).z data.LabeledMarker(1).y 0 0 0]*1000;
+% initWork=reference(1,:);
+% offset=initWorld-initWork;
+
 correctedVel=zeros(length(path(:,1)),6);
+indexf=0;
+toofast=zeros(1,7);
 %% Main Loop
 Ui = zeros(1,6);
 index = 1;
@@ -99,16 +105,16 @@ while(toc <= path(end,1))
         %velocity captured by the camera system.
         
         if index == 1
-            thetad=path(index,8:13);
             error(index,:) = zeros(1,6);
-            trajectoryVel(index,:)=zeros(1,6);
-        elseif index > 1 && index < 7
-            trajectoryVel(index,:)=(trajectory(index,:)-trajectory(index-1,:))/path(1,1);
-            error(index,:) = reference(index,:)-trajectory(index,:);
-        elseif index > 6
+%             trajectoryVel(index,:)=zeros(1,6);
+%         elseif index > 1 && index < 7
+%             trajectoryVel(index,:)=(trajectory(index,:)-trajectory(index-1,:))/path(1,1);
+%             error(index,:) = reference(index,:)-trajectory(index,:);
+%         elseif index > 6
             %path(1,1) is timestep assuming uniform frequency
-            trajectoryVel(index,:)=(10*trajectory(index-6,:)-72*trajectory(index-5,:)+225*trajectory(index-4,:)-400*trajectory(index-3,:)+450*trajectory(index-2,:)-360*trajectory(index-1,:)+147*trajectory(index,:))/60*path(1,1);
+%             trajectoryVel(index,:)=(10*trajectory(index-6,:)-72*trajectory(index-5,:)+225*trajectory(index-4,:)-400*trajectory(index-3,:)+450*trajectory(index-2,:)-360*trajectory(index-1,:)+147*trajectory(index,:))/60*path(1,1);
             %error in pos!!!
+        else
             error(index,:) = reference(index,:)-trajectory(index,:);
         end
         if index == 1
@@ -124,7 +130,13 @@ while(toc <= path(end,1))
             u=Up+Ui+Ud;
             %PD part
             correctedVel(index,:)=referenceVel(index,:)-u;
-        
+            
+            if sum(abs(correctedVel(index,:)) > abs(1.2*referenceVel(index,:)))
+                indexf=indexf+1;
+                toofast(indexf,:)=[index correctedVel(index,:)];
+                correctedVel(index,:) = referenceVel(index,:) * 1.2;
+            end
+            
             thetad=trajectoryIK(correctedVel(index,:)',theta(index,:));
         
        
@@ -134,7 +146,7 @@ while(toc <= path(end,1))
                        thetad(4),thetad(5),thetad(6)];
                     
         Stepper1.updateStates(statesArray);
-        theta(index+1,:)=theta(index,:)+(thetad*path(1,1));
+        theta(index+1,:)=theta(index,:)+(thetad'*path(1,1));
         
         index = index + 1;
         toc
