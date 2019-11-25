@@ -21,8 +21,8 @@ end
 initialStatesWork = manipFK(theta');
 initialStatesWork(4:6) = 0;
 %rotation matrix for how global rotates to reach work frame
-rot=[cos(rotation) 0 0;
-     0 sin(rotation) 0
+rot=[cosd(rotation) 0 0;
+     0 sind(rotation) 0
      0      0     1];
 %% Obtaining global frame position for 10 seconds and averaging
 index = 1;
