@@ -1,4 +1,4 @@
-function [offset] = getTransformationMatrix(theta)
+function [offset] = getTransformationMatrix(theta,rotation)
 %GETTRANSFORMATION This function obtains the transformation from the global
 %frame to the AR2 workspace using the optiTrack camera system. Theta is
 %specified as a 6x1 matrix containing the current joint angle states.
@@ -20,6 +20,10 @@ end
 
 initialStatesWork = manipFK(theta');
 initialStatesWork(4:6) = 0;
+%rotation matrix for how global rotates to reach work frame
+rot=[cos(rotation) 0 0;
+     0 sin(rotation) 0
+     0      0     1];
 %% Obtaining global frame position for 10 seconds and averaging
 index = 1;
 tic
@@ -30,12 +34,12 @@ while toc <= 10
 			fprintf( '\tMake sure the server is in Live mode or playing in playback\n\n')
 			return
         end
-    statesWorld(index,1:6) = [-data.LabeledMarker(1).x -data.LabeledMarker(1).z data.LabeledMarker(1).y 0 0 0]*1000;
+    statesWorld(index,1:6) = [data.LabeledMarker(1).x data.LabeledMarker(1).z data.LabeledMarker(1).y 0 0 0]*1000;
     index = index + 1;
 end
 
 averageStatesWorld = sum(statesWorld)/length(statesWorld);
-offset = averageStatesWorld - initialStatesWork';
+offset = averageStatesWorld\rot - initialStatesWork';
 
 end
 
