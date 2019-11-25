@@ -1,5 +1,4 @@
-
-function [trajectory,reference,time,error,correctedVel] = trajectoryTrackingArm_Feedback(path,refTraj,Stepper1,theta0)
+function [trajectory,reference,time,error,correctedVel] = optimizeGains(path,refTraj,Stepper1)
 % This function takes a path, specified as 6 angle states followed by six
 % angular velocity states (rad,rad/s) for each joint.
 % Stepper1 is a stepper motor object for one of
@@ -44,9 +43,10 @@ referenceVel(:,3)=refTraj(:,2);
 
 % thetad=zeros(6,1);
 % thetaOld=zeros(6,1);
+theta0 = [path(1,2),path(1,3),path(1,4),path(1,5),path(1,6),path(1,7)];
+theta = theta0;
 
-theta=theta0;
-
+% Initial states workspace
 initialStatesWorld=manipFK(theta0);
 
 reference(:,1)=initialStatesWorld(1);
