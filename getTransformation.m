@@ -19,18 +19,23 @@ if ( natnetclient.IsConnected == 0 )
 end
 
 initialStatesWork = manipFK(theta');
-
+initialStatesWork(4:6) = 0;
 %% Obtaining global frame position for 10 seconds and averaging
 index = 1;
 tic
 while toc <= 10
     data = natnetclient.getFrame;
+            if (isempty(data.LabeledMarker(1)))
+			fprintf( '\tPacket is empty/stale\n' )
+			fprintf( '\tMake sure the server is in Live mode or playing in playback\n\n')
+			return
+        end
     statesWorld(index,1:6) = [-data.LabeledMarker(1).x -data.LabeledMarker(1).z data.LabeledMarker(1).y 0 0 0]*1000;
     index = index + 1;
 end
 
 averageStatesWorld = sum(statesWorld)/length(statesWorld);
-offset = averageStatesWorld - initialStatesWork;
+offset = averageStatesWorld - initialStatesWork';
 
 end
 
