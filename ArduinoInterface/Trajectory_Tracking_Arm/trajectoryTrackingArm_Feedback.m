@@ -164,4 +164,7 @@ while(toc <= path(end,1))
 end
 data = natnetclient.getFrame;
 trajectory(end,:) = [-data.LabeledMarker(1).x -data.LabeledMarker(1).z data.LabeledMarker(1).y 0 0 0]*1000 - offset;
+
+plotArmExp(trajectory,reference,error,path(end,1));
+
 end
