@@ -36,7 +36,7 @@ Stepper1.updateStates(statesArray);
 pause(10);
 
 %% Setup: For FK and IK Functions
-kp=10;    ki=0.038;    kd=.8;
+kp=15;    ki=2*0.038;    kd=0.4;
 reference=zeros(length(refTraj(:,1)),3);
 referenceVel=zeros(length(refTraj(:,2)),3);
 
