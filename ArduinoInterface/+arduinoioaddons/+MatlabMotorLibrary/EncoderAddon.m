@@ -42,7 +42,7 @@ classdef EncoderAddon < matlabshared.addon.LibraryBase
             obj.Parent = parentObj;
             obj.Pins = inputPins;
             count = getResourceCount(obj.Parent,obj.ResourceOwner);
-            if count > 3
+            if count > 4
                 error('You can only have 4 Motors');
             end
             incrementResourceCount(obj.Parent,obj.ResourceOwner);
