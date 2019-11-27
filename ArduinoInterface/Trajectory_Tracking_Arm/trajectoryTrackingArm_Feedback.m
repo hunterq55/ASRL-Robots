@@ -36,7 +36,7 @@ Stepper1.updateStates(statesArray);
 pause(10);
 
 %% Setup: For FK and IK Functions
-kp=1;    ki=1/25;    kd=0;
+kp=10;    ki=0.038;    kd=0;
 reference=zeros(length(refTraj(:,1)),6);
 referenceVel=zeros(length(refTraj(:,2)),6);
 
@@ -88,7 +88,7 @@ while(toc <= path(end,1))
 			return
         end
             
-        trajectoryGlobal(index,:) = [-data.LabeledMarker(1).x -data.LabeledMarker(1).z data.LabeledMarker(1).y 0 0 0]*1000;
+        trajectoryGlobal(index,:) = [-data.LabeledMarker(1).z -data.LabeledMarker(1).x data.LabeledMarker(1).y 0 0 0]*1000;
         trajectory(index,:) = trajectoryGlobal(index,:) - offset;
         %Multiple by 1000 to convert from m to mm
         time(index,:) = toc;
@@ -122,30 +122,34 @@ while(toc <= path(end,1))
             Up=zeros(1,6);
             Ui=zeros(1,6);
             Ud=zeros(1,6);
-        else
+        elseif index == 2
             Up=kp*(error(index,:));
             Ui= Ui + ki*(error(index,:)*path(1,1));
             Ud=kd*((error(index,:)-error(index-1,:))/path(1,1));
+        else
+            Up=kp*(error(index,:));
+            Ui= Ui + ki*(error(index,:)*path(1,1));
+            Ud=kd*(3*(error(index,:)-4*error(index-1,:)+error(index-2,:))/2*path(1,1));
         end   
             u=Up+Ui+Ud;
             %PD part
-            correctedVel(index,:)=referenceVel(index,:)-u;
+            correctedVel(index,:)=referenceVel(index,:)+u;
             
-            if sum(abs(correctedVel(index,3)) > abs(1.2*referenceVel(index,3))) || sum(abs(correctedVel(index,1:2)) > [2 2])
-                indexf=indexf+1;
-                toofast(indexf,:)=[index correctedVel(index,:)];
-                correctedVel(index,3) = referenceVel(index,3) * 1.2;
-                if correctedVel(index,1) > 0
-                    correctedVel(index,1) = 2;
-                elseif correctedVel(index,1) < 0
-                    correctedVel(index,1) = -2;
-                end
-                if correctedVel(index,2) > 0
-                    correctedVel(index,2) = 2;
-                elseif correctedVel(index,2) < 0
-                    correctedVel(index,2) = -2;
-                end
-            end
+%             if sum(abs(correctedVel(index,3)) > abs(1.2*referenceVel(index,3))) || sum(abs(correctedVel(index,1:2)) > [2 2])
+%                 indexf=indexf+1;
+%                 toofast(indexf,:)=[index correctedVel(index,:)];
+%                 correctedVel(index,3) = referenceVel(index,3) * 1.2;
+%                 if correctedVel(index,1) > 0
+%                     correctedVel(index,1) = 2;
+%                 elseif correctedVel(index,1) < 0
+%                     correctedVel(index,1) = -2;
+%                 end
+%                 if correctedVel(index,2) > 0
+%                     correctedVel(index,2) = 2;
+%                 elseif correctedVel(index,2) < 0
+%                     correctedVel(index,2) = -2;
+%                 end
+%             end
             
             thetad=trajectoryIK(correctedVel(index,:)',theta(index,:));
         
@@ -163,8 +167,9 @@ while(toc <= path(end,1))
     end
 end
 data = natnetclient.getFrame;
-trajectory(end,:) = [-data.LabeledMarker(1).x -data.LabeledMarker(1).z data.LabeledMarker(1).y 0 0 0]*1000 - offset;
+trajectory(end,:) = [-data.LabeledMarker(1).z -data.LabeledMarker(1).x data.LabeledMarker(1).y 0 0 0]*1000 - offset;
 
 plotArmExp(trajectory,reference,error,path(end,1));
-
+pause(2);
+Stepper1.default("REST");
 end
