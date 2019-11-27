@@ -39,6 +39,8 @@ class MotorMatlab : public LibraryBase
 
     Motor* mPointer[MAX_MOTORS];
 
+    int mode = 1;
+
     public:
     MotorMatlab(MWArduinoClass& a)
     {
@@ -55,6 +57,8 @@ class MotorMatlab : public LibraryBase
     {
         //This loop will bring the motors to a desired setpoint by updating
         //the PID, as defined earlier in the code.
+        if (mode == 0)
+        {
           if(mPointer[0] != NULL)
           {
               mPointer[0]->updateMotor();
@@ -72,6 +76,7 @@ class MotorMatlab : public LibraryBase
               mPointer[2]->updateMotor();
               //mPointer[2]->setDuty(50);
           }
+        }
     }
 
     public:
