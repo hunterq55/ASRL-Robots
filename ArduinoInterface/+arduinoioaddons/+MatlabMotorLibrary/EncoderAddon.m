@@ -1,4 +1,4 @@
-classdef EncoderAddon < arduinoio.LibraryBase
+classdef EncoderAddon < matlabshared.addon.LibraryBase
 
     properties(Access = private, Constant = true)
     GET_RAD = hex2dec('00')
@@ -14,11 +14,13 @@ classdef EncoderAddon < arduinoio.LibraryBase
     properties(Access = protected, Constant = true)
         LibraryName = 'MatlabMotorLibrary/EncoderAddon'
         DependentLibraries = {}
-        ArduinoLibraryHeaderFiles = {'FinalMotorLibrary/FinalMotorLibrary.h'}
+        LibraryHeaderFiles = {'FinalMotorLibrary/FinalMotorLibrary.h'}
         CppHeaderFile = fullfile(arduinoio.FilePath(mfilename('fullpath')), 'src', 'MotorMatlab.h')
         CppClassName = 'MotorMatlab'
     end
-
+    properties(Access = protected)
+      Pins
+    end
     properties(Access = private)
         ResourceOwner = 'MatlabMotorLibrary/EncoderAddon';
     end
