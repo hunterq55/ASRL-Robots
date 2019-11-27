@@ -30,7 +30,7 @@ while toc <= 10
 			fprintf( '\tMake sure the server is in Live mode or playing in playback\n\n')
 			return
         end
-    statesWorld(index,1:6) = [-data.LabeledMarker(1).x -data.LabeledMarker(1).z data.LabeledMarker(1).y 0 0 0]*1000;
+    statesWorld(index,1:6) = [-data.LabeledMarker(1).z -data.LabeledMarker(1).x data.LabeledMarker(1).y 0 0 0]*1000;
     index = index + 1;
 end
 
