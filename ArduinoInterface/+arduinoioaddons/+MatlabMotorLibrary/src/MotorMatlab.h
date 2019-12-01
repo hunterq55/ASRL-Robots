@@ -78,9 +78,9 @@ class MotorMatlab : public LibraryBase
         {
             case MOTOR_CREATE:
             {
-                byte ID, pinNumbers[2];
+                byte ID, pinNumbers[1];
                 ID = dataIn[0];
-                for (byte i=0;i<2;i=i=i+1)
+                for (byte i=0;i<2;i=i+1)
                 {
                     pinNumbers[i] = dataIn[i+1];
                 }
@@ -88,7 +88,7 @@ class MotorMatlab : public LibraryBase
                 if(ID == 0)
                 {
                     mPointer[ID] = new Motor(1,pinNumbers[0],pinNumbers[1],
-                                           3072,&inputRadSec1,&outputVoltage1,&setpointRadSec1,
+                                           3072,&inputRadSec0,&outputVoltage0,&setpointRadSec0,
                                            Kp,Ki,Kd,DIRECT);
                     mPointer[ID]->setAfms(&AFMS);
                     mPointer[ID]->registerMotor();
