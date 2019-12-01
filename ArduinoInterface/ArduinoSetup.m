@@ -1,4 +1,5 @@
 a = arduino('com8','Mega2560','Libraries','MatlabMotorLibrary/EncoderAddon','ForceBuild',true,'TraceOn',true);
+% a=arduino;
 Motor0FAKE = addon(a,'MatlabMotorLibrary/EncoderAddon',{'D11','D32'});
 Motor1 = addon(a,'MatlabMotorLibrary/EncoderAddon',{'D2','D23'});
 Motor2 = addon(a,'MatlabMotorLibrary/EncoderAddon',{'D19','D27'});
