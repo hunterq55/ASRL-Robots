@@ -115,7 +115,7 @@ validity=validateTrajectory(path);
 isvalid=validity(1);
 
     if isvalid == 0
-        error("The path is not valid! Run validateTrajectory to check why.");
+        disp("The path is not valid! Run validateTrajectory to check why.");
     else
         disp("The trajectory is valid!");
     end
