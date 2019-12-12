@@ -36,8 +36,8 @@ L = .13; %distance from platform centroid to wheel
 R = .05;  %radius of the wheel
 
 %PID
-Kp = 8/2;
-Ki = .4/2;
+Kp = 8;
+Ki = .4;
 
 Kp = [Kp 0 0;
       0 Kp 0;
