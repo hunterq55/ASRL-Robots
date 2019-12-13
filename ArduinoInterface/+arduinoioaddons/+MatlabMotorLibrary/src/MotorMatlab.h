@@ -23,7 +23,7 @@ const char MSG_SETPOINT[]       PROGMEM = "Setpoint recieved: %d\n";
 #define UPDATE_MOTORS 0x06
 
 //GLOBAL VARIABLES
-double Kp = 2.5/2,Ki = 60.25/2,Kd = 0.0;
+double Kp = 2.5,Ki = 60.25,Kd = 0.0;
 double inputRadSec1, outputVoltage1, setpointRadSec1 = 0.0;
 double inputRadSec2, outputVoltage2, setpointRadSec2 = 0.0;
 double inputRadSec3, outputVoltage3, setpointRadSec3 = 0.0;
