@@ -81,7 +81,7 @@ for i=1:length(refTraj(:,1))
    reference(i,3)=temp(3);
 end
 
-trajectory=zeros(length(path_arm(:,1)),3);
+trajectory_arm=zeros(length(path_arm(:,1)),3);
 trajectoryGlobal=zeros(length(path_arm(:,1)),3);
 trajectoryVel=zeros(length(path_arm(:,1)),3);
 error=zeros(length(path_arm(:,1)),3);
@@ -139,10 +139,9 @@ while(toc <= path_gv(end,1))
 		%ARM Logic
 		if index == 1
             error_arm(index,:) = zeros(1,3);
-
             %error in pos!!!
         else
-            error_arm(index,:) = reference(index,:)-trajectory(index,:);
+            error_arm(index,:) = reference(index,:)-trajectory_arm(index,:);
         end
         if index == 1
             %use PID Controller:
@@ -179,9 +178,9 @@ while(toc <= path_gv(end,1))
 		q(index+1,:)=q(index,:)'+(qd'*path(1,1));
 
         time(index,:) = toc;
-        pos(index,:) = [position(index,1:2) ];
+        pos(index,:) = [position(index,1:2) trajectory_arm(index,3)];
         e(index,:) = [error_gv(index,1:2) error_arm(index,3)];
-        traj(index,:) = trajectory;
+        traj(index,:) = [trajectory(index,1:2) reference(index,3)];
         index = index + 1;
     end
 end
@@ -189,6 +188,6 @@ end
 
 %Set motors back to zero
 Motor1.updateMotors([0.0,0.0,0.0]);
-
+Stepper1.default("REST");
 
 end
