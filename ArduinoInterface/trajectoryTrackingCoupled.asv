@@ -163,22 +163,22 @@ while(toc <= path_GV_G(end,1))
         u = Up+Ui+Ud;
         %PID part
         commandDot_AR2_W(index,:) = pathDot_AR2_W(index,:)+u;
-        commandDot_AR2_J_temp = trajectoryIK3(commandDot_AR2_W(index,:)',command_AR2_J(index,:));
+        commandDot_AR2_Jtemp = trajectoryIK3(commandDot_AR2_W(index,:)',command_AR2_J(index,:));
 
-        commandDot_AR2_J=zeros(1,6);
-        commandDot_AR2_J(2)=commandDot_AR2_J_temp(1);
-        commandDot_AR2_J(3)=commandDot_AR2_J_temp(2);
-        commandDot_AR2_J(5)=commandDot_AR2_J_temp(3);
+        qd=zeros(1,6);
+        qd(2)=qdtemp(1);
+        qd(3)=qdtemp(2);
+        qd(5)=qdtemp(3);
 
         statesArray_AR2_J = [command_AR2_J(index,1),command_AR2_J(index,2),command_AR2_J(index,3)...
                        command_AR2_J(index,4),command_AR2_J(index,5),command_AR2_J(index,6)...
-                       commandDot_AR2_J(1),commandDot_AR2_J(2),commandDot_AR2_J(3)...
-                       commandDot_AR2_J(4),commandDot_AR2_J(5),commandDot_AR2_J(6)];
+                       qd(1),qd(2),qd(3)...
+                       qd(4),qd(5),qd(6)];
 
         Stepper1.updateStates(statesArray_AR2_J);
         Motor1.updateMotors(command_GV_J*1.2);
 
-		command_AR2_J(index+1,:)=command_AR2_J(index,:)'+(commandDot_AR2_J'*timestep);
+		command_AR2_J(index+1,:)=command_AR2_J(index,:)'+(qd'*timestep);
 
         time(index,:) = toc;
         pos(index,:) = [position(index,1:2) traj_AR2_W(index,3)];
