@@ -130,7 +130,7 @@ while(toc <= path(end,1))
             Ud=kd*(3*(error(index,:)-4*error(index-1,:)+error(index-2,:))/2*path(1,1));
         end   
             u=Up+Ui+Ud;
-            %PD part
+            %PID part
             correctedVel(index,:)=referenceVel(index,:)+u;
             
 %             if sum(abs(correctedVel(index,3)) > abs(1.2*referenceVel(index,3))) || sum(abs(correctedVel(index,1:2)) > [2 2])
