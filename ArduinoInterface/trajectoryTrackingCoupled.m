@@ -89,7 +89,7 @@ time=path_arm(:,1);
 data = natnetclient.getFrame;
 
 offset = getTransformation3(q0);
-offset(3)=offset(3)+21.12;
+%offset(3)=offset(3)+21.12;
 % initWorld = [-data.LabeledMarker(1).x -data.LabeledMarker(1).z data.LabeledMarker(1).y 0 0 0]*1000;
 % initWork=reference(1,:);
 % offset=initWorld-initWork;
@@ -137,13 +137,16 @@ while(toc <= path_gv(end,1))
         setpointRadSec = setpointMetSec/R;
 
 		%ARM Logic
-        if index == 1
+        trajectoryGlobal(index,:) = [-data.LabeledMarker(1).z -data.LabeledMarker(1).x data.LabeledMarker(1).y]*1000;
+        trajectory_arm(index,:) = trajectoryGlobal(index,:) - offset;
+
+		if index == 1
             error_arm(index,:) = zeros(1,3);
             %error in pos!!!
         else
             error_arm(index,:) = reference(index,:)-trajectory_arm(index,:);
         end
-        
+
         if index == 1
             %use PID Controller:
             Up=zeros(1,3);
@@ -157,25 +160,25 @@ while(toc <= path_gv(end,1))
             Up=kp*(error_arm(index,:));
             Ui= Ui + ki*(error_arm(index,:)*path(1,1));
             Ud=kd*(3*(error_arm(index,:)-4*error_arm(index-1,:)+error_arm(index-2,:))/2*path(1,1));
-        end   
+        end
         u=Up+Ui+Ud;
         %PID part
         correctedVel(index,:)=referenceVel(index,:)+u;
         qdtemp=trajectoryIK3(correctedVel(index,:)',q(index,:));
-            
+
         qd=zeros(1,6);
         qd(2)=qdtemp(1);
         qd(3)=qdtemp(2);
         qd(5)=qdtemp(3);
-            
+
         statesArray = [q(index,1),q(index,2),q(index,3)...
                        q(index,4),q(index,5),q(index,6)...
                        qd(1),qd(2),qd(3)...
                        qd(4),qd(5),qd(6)];
-                    
+
         Stepper1.updateStates(statesArray);
         Motor1.updateMotors(setpointRadSec*1.2);
-		
+
 		q(index+1,:)=q(index,:)'+(qd'*path(1,1));
 
         time(index,:) = toc;
