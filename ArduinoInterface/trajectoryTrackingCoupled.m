@@ -89,7 +89,7 @@ time=path_arm(:,1);
 data = natnetclient.getFrame;
 
 offset = getTransformation3(q0);
-offset(3)=offset(3)+21.12;
+%offset(3)=offset(3)+21.12;
 % initWorld = [-data.LabeledMarker(1).x -data.LabeledMarker(1).z data.LabeledMarker(1).y 0 0 0]*1000;
 % initWork=reference(1,:);
 % offset=initWorld-initWork;
@@ -137,6 +137,9 @@ while(toc <= path_gv(end,1))
         setpointRadSec = setpointMetSec/R;
 
 		%ARM Logic
+        trajectoryGlobal(index,:) = [-data.LabeledMarker(1).z -data.LabeledMarker(1).x data.LabeledMarker(1).y]*1000;
+        trajectory_arm(index,:) = trajectoryGlobal(index,:) - offset;
+        
 		if index == 1
             error_arm(index,:) = zeros(1,3);
             %error in pos!!!
