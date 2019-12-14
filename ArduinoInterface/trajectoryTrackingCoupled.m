@@ -46,9 +46,9 @@ Ki_GV = [Ki_GV 0 0;
       0 Ki_GV 0;
       0 0  -Ki_GV;];
   
-Kp_AR2 = 7.5;
+Kp_AR2 = 4;
 Ki_AR2 = 2*0.038;    
-Kd_AR2 = 0.4;
+Kd_AR2 = 0.4*3;
 
 
 %% Main Loop Prep
@@ -146,7 +146,7 @@ while(toc <= path_GV_G(end,1))
 
 		%ARM Logic
 
-        traj_AR2_G(index,:) = [-data.LabeledMarker(7).z -data.LabeledMarker(7).x data.LabeledMarker(7).y]*1000;
+        traj_AR2_G(index,:) = [data.LabeledMarker(7).z data.LabeledMarker(7).x data.LabeledMarker(7).y]*1000;
         traj_AR2_W(index,:) = traj_AR2_G(index,:) - offset;
 
 		if index == 1
