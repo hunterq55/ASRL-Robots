@@ -1,10 +1,29 @@
-
-function [trajectory,reference,time,error,correctedVel,theta,toofast] = trajectoryTrackingArm_Feedback3(path,refTraj,Stepper1)
+function [trajectory,reference,time,error,correctedVel,theta,toofast] = trajectoryTrackingCoupledRyan(path,refTraj,Stepper1,Motor1,states_GV_G)
 % This function takes a path, specified as 6 angle states followed by six
 % angular velocity states (rad,rad/s) for each joint.
 % Stepper1 is a stepper motor object for one of
 % the joints on the arm. Arms must first be callibrated.
 % path and refTraj are 13 columns, refTraj has z and zDot
+
+%% Setup for GV
+
+%Platform Geometry
+L = .13; %distance from platform centroid to wheel
+R = .05;  %radius of the wheel
+
+%PID
+
+Kp_GV = 8*.5;
+Ki_GV = .4*.5;
+
+
+Kp_GV = [Kp_GV 0 0;
+      0 Kp_GV 0;
+      0 0  -Kp_GV;]; %Gains for theta must be negative, not sure why yet
+  
+Ki_GV = [Ki_GV 0 0;
+      0 Ki_GV 0;
+      0 0  -Ki_GV;];
 
 %% Trajectory Validation
 validity = validateTrajectory(path);
@@ -24,6 +43,11 @@ if ( natnetclient.IsConnected == 0 )
 	fprintf( 'Client failed to connect\n' )
 	fprintf( '\tMake sure the host is connected to the network\n' )
 	fprintf( '\tand that the host and client IP addresses are correct\n\n' )
+	return
+end
+
+model = natnetclient.getModelDescription;
+if ( model.RigidBodyCount < 1 )
 	return
 end
 
@@ -74,7 +98,9 @@ indexf=0;
 toofast=zeros(1,4);
 %% Main Loop
 Ui = zeros(1,3);
+errorSum_GV_G = 0;
 index = 1;
+timestep = path(1,1);
 tic;
 while(toc <= path(end,1))
     if (toc >= path(index,1))
@@ -85,7 +111,33 @@ while(toc <= path(end,1))
 			fprintf( '\tMake sure the server is in Live mode or playing in playback\n\n')
 			return
         end
-            
+        
+        %% New Code for GV Section
+        path_GV_G = [states_GV_G(index,2);states_GV_G(index,3);states_GV_G(index,4)];
+        pathDot_GV_G = [states_GV_G(index,5);states_GV_G(index,6);states_GV_G(index,7)];
+        
+        yaw = data.RigidBody(1).qy;
+        pitch = data.RigidBody(1).qz;
+        roll = data.RigidBody(1).qx;
+        scalar = data.RigidBody(1).qw;
+        q = quaternion(roll,yaw,pitch,scalar);
+        qRot = quaternion(0,0,0,1);
+        q = mtimes(q,qRot);
+        a = EulerAngles(q,'zyx');
+        GV_Theta = a(2); %yaw angle/rotation about the vertical
+        
+        traj_GV_G = [data.RigidBody(1).x;-data.RigidBody(1).z;GV_Theta;];
+        error_GV_G = traj_GV_G - path_GV_G;
+        errorSum_GV_G = errorSum_GV_G + error_GV_G*timestep;
+        
+        pTheta = [-sin(GV_Theta)               cos(GV_Theta)          L;
+                  -sin((pi/3)-GV_Theta)       -cos((pi/3)-GV_Theta)   L;
+                   sin((pi/3)+GV_Theta)       -cos((pi/3)+GV_Theta)   L;];
+        setpointMetSec = pTheta*(pathDot_GV_G - Kp_GV*error_GV_G - Ki_GV*errorSum_GV_G);
+        setpointRadSec = setpointMetSec/R;
+        
+        
+        %% Old Code Begins    
         trajectoryGlobal(index,:) = [-data.LabeledMarker(7).z -data.LabeledMarker(7).x data.LabeledMarker(7).y]*1000;
         trajectory(index,:) = trajectoryGlobal(index,:) - offset;
         %Multiple by 1000 to convert from m to mm
@@ -162,6 +214,7 @@ while(toc <= path(end,1))
                        thetad(4),thetad(5),thetad(6)];
                     
         Stepper1.updateStates(statesArray);
+        Motor1.updateMotors(setpointRadSec*1.2);
         theta(index+1,:)=theta(index,:)'+(thetad'*path(1,1));
         
         index = index + 1;
