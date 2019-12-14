@@ -56,7 +56,7 @@ timestep = path_GV_G(end,1)/length(path_GV_G(:,1)); %This is currently set equal
                 %platform velocity and the inner loop PID update interval.
                 
 errorSum_GV_G = 0;   %A forward euler integration will be performed.
-
+thetaLast_GV = 0;
 % Arm initialization
 statesArray_AR2_J = [path_AR2_J(1,2),path_AR2_J(1,3),path_AR2_J(1,4)...
                path_AR2_J(1,5),path_AR2_J(1,6),path_AR2_J(1,7)...
@@ -76,7 +76,7 @@ command_AR2_J(1,:) = command0_AR2_J;
 command0_AR2_W = manipFK(command0_AR2_J);
 
 % Offset between global and AR2 work frame
-offset = getTransformation3(command0_AR2_J);
+offset = getTransformation3(command0_AR2_J,7);
 
 
 for i = 1:length(path_AR2_WZ(:,1))
@@ -123,7 +123,10 @@ while(toc <= path_GV_G(end,1))
         q = mtimes(q,qRot);
         a = EulerAngles(q,'zyx');
         theta_GV_G = a(2); %yaw angle/rotation about the vertical
-
+        if abs(theta_GV_G - thetaLast_GV) >= (10)*(pi/180)
+            theta_GV_G = thetaLast_GV;
+        end
+        
         position = [data.RigidBody(1).x;-data.RigidBody(1).z;theta_GV_G;];
         error_GV_G = position - trajectory;
         errorSum_GV_G = errorSum_GV_G + error_GV_G*timestep;

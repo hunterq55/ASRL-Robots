@@ -16,7 +16,6 @@ R = .05;  %radius of the wheel
 Kp_GV = 8*.5;
 Ki_GV = .4*.5;
 
-
 Kp_GV = [Kp_GV 0 0;
       0 Kp_GV 0;
       0 0  -Kp_GV;]; %Gains for theta must be negative, not sure why yet
@@ -101,6 +100,7 @@ Ui = zeros(1,3);
 errorSum_GV_G = 0;
 index = 1;
 timestep = path(1,1);
+GV_ThetaLast = 0;
 tic;
 while(toc <= path(end,1))
     if (toc >= path(index,1))
@@ -125,6 +125,9 @@ while(toc <= path(end,1))
         q = mtimes(q,qRot);
         a = EulerAngles(q,'zyx');
         GV_Theta = a(2); %yaw angle/rotation about the vertical
+        if abs(GV_Theta - GV_ThetaLast) >= (10)*(pi/180)
+            GV_Theta = GV_ThetaLast;
+        end
         
         traj_GV_G = [data.RigidBody(1).x;-data.RigidBody(1).z;GV_Theta;];
         error_GV_G = traj_GV_G - path_GV_G;
@@ -227,4 +230,5 @@ trajectory(end,:) = [-data.LabeledMarker(7).z -data.LabeledMarker(7).x data.Labe
 plotArmExp(trajectory,reference,error,path(end,1));
 pause(2);
 Stepper1.default("REST");
+Motor1.updateMotors([0.0,0.0,0.0]);
 end
