@@ -46,7 +46,7 @@ Ki_GV = [Ki_GV 0 0;
       0 Ki_GV 0;
       0 0  -Ki_GV;];
   
-Kp_AR2 = 15;
+Kp_AR2 =  15;
 Ki_AR2 = 2*0.038;    
 Kd_AR2 = 0.4;
 
@@ -81,7 +81,7 @@ offset = getTransformation3(command0_AR2_J);
 
 for i = 1:length(path_AR2_WZ(:,1))
    command_AR2_W_6(i,:) = manipFK(path_AR2_J(i,(2:7)));
-   command_AR2_W(1:3)= command_AR2_W_6(i,1:3);
+   command_AR2_W(i,1:3)= command_AR2_W_6(i,1:3);
 end
 
 traj_AR2_W = zeros(length(path_AR2_J(:,1)),3);
@@ -136,7 +136,7 @@ while(toc <= path_GV_G(end,1))
         command_GV_J = (1/R)*(pTheta*(trajectoryPrime - Kp_GV*error_GV_G - Ki_GV*errorSum_GV_G));
 
 		%ARM Logic
-        traj_AR2_G(index,:) = [-data.LabeledMarker(1).z -data.LabeledMarker(1).x data.LabeledMarker(1).y]*1000;
+        traj_AR2_G(index,:) = [-data.LabeledMarker(7).z -data.LabeledMarker(7).x data.LabeledMarker(7).y]*1000;
         traj_AR2_W(index,:) = traj_AR2_G(index,:) - offset;
 
 		if index == 1
@@ -181,9 +181,9 @@ while(toc <= path_GV_G(end,1))
 		command_AR2_J(index+1,:)=command_AR2_J(index,:)'+(commandDot_AR2_J'*timestep);
 
         time(index,:) = toc;
-        pos(index,:) = [position(index,1:2) traj_AR2_W(index,3)];
-        e(index,:) = [error_GV_G(index,1:2) error_AR2_W(index,3)];
-        traj_AR2_G(index,:) = [trajectory(index,1:2) command_AR2_W(index,3)];
+        pos(index,:) = [position(1) position(2) traj_AR2_W(index,3)];
+        e(index,:) = [error_GV_G(1) error_GV_G(2) error_AR2_W(index,3)];
+        traj_AR2_G(index,:) = [trajectory(1) trajectory(2) command_AR2_W(index,3)];
         index = index + 1;
     end
 end
