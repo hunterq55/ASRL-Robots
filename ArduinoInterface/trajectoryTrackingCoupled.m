@@ -1,4 +1,4 @@
-function [pos,e,traj_AR2_G,time] = trajectoryTrackingCoupled(path_GV_G,path_AR2_J,Motor1,Stepper1,path_AR2_WZ)
+function [pose_GV,error_GV,pos_AR2_W,error_AR2_W,traj_AR2_G,time] = trajectoryTrackingCoupled(path_GV_G,path_AR2_J,Motor1,Stepper1,path_AR2_WZ)
 
 pause(15);
 
@@ -46,7 +46,7 @@ Ki_GV = [Ki_GV 0 0;
       0 Ki_GV 0;
       0 0  -Ki_GV;];
   
-Kp_AR2 =  15;
+Kp_AR2 = 7.5;
 Ki_AR2 = 2*0.038;    
 Kd_AR2 = 0.4;
 
@@ -99,6 +99,7 @@ commandDot_AR2_W = zeros(length(path_AR2_J(:,1)),3);
 
 %% Main  Loop
 index = 1;
+disp("Starting");
 tic;
 while(toc <= path_GV_G(end,1))
 
@@ -108,12 +109,14 @@ while(toc <= path_GV_G(end,1))
         trajectoryPrime = [path_GV_G(index,5);path_GV_G(index,6);path_GV_G(index,7)];
 
         data = natnetclient.getFrame;
-		if (isempty(data.RigidBody(1)))
+        if (isempty(data.RigidBody(1)) || isempty(data.LabeledMarker(7)))
 			fprintf( '\tPacket is empty/stale\n' )
 			fprintf( '\tMake sure the server is in Live mode or playing in playback\n\n')
-			return
+			Motor1.updateMotors([0 0 0]);
+            Stepper1.default("REST");
+            return
         end
-
+        
         yaw_GV_G = data.RigidBody(1).qy;
         pitch_GV_G = data.RigidBody(1).qz;
         roll_GV_G = data.RigidBody(1).qx;
@@ -127,10 +130,13 @@ while(toc <= path_GV_G(end,1))
             theta_GV_G = thetaLast_GV;
         end
         
+        yawYeet = theta_GV_G;
+        
         position = [data.RigidBody(1).x;-data.RigidBody(1).z;theta_GV_G;];
         error_GV_G = position - trajectory;
         errorSum_GV_G = errorSum_GV_G + error_GV_G*timestep;
 
+        yawYeet_error = theta_GV_G - path_GV_G(index,4);
 
         pTheta = [-sin(theta_GV_G)               cos(theta_GV_G)          L;
                   -sin((pi/3)-theta_GV_G)       -cos((pi/3)-theta_GV_G)   L;
@@ -139,6 +145,7 @@ while(toc <= path_GV_G(end,1))
         command_GV_J = (1/R)*(pTheta*(trajectoryPrime - Kp_GV*error_GV_G - Ki_GV*errorSum_GV_G));
 
 		%ARM Logic
+
         traj_AR2_G(index,:) = [-data.LabeledMarker(7).z -data.LabeledMarker(7).x data.LabeledMarker(7).y]*1000;
         traj_AR2_W(index,:) = traj_AR2_G(index,:) - offset;
 
@@ -184,9 +191,11 @@ while(toc <= path_GV_G(end,1))
 		command_AR2_J(index+1,:)=command_AR2_J(index,:)'+(commandDot_AR2_J'*timestep);
 
         time(index,:) = toc;
-        pos(index,:) = [position(1) position(2) traj_AR2_W(index,3)];
-        e(index,:) = [error_GV_G(1) error_GV_G(2) error_AR2_W(index,3)];
-        traj_AR2_G(index,:) = [trajectory(1) trajectory(2) command_AR2_W(index,3)];
+        pose_GV(index,:) = [position(1) position(2) yawYeet];
+        error_GV(index,:) = [error_GV_G(1) error_GV_G(2) yawYeet_error];
+        pos_AR2_W(index,:) = [traj_AR2_W(index,1) traj_AR2_W(index,2) traj_AR2_W(index,3)];
+        error_AR2_W(index,:) = [error_AR2_W(index,1) error_AR2_W(index,2) error_AR2_W(index,3)];
+        traj_AR2_G(index,:) = [command_AR2_W(index,1) command_AR2_W(index,2) command_AR2_W(index,3)];
         index = index + 1;
     end
 end
