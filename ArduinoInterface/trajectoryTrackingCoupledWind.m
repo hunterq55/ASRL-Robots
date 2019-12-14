@@ -110,8 +110,13 @@ while(toc < 60)
 
         data = natnetclient.getFrame;
         if (isempty(data.RigidBody(1)) || isempty(data.LabeledMarker(7)))
-			fprintf( '\tPacket is empty/stale\n' )
-			fprintf( '\tMake sure the server is in Live mode or playing in playback\n\n')
+            if isempty(data.RigidBody(1)) == 1
+                disp("Ground Vehicle Lost Connection");
+            elseif isempty(data.LabeledMarker(7))
+                disp("AR2 Lost Connection");
+            end
+% 			fprintf( '\tPacket is empty/stale\n' )
+% 			fprintf( '\tMake sure the server is in Live mode or playing in playback\n\n')
 			Motor1.updateMotors([0 0 0]);
             Stepper1.default("REST");
             return
@@ -159,8 +164,13 @@ while(toc <= path_GV_G(end,1) && toc >= 60)
 
         data = natnetclient.getFrame;
         if (isempty(data.RigidBody(1)) || isempty(data.LabeledMarker(7)))
-			fprintf( '\tPacket is empty/stale\n' )
-			fprintf( '\tMake sure the server is in Live mode or playing in playback\n\n')
+            if isempty(data.RigidBody(1)) == 1
+                disp("Ground Vehicle Lost Connection");
+            elseif isempty(data.LabeledMarker(7))
+                disp("AR2 Lost Connection");
+            end
+% 			fprintf( '\tPacket is empty/stale\n' )
+% 			fprintf( '\tMake sure the server is in Live mode or playing in playback\n\n')
 			Motor1.updateMotors([0 0 0]);
             Stepper1.default("REST");
             return
