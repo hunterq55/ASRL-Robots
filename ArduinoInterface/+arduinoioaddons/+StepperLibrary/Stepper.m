@@ -18,10 +18,6 @@ classdef Stepper < arduinoio.LibraryBase
         %A collection of default positions
         REST = [0,-110*pi/180,141*pi/180,0,0,0,...
                 .25,.25,.25,.25,.25,.25];
-        CWLimit = [-170*(pi/180),-132*(pi/180),-0*(pi/180),...
-                   -155*(pi/180),-105*(pi/180),-155*(pi/180)];
-        CCWLimit = [170*(pi/180),0*(pi/180),141*(pi/180),...
-                    155*(pi/180),105*(pi/180),155*(pi/180)];
     end
 
     properties(Access = private, Constant = true)
@@ -142,14 +138,6 @@ classdef Stepper < arduinoio.LibraryBase
          end
          function [] = updateStates(obj,statesArray)
              cmdID = obj.UPDATE_STATES;
-           
-             for i = 1:6
-                 if (statesArray(i) >= obj.CCWLimit(i))
-                     statesArray(i) = obj.CCWLimit(i);
-                 elseif (statesArray(i) <= obj.CWLimit(i))
-                     statesArray(i) = obj.CWLimit(i);
-                 end
-             end
 
              input1 = [typecast(int32(statesArray(1)*obj.STEPPER_CONSTANT1),'uint8')];
              input2 = [typecast(int32(statesArray(2)*obj.STEPPER_CONSTANT2),'uint8')];

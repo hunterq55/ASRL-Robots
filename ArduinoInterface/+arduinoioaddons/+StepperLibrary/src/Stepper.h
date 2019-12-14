@@ -438,11 +438,11 @@ class Stepper : public LibraryBase
               // Reversed
               steps[1] = *((long*)newPosition2);
               // Reversed
-              steps[2] = *((long*)newPosition3);
-              steps[3] = *((long*)newPosition4);
+              steps[2] = *((long*)newPosition1);
+              steps[3] = *((long*)newPosition1);
               // Reversed
-              steps[4] = *((long*)newPosition5);
-              steps[5] = *((long*)newPosition6);
+              steps[4] = *((long*)newPosition1);
+              steps[5] = *((long*)newPosition1);
 
               sendResponseMsg(cmdID,0,0);
               break;
