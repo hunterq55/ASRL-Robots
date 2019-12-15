@@ -151,7 +151,7 @@ while(toc < 60)
         
         Motor1.updateMotors(command_GV_J*1.2);
 		%ARM Logic
-
+        index=index+1;
         
     end
 end
