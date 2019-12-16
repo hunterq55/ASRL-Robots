@@ -34,8 +34,8 @@ R = .05;  %radius of the wheel
 
 %% Gains
 
-Kp_GV = 8*.5;
-Ki_GV = .4*.5;
+Kp_GV = 8/2;
+Ki_GV = .4;
 
 
 Kp_GV = [Kp_GV 0 0;
@@ -46,9 +46,14 @@ Ki_GV = [Ki_GV 0 0;
       0 Ki_GV 0;
       0 0  -Ki_GV;];
   
-Kp_AR2 = 4/4;
-Ki_AR2 = 2*0.038/4;    
-Kd_AR2 = 0.4*3/4;
+Kp_AR2 = 4/2;
+Ki_AR2 = 2*0.038;    
+Kd_AR2 = 0.4*3/2;
+
+Kp_AR2 = (16*.6)/(4*3*3);
+Ki_AR2 = (1.2*16/.32)/(4*3*3);    
+Kd_AR2 = (3*16*.32/40)/(4*3*3);
+
 
 %% Main Loop Prep
 timestep = path_GV_G(end,1)/length(path_GV_G(:,1)); %This is currently set equal to the interval for calculating

@@ -34,6 +34,8 @@ R = .05;  %radius of the wheel
 Kp = 8*.5;
 Ki = .4*.5;
 
+Kp = 0;
+Ki = 0;
 
 Kp = [Kp 0 0;
       0 Kp 0;
