@@ -1,8 +1,4 @@
-function plotCoupled(orbitReference,pose_GV,)
-
-orbitMeasured = zeros(size(orbitReference));
-
-orbitMeasured = pose_GV(:,1);
+function plotCoupled(orbitReference,traj_AR2_G)
 %[pose_GV,error_GV,pos_AR2_W,error_AR2_W,traj_AR2_W,traj_AR2_G,time,offset]
 
 %pose_GV in meters
@@ -11,13 +7,22 @@ orbitMeasured = pose_GV(:,1);
 
 %traj_AR2_W in mm
 
-%traj_AR2_G in meters
+%traj_AR2_G in mm
+
+orbitMeasured = zeros(size(orbitReference));
+
+orbitMeasured(:,1) = traj_AR2_G(:,2);
+orbitMeasured(:,2) = -traj_AR2_G(:,1);
+
+
+%% Plotting Position Graph
 figure
 hold on
 plot3(orbitReference(:,1),orbitReference(:,2),orbitReference(:,3));
 plot3();
 hold off
 
+%% Plotting Error Graphs
 error=orbitReference-orbitMeasured;
 
 
