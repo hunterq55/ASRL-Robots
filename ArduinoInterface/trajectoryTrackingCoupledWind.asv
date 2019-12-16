@@ -155,10 +155,6 @@ while(toc < 60)
         
     end
 end
-Up = zeros(1,3);
-Ui = zeros(1,3);
-Ud = zeros(1,3);
-index = 1501;
 while(toc <= path_GV_G(end,1) && toc >= 60)
 
     if (toc >= path_GV_G(index,1))
@@ -219,12 +215,12 @@ while(toc <= path_GV_G(end,1) && toc >= 60)
             error_AR2_W(index,:) = command_AR2_W(index,:)-traj_AR2_W(index,:);
         end
 
-        if index == (1 + 1500)
+        if index == 1 + 1500
             %use PID Controller:
             Up = zeros(1,3);
             Ui = zeros(1,3);
             Ud = zeros(1,3);
-        elseif index == (2 + 1500)
+        elseif index == 2
             Up = Kp_AR2*(error_AR2_W(index,:));
             Ui = Ui + Ki_AR2*(error_AR2_W(index,:)*timestep);
             Ud = Kd_AR2*((error_AR2_W(index,:)-error_AR2_W(index-1,:))/timestep);

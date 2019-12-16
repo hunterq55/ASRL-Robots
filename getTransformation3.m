@@ -1,4 +1,4 @@
-function [offset] = getTransformation3(theta,marker)
+function [offset] = getTransformation3(theta)
 %GETTRANSFORMATION This function obtains the transformation from the global
 %frame to the AR2 workspace using the optiTrack camera system. Theta is
 %specified as a 6x1 matrix containing the current joint angle states.
@@ -25,12 +25,12 @@ index = 1;
 tic
 while toc <= 10
     data = natnetclient.getFrame;
-            if (isempty(data.LabeledMarker(marker)))
+            if (isempty(data.RigidBody(2)))
 			fprintf( '\tPacket is empty/stale\n' )
 			fprintf( '\tMake sure the server is in Live mode or playing in playback\n\n')
 			return
         end
-    statesWorld(index,1:3) = [data.LabeledMarker(marker).z data.LabeledMarker(marker).x data.LabeledMarker(marker).y]*1000;
+    statesWorld(index,1:3) = [data.RigidBody(2).z data.RigidBody(2).x data.RigidBody(2).y]*1000;
     index = index + 1;
 end
 

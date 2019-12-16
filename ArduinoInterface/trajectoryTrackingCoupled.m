@@ -1,6 +1,6 @@
-function [pose_GV,error_GV,pos_AR2_W,error_AR2_W,traj_AR2_G,time] = trajectoryTrackingCoupled(path_GV_G,path_AR2_J,Motor1,Stepper1,path_AR2_WZ)
+function [pose_GV,error_GV,pos_AR2_W,error_AR2_W,traj_AR2_W,traj_AR2_G,time] = trajectoryTrackingCoupled(path_GV_G,path_AR2_J,Motor1,Stepper1,path_AR2_WZ)
 
-pause(15);
+pause(5);
 
 %% NatNet Connection
 natnetclient = natnet;
@@ -46,10 +46,9 @@ Ki_GV = [Ki_GV 0 0;
       0 Ki_GV 0;
       0 0  -Ki_GV;];
   
-Kp_AR2 = 4;
-Ki_AR2 = 2*0.038;    
-Kd_AR2 = 0.4*3;
-
+Kp_AR2 = 4/4;
+Ki_AR2 = 2*0.038/4;    
+Kd_AR2 = 0.4*3/4;
 
 %% Main Loop Prep
 timestep = path_GV_G(end,1)/length(path_GV_G(:,1)); %This is currently set equal to the interval for calculating
@@ -76,7 +75,7 @@ command_AR2_J(1,:) = command0_AR2_J;
 command0_AR2_W = manipFK(command0_AR2_J);
 
 % Offset between global and AR2 work frame
-offset = getTransformation3(command0_AR2_J,7);
+offset = getTransformation3(command0_AR2_J);
 
 
 for i = 1:length(path_AR2_WZ(:,1))
@@ -109,10 +108,10 @@ while(toc <= path_GV_G(end,1))
         trajectoryPrime = [path_GV_G(index,5);path_GV_G(index,6);path_GV_G(index,7)];
 
         data = natnetclient.getFrame;
-        if (isempty(data.RigidBody(1)) || isempty(data.LabeledMarker(7)))
+        if (isempty(data.RigidBody(1)) || isempty(data.RigidBody(2)))
             if isempty(data.RigidBody(1)) == 1
                 disp("Ground Vehicle Lost Connection");
-            elseif isempty(data.LabeledMarker(7))
+            elseif isempty(data.RigidBody(2))
                 disp("AR2 Lost Connection");
             end
 % 			fprintf( '\tPacket is empty/stale\n' )
@@ -151,7 +150,7 @@ while(toc <= path_GV_G(end,1))
 
 		%ARM Logic
 
-        traj_AR2_G(index,:) = [data.LabeledMarker(7).z data.LabeledMarker(7).x data.LabeledMarker(7).y]*1000;
+        traj_AR2_G(index,:) = [data.RigidBody(2).z data.RigidBody(2).x data.RigidBody(2).y]*1000;
         traj_AR2_W(index,:) = traj_AR2_G(index,:) - offset;
 
 		if index == 1
@@ -160,7 +159,7 @@ while(toc <= path_GV_G(end,1))
         else
             error_AR2_W(index,:) = command_AR2_W(index,:)-traj_AR2_W(index,:);
         end
-
+        
         if index == 1
             %use PID Controller:
             Up = zeros(1,3);
@@ -178,6 +177,7 @@ while(toc <= path_GV_G(end,1))
         u = Up+Ui+Ud;
         %PID part
         commandDot_AR2_W(index,:) = pathDot_AR2_W(index,:)+u;
+        commandDot_AR2_W(index,1:2) = 0;
         commandDot_AR2_J_temp = trajectoryIK3(commandDot_AR2_W(index,:)',command_AR2_J(index,:));
 
         commandDot_AR2_J=zeros(1,6);
@@ -200,11 +200,16 @@ while(toc <= path_GV_G(end,1))
         error_GV(index,:) = [error_GV_G(1) error_GV_G(2) yawYeet_error];
         pos_AR2_W(index,:) = [traj_AR2_W(index,1) traj_AR2_W(index,2) traj_AR2_W(index,3)];
         error_AR2_W(index,:) = [error_AR2_W(index,1) error_AR2_W(index,2) error_AR2_W(index,3)];
-        traj_AR2_G(index,:) = [command_AR2_W(index,1) command_AR2_W(index,2) command_AR2_W(index,3)];
+        traj_AR2_W(index,:) = [command_AR2_W(index,1) command_AR2_W(index,2) command_AR2_W(index,3)];
         index = index + 1;
     end
 end
 
+%Get Ending Position
+data = natnetclient.getFrame();
+pose_GV(end,:) = [data.RigidBody(1).x,-data.RigidBody(1).z,theta_GV_G];
+
+pos_AR2_W(end,:) = [data.RigidBody(2).z data.RigidBody(2).x data.RigidBody(2).y]*1000;
 
 %Set motors back to zero
 Motor1.updateMotors([0.0,0.0,0.0]);

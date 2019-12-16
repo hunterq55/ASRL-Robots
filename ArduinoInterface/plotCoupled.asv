@@ -1,0 +1,24 @@
+function plotCoupled(orbitReference,pose_GV,)
+
+orbitMeasured = zeros(size(orbitReference));
+
+orbitMeasured = pose_GV(:,1);
+%[pose_GV,error_GV,pos_AR2_W,error_AR2_W,traj_AR2_W,traj_AR2_G,time,offset]
+
+%pose_GV in meters
+
+%pos_AR2_W in mm
+
+%traj_AR2_W in mm
+
+%traj_AR2_G in meters
+figure
+hold on
+plot3(orbitReference(:,1),orbitReference(:,2),orbitReference(:,3));
+plot3();
+hold off
+
+error=orbitReference-orbitMeasured;
+
+
+end
