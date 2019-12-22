@@ -9,6 +9,8 @@
 %Motor3 = addon(a,'MatlabMotorLibrary/EncoderAddon',{'D18','D25'});
 
 %Rotation matrix definitions
+pause(2);
+
 L = .115;
 theta = 0;
 index = 0;
