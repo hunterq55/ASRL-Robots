@@ -10,11 +10,13 @@ The goal of this repository is to host all files needed for simulation of each s
 
 - master hosts all parts of the ROME mobile manipulator platform, including simulation code, visualization code, and all code required to run the mobile manipulator using the MATLAB Arduino Hardware Support Package.
 
+#### ROME Control
+
+ - Velocity Control through the MATLAB Support Package is used to increase the ability of the AR2. All files can be found in the Kinematics folder.
+
 #### Manipulator
 
 - The lab currently uses the AR2 designed by Chris Annin (https://github.com/Chris-Annin/AR2) for the manipulator used in the Rapid Orbital Motion Emulator (ROME) research project.
-
- - Velocity Control through the MATLAB Support Package is used to increase the ability of the AR2. All files can be found in the Kinematics folder.
 
  - Aiding our research, a visualization tool for the AR2 was created, but is currently using broken inverse kinematics.
 
