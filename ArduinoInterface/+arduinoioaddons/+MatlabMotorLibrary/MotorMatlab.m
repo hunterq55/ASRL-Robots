@@ -1,4 +1,4 @@
-classdef EncoderAddon < matlabshared.addon.LibraryBase
+classdef MotorMatlab < matlabshared.addon.LibraryBase
 
     properties(Access = private, Constant = true)
     GET_RAD = hex2dec('00')
@@ -12,7 +12,7 @@ classdef EncoderAddon < matlabshared.addon.LibraryBase
     end
 
     properties(Access = protected, Constant = true)
-        LibraryName = 'MatlabMotorLibrary/EncoderAddon'
+        LibraryName = 'MatlabMotorLibrary/MotorMatlab'
         DependentLibraries = {}
         LibraryHeaderFiles = {'FinalMotorLibrary/FinalMotorLibrary.h'}
         CppHeaderFile = fullfile(arduinoio.FilePath(mfilename('fullpath')), 'src', 'MotorMatlab.h')
@@ -22,7 +22,7 @@ classdef EncoderAddon < matlabshared.addon.LibraryBase
       Pins
     end
     properties(Access = private)
-        ResourceOwner = 'MatlabMotorLibrary/EncoderAddon';
+        ResourceOwner = 'MatlabMotorLibrary/MotorMatlab';
     end
 
     properties(Access = private)
@@ -38,7 +38,7 @@ classdef EncoderAddon < matlabshared.addon.LibraryBase
 
 
     methods(Access = public)
-        function obj = EncoderAddon(parentObj,inputPins)
+        function obj = MotorMatlab(parentObj,inputPins)
             obj.Parent = parentObj;
             obj.Pins = inputPins;
             count = getResourceCount(obj.Parent,obj.ResourceOwner);

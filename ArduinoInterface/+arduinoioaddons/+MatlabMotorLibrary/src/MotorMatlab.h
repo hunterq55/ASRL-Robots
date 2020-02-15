@@ -88,22 +88,13 @@ class MotorMatlab : public LibraryBase
                 if(ID == 0)
                 {
                     mPointer[ID] = new Motor(1,pinNumbers[0],pinNumbers[1],
-                                           3072,&inputRadSec0,&outputVoltage0,&setpointRadSec0,
-                                           Kp,Ki,Kd,DIRECT);
-                    mPointer[ID]->setAfms(&AFMS);
-                    mPointer[ID]->registerMotor();
-                    debugPrint(MSG_CREATE,ID,pinNumbers[0],pinNumbers[1],3702,Kp,Ki,Kd);
-                }
-                else if(ID == 1)
-                {
-                    mPointer[ID] = new Motor(4,pinNumbers[0],pinNumbers[1],
                                            3072,&inputRadSec1,&outputVoltage1,&setpointRadSec1,
                                            Kp,Ki,Kd,DIRECT);
                     mPointer[ID]->setAfms(&AFMS);
                     mPointer[ID]->registerMotor();
                     debugPrint(MSG_CREATE,ID,pinNumbers[0],pinNumbers[1],3702,Kp,Ki,Kd);
                 }
-                else if(ID == 2)
+                else if(ID == 1)
                 {
                     mPointer[ID] = new Motor(2,pinNumbers[0],pinNumbers[1],
                                            3072,&inputRadSec2,&outputVoltage2,&setpointRadSec2,
@@ -112,9 +103,18 @@ class MotorMatlab : public LibraryBase
                     mPointer[ID]->registerMotor();
                     debugPrint(MSG_CREATE,ID,pinNumbers[0],pinNumbers[1],3702,Kp,Ki,Kd);
                 }
-                else if(ID == 3)
+                else if(ID == 2)
                 {
                     mPointer[ID] = new Motor(3,pinNumbers[0],pinNumbers[1],
+                                           3072,&inputRadSec3,&outputVoltage3,&setpointRadSec3,
+                                           Kp,Ki,Kd,DIRECT);
+                    mPointer[ID]->setAfms(&AFMS);
+                    mPointer[ID]->registerMotor();
+                    debugPrint(MSG_CREATE,ID,pinNumbers[0],pinNumbers[1],3702,Kp,Ki,Kd);
+                }
+                else if(ID == 3)
+                {
+                    mPointer[ID] = new Motor(4,pinNumbers[0],pinNumbers[1],
                                            3072,&inputRadSec3,&outputVoltage3,&setpointRadSec3,
                                            Kp,Ki,Kd,DIRECT);
                     mPointer[ID]->setAfms(&AFMS);

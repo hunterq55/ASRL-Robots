@@ -88,6 +88,7 @@ while(toc <= path(end,1))
         setpointMetSec = pTheta*(trajectoryPrime - Kp*error - Ki*errorSum);
         setpointRadSec = setpointMetSec/R;
         
+        
         Motor1.updateMotors(setpointRadSec*1.2);
         
         time(index,:) = toc;
