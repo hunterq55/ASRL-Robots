@@ -1,7 +1,8 @@
 #ifndef MatlabMotorLibrary_h
 #define MatlabMotorLibrary_h
+
 #include "LibraryBase.h"
-#include "FinalMotorLibrary.h"
+#include "Motor.h" //FinalMotorLibrary.h
 //Debug statements
 const char MSG_CREATE[]       PROGMEM = "MotorMatlab::mPointer[%d] = %d %d %d %f %f %f\n";
 const char MSG_READ[]       PROGMEM = "MotorMatlab::mPointer[%d].read() = %d\n";

@@ -14,7 +14,7 @@ classdef MotorMatlab < matlabshared.addon.LibraryBase
     properties(Access = protected, Constant = true)
         LibraryName = 'MatlabMotorLibrary/MotorMatlab'
         DependentLibraries = {}
-        LibraryHeaderFiles = {'FinalMotorLibrary/FinalMotorLibrary.h'}
+        LibraryHeaderFiles = {'Motor/Motor.h'} %FinalMotorLibrary/FinalMotorLibrary.h
         CppHeaderFile = fullfile(arduinoio.FilePath(mfilename('fullpath')), 'src', 'MotorMatlab.h')
         CppClassName = 'MotorMatlab'
     end
