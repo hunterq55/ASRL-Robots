@@ -3,6 +3,8 @@
 
 %https://www.mathworks.com/help/supportpkg/arduinoio/ug/control-motors-using-adafruit-motor-shield-v2.html#AdafruitMotorShieldV2Example-4
 
+
+%https://www.robotshop.com/en/12v-120-rpm-dc-motor-641.html
 %need to find relation for motor speed IRL to MATLAB motor -1 to 1
 
 a = arduino('COM3','Mega2560','Libraries','Adafruit\MotorShieldV2');
