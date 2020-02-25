@@ -10,6 +10,12 @@
 
 %Rotation matrix definitions
 
+MaxMotor = 12.5664;
+
+dcm1.Speed = 0;
+dcm2.Speed = 0;
+dcm3.Speed = 0;
+
 pause(2);
 
 L = .115;
@@ -45,9 +51,14 @@ while(1)
         setpointRadSec2 = metSec2/R;
         setpointRadSec3 = metSec3/R;
         
-        disp(setpointRadSec1);
-        Motor1.updateMotors([setpointRadSec1,setpointRadSec2,setpointRadSec3]);
+%         disp(setpointRadSec1);
+%         Motor1.updateMotors([setpointRadSec1,setpointRadSec2,setpointRadSec3]);
         
+        dcm1.Speed = setpointRadSec1/MaxMotor;
+        dcm2.Speed = 0;
+        dcm3.Speed = 0;
+
+
         index = index + 1;
     end   
 end
