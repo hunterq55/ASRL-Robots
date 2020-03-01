@@ -41,8 +41,8 @@ L = .13; %distance from platform centroid to wheel
 R = .05;  %radius of the wheel
 
 %PID
-Kp = 8*.25;
-Ki = .4*.25;
+Kp = 8*.25*.25;
+Ki = .4*.25*.25;
 % 
 % Kp = 0;
 % Ki = 0;
@@ -68,7 +68,7 @@ while(toc < 2*pi*4*numCircles)
     
     if (toc >= timestep*index)
         
-        trajectory = [cos(.25*toc);sin(.25*toc);0;]; %Circle set to 1 meter radius, 8pi period.
+        trajectory = [.5*cos(.25*toc);.5sin(.25*toc);0;]; %Circle set to 1 meter radius, 8pi period.
         trajectoryPrime = [-.25*sin(.25*toc);.25*cos(.25*toc);0;]; %Trajectory derivative
     
         data = natnetclient.getFrame;	
