@@ -19,7 +19,7 @@ if ( natnetclient.IsConnected == 0 )
 end
 
 initialStatesWork = manipFK(theta');
-initialStatesWork(4:6) = 0;
+
 %rotation matrix for how global rotates to reach work frame
 rotz=[cosd(rotation) -sind(rotation) 0;
      sind(rotation) cosd(rotation)  0
@@ -34,9 +34,19 @@ while toc <= 10
 			fprintf( '\tMake sure the server is in Live mode or playing in playback\n\n')
 			return
         end
+        
+    yaw = data.RigidBody(1).qy;
+    pitch= data.RigidBody(1).qz;
+    roll= data.RigidBody(1).qx;
+    scalar = data.RigidBody(1).qw;
+    q = quaternion(roll,yaw,pitch,scalar);
+    qRot = quaternion(0,0,0,1);
+    q = mtimes(q,qRot);
+    a = EulerAngles(q,'zyx');
+    
     statesWorldPos(index,1:3) = [data.LabeledMarker(1).z data.LabeledMarker(1).x data.LabeledMarker(1).y]*1000;
     statesWorldPosRot(index,1:3)=rotz*statesWorldPos(index,1:3)';
-    statesWorld(index,1:6) = [statesWorldPosRot(index,1:3) 0 0 0];
+    statesWorld(index,1:6) = [statesWorldPosRot(index,1:3) a(2) a(1) a(3)];
     index = index + 1;
 end
 
