@@ -1,10 +1,10 @@
-function [trajectory,time,error,initposWork,initposGlobal] = trajectoryTrackingArm_Feedback(path,refTraj,Stepper1,theta0)
+function [trajectory,time,error,initposWork,initposGlobal] = trajectoryTrackingArm_Feedback(path_AR2_J,refTraj,Stepper1,theta0)
 % This function takes a path, specified as 6 angle states followed by six
 % angular velocity states (rad,rad/s) for each joint.
 % Stepper1 is a stepper motor object for one of
 % the joints on the arm. Arms must first be callibrated.
 
-pause(15);
+pause(5);
 
 %% NatNet Connection
 natnetclient = natnet;
@@ -26,15 +26,11 @@ if ( model.RigidBodyCount < 1 )
 end
 
 %% Trajectory Validation (Actually Path Validation REEEEEE)
-validity = validateTrajectory(path);
+validity = validateTrajectory(path_AR2_J);
 if validity(1) == 0
   disp('The given trajectory is invalid');
   return
 end
-
-%% Platform Geometry
-L = .13; %distance from platform centroid to wheel
-R = .05;  %radius of the wheel
 
 %% Gains
 
@@ -44,7 +40,7 @@ Kd_AR2 = 0.4*3;
 
 
 %% Main Loop Prep
-timestep = path(end,1)/length(path(:,1)); %This is currently set equal to the interval for calculating
+timestep = path_AR2_J(end,1)/length(path_AR2_J(:,1)); %This is currently set equal to the interval for calculating
                 %platform velocity and the inner loop PID update interval.
 
 % Arm initialization
@@ -66,12 +62,13 @@ command_AR2_J(1,:) = command0_AR2_J;
 command0_AR2_W = manipFK(command0_AR2_J);
 
 % Offset between global and AR2 work frame
-offset = getTransformation(command0_AR2_J);
+offsetTemp = getTransformationMatrix(command0_AR2_J,0);
 
+offset = offsetTemp(1:3);
+offsetAng = offsetTemp(4:6);
 
 for i = 1:length(path_AR2_WZ(:,1))
    command_AR2_W_6(i,:) = manipFK(path_AR2_J(i,(2:7)));
-   command_AR2_W(i,1:3)= command_AR2_W_6(i,1:3);
 end
 
 traj_AR2_W = zeros(length(path_AR2_J(:,1)),3);
@@ -80,31 +77,43 @@ trajDot_AR2_W = zeros(length(path_AR2_J(:,1)),3);
 error_AR2_W = zeros(length(path_AR2_J(:,1)),3);
 time = path_AR2_J(:,1);
 
-%offset(3)=offset(3)+21.12;
-% initWorld = [-data.LabeledMarker(1).x -data.LabeledMarker(1).z data.LabeledMarker(1).y 0 0 0]*1000;
-% initWork=reference(1,:);
-% offset=initWorld-initWork;
-
-commandDot_AR2_W = zeros(length(path(:,1)),3);
+commandDot_AR2_W = zeros(length(path_AR2_J(:,1)),3);
 
 %% Main  Loop
 index = 1;
 disp("Starting");
 tic;
-while(toc <= path(end,1))
+while(toc <= path_AR2_J(end,1))
 
-    if (toc >= path(index,1))
+    if (toc >= path_AR2_J(index,1))
 
         data = natnetclient.getFrame;
 
 		%ARM Logic
-
-        traj_AR2_G(index,:) = [data.LabeledMarker(7).z data.LabeledMarker(7).x data.LabeledMarker(7).y]*1000;
+				%pos measure
+        traj_AR2_G(index,:) = [data.RigidBody(1).z data.RigidBody(1).x data.RigidBody(1).y]*1000;
         traj_AR2_W(index,:) = traj_AR2_G(index,:) - offset;
 
+				%angle measure
+				yaw = data.RigidBody(1).qy;
+        pitch = data.RigidBody(1).qz;
+        roll = data.RigidBody(1).qx;
+        scalar = data.RigidBody(1).qw;
+        q = quaternion(roll,yaw,pitch,scalar);
+        qRot = quaternion(0,0,0,1);
+        q = mtimes(q,qRot);
+        a = EulerAngles(q,'zyx');
+
+				%orientation measure
+				traj_AR2_OR_G(index,:) = [a(2), a(1), a(3)]; %yaw pitch
+				traj_AR2_OR_W(index,:) = traj_AR2_OR_G(index,:) - offsetAng;
+
+		%Error Calc and correction
+
+		%pos correction
 		if index == 1
             error_AR2_W(index,:) = zeros(1,3);
-            %error in pos!!!
+            %error in pos using PID!!!
         else
             error_AR2_W(index,:) = command_AR2_W(index,:)-traj_AR2_W(index,:);
         end
@@ -126,12 +135,8 @@ while(toc <= path(end,1))
         u = Up+Ui+Ud;
         %PID part
         commandDot_AR2_W(index,:) = pathDot_AR2_W(index,:)+u;
-        commandDot_AR2_J_temp = trajectoryIK3(commandDot_AR2_W(index,:)',command_AR2_J(index,:));
+        commandDot_AR2_J = trajectoryIK(commandDot_AR2_W(index,:)',command_AR2_J(index,:));
 
-        commandDot_AR2_J=zeros(1,6);
-        commandDot_AR2_J(2)=commandDot_AR2_J_temp(1);
-        commandDot_AR2_J(3)=commandDot_AR2_J_temp(2);
-        commandDot_AR2_J(5)=commandDot_AR2_J_temp(3);
 
         statesArray_AR2_J = [command_AR2_J(index,1),command_AR2_J(index,2),command_AR2_J(index,3)...
                        command_AR2_J(index,4),command_AR2_J(index,5),command_AR2_J(index,6)...
