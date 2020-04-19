@@ -55,6 +55,7 @@ qdot = pinv(J)*[xdot_ref + Kp*ep; pinv(L)*(L'*omega_ref + Ko*eo)]; %qdot - angle
 errdot = [xdot_ref; L'*omega_ref] - [eye(3), zeros(3); zeros(3), L]*J*qdot; %error vel
 xdot = [qdot; errdot]; %full output vel
 
-%put into fast ode solver above to find
+%put into fast ode solver above to find - solve equations in from t1 to t2,
+%put back into solution
 
 %q and err
