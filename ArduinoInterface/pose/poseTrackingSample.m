@@ -11,6 +11,50 @@
 
 %assume J is defined here
 
+%% NatNet Connection
+natnetclient = natnet;
+natnetclient.HostIP = '127.0.0.1';
+natnetclient.ClientIP = '127.0.0.1';
+natnetclient.ConnectionType = 'Multicast';
+natnetclient.connect;
+
+if ( natnetclient.IsConnected == 0 )
+	fprintf( 'Client failed to connect\n' )
+	fprintf( '\tMake sure the host is connected to the network\n' )
+	fprintf( '\tand that the host and client IP addresses are correct\n\n' )
+	return
+end
+
+model = natnetclient.getModelDescription;
+if ( model.RigidBodyCount < 1 )
+	return
+end
+
+%%
+
+offset = getTransformationMatrix(command0_AR2_J,0);
+
+data = natnetclient.getFrame();
+
+initialStates_G=[data.RigidBody(1).z data.RigidBody(1).x data.RigidBody(1).y]*1000;
+
+initial_W(index,:) = traj_AR2_G(index,:) - offset;
+
+%angle measure
+yaw = data.RigidBody(1).qy;
+pitch = data.RigidBody(1).qz;
+roll = data.RigidBody(1).qx;
+scalar = data.RigidBody(1).qw;
+q = quaternion(roll,yaw,pitch,scalar);
+qRot = quaternion(0,0,0,1);
+q = mtimes(q,qRot);
+a = EulerAngles(q,'zyx');
+
+%orientation measure
+traj_AR2_OR_G(index,:) = [a(2), a(1), a(3)]; %yaw pitch
+
+
+
 thetaIC=[q1;q2;q3;q4;q5;q6];
 
 theta_ref = thetaIC;
