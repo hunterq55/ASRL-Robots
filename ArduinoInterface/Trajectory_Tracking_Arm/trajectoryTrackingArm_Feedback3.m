@@ -63,7 +63,7 @@ error=zeros(length(path(:,1)),3);
 time=path(:,1);
 data = natnetclient.getFrame;
 
-offset = getTransformation3(theta0,7);
+offset = getTransformation3(theta0);
 
 % initWorld = [-data.LabeledMarker(1).x -data.LabeledMarker(1).z data.LabeledMarker(1).y 0 0 0]*1000;
 % initWork=reference(1,:);
@@ -86,7 +86,7 @@ while(toc <= path(end,1))
 			return
         end
             
-        trajectoryGlobal(index,:) = [-data.LabeledMarker(7).z -data.LabeledMarker(7).x data.LabeledMarker(7).y]*1000;
+        trajectoryGlobal(index,:) = [-data.LabeledMarker(1).z -data.LabeledMarker(1).x data.LabeledMarker(1).y]*1000;
         trajectory(index,:) = trajectoryGlobal(index,:) - offset;
         %Multiple by 1000 to convert from m to mm
         time(index,:) = toc;
@@ -130,7 +130,7 @@ while(toc <= path(end,1))
             Ud=kd*(3*(error(index,:)-4*error(index-1,:)+error(index-2,:))/2*path(1,1));
         end   
             u=Up+Ui+Ud;
-            %PID part
+            %PD part
             correctedVel(index,:)=referenceVel(index,:)+u;
             
 %             if sum(abs(correctedVel(index,3)) > abs(1.2*referenceVel(index,3))) || sum(abs(correctedVel(index,1:2)) > [2 2])
@@ -169,7 +169,7 @@ while(toc <= path(end,1))
     end
 end
 data = natnetclient.getFrame;
-trajectory(end,:) = [-data.LabeledMarker(7).z -data.LabeledMarker(7).x data.LabeledMarker(7).y]*1000 - offset;
+trajectory(end,:) = [-data.LabeledMarker(1).z -data.LabeledMarker(1).x data.LabeledMarker(1).y]*1000 - offset;
 
 plotArmExp(trajectory,reference,error,path(end,1));
 pause(2);

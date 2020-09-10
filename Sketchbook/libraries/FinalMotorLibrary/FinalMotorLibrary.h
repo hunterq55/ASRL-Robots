@@ -10,7 +10,7 @@ class Motor
 
 public:
 
-    Motor(int id, uint8_t phaseA, uint8_t phaseB, unsigned int encoderCPR, double *input,double *output, double *setpoint,double Kp,double Ki,double Kd,int ControllerDirection);
+    Motor(int id, uint8_t phaseA, uint8_t phaseB, unsigned int encoderCPR,double Kp,double Ki,double Kd,int ControllerDirection);
 
 
     Encoder *encoder;

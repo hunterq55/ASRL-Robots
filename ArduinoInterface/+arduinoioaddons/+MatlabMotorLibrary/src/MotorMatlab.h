@@ -1,18 +1,14 @@
-
 #ifndef MatlabMotorLibrary_h
 #define MatlabMotorLibrary_h
 
 #include "LibraryBase.h"
-#include "FinalMotorLibrary.h"
-
+#include "Motor.h" //FinalMotorLibrary.h
 //Debug statements
 const char MSG_CREATE[]       PROGMEM = "MotorMatlab::mPointer[%d] = %d %d %d %f %f %f\n";
 const char MSG_READ[]       PROGMEM = "MotorMatlab::mPointer[%d].read() = %d\n";
 const char PID_BUGS[]        PROGMEM = "PID Output Voltage : %d\n";
 const char MSG_SETPOINT[]       PROGMEM = "Setpoint recieved: %d\n";
-
 #define MAX_MOTORS 4
-
 //Available commands through MATLAB interface
 #define MOTOR_CREATE 0x03
 #define GET_COUNTS 0x02
@@ -21,17 +17,13 @@ const char MSG_SETPOINT[]       PROGMEM = "Setpoint recieved: %d\n";
 #define GET_COUNTSSEC 0x04
 #define SET_RADSEC 0x05
 #define UPDATE_MOTORS 0x06
-
 //GLOBAL VARIABLES
 double Kp = 2.5,Ki = 60.25,Kd = 0.0;
-double inputRadSec1, outputVoltage1, setpointRadSec1 = 0.0;
-double inputRadSec2, outputVoltage2, setpointRadSec2 = 0.0;
-double inputRadSec3, outputVoltage3, setpointRadSec3 = 0.0;
-
-
+double inputRadSec0 = 0.0, outputVoltage0 = 0.0, setpointRadSec0 = 0.0;
+double inputRadSec1 = 0.0, outputVoltage1 = 0.0, setpointRadSec1 = 0.0;
+double inputRadSec2 = 0.0, outputVoltage2 = 0.0, setpointRadSec2 = 0.0;
+double inputRadSec3 = 0.0, outputVoltage3 = 0.0, setpointRadSec3 = 0.0;
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
-
-
 class MotorMatlab : public LibraryBase
 {
     public:
@@ -54,6 +46,7 @@ class MotorMatlab : public LibraryBase
     {
         //This loop will bring the motors to a desired setpoint by updating
         //the PID, as defined earlier in the code.
+        
         if(mPointer[0] != NULL)
         {
             mPointer[0]->updateMotor();
@@ -71,6 +64,11 @@ class MotorMatlab : public LibraryBase
             mPointer[2]->updateMotor();
             //mPointer[2]->setDuty(50);
         }
+        
+        if(mPointer[3] != NULL)
+        {
+            mPointer[3]->updateMotor();
+        }
     }
     
     public:
@@ -81,10 +79,9 @@ class MotorMatlab : public LibraryBase
         {
             case MOTOR_CREATE:
             {
-                byte ID, pinNumbers[2];
+                byte ID, pinNumbers[1];
                 ID = dataIn[0];
-
-                for (byte i=0;i<2;i=i=i+1)
+                for (byte i=0;i<2;i=i+1)
                 {
                     pinNumbers[i] = dataIn[i+1];
                 }
@@ -110,6 +107,15 @@ class MotorMatlab : public LibraryBase
                 else if(ID == 2)
                 {
                     mPointer[ID] = new Motor(3,pinNumbers[0],pinNumbers[1],
+                                           3072,&inputRadSec3,&outputVoltage3,&setpointRadSec3,
+                                           Kp,Ki,Kd,DIRECT);
+                    mPointer[ID]->setAfms(&AFMS);
+                    mPointer[ID]->registerMotor();
+                    debugPrint(MSG_CREATE,ID,pinNumbers[0],pinNumbers[1],3702,Kp,Ki,Kd);
+                }
+                else if(ID == 3)
+                {
+                    mPointer[ID] = new Motor(4,pinNumbers[0],pinNumbers[1],
                                            3072,&inputRadSec3,&outputVoltage3,&setpointRadSec3,
                                            Kp,Ki,Kd,DIRECT);
                     mPointer[ID]->setAfms(&AFMS);
@@ -153,17 +159,20 @@ class MotorMatlab : public LibraryBase
                 
                 if(ID == 0)
                 {
-                     setpointRadSec1 = *((float*)(radSec));
+                     setpointRadSec0 = *((float*)(radSec));
                 }
                 else if(ID == 1)
                 {
-                    setpointRadSec2 = *((float*)(radSec));
+                     setpointRadSec1 = *((float*)(radSec));
                 }
                 else if(ID == 2)
                 {
+                    setpointRadSec2 = *((float*)(radSec));
+                }
+                else if(ID == 3)
+                {
                     setpointRadSec3 = *((float*)(radSec));
                 }        
-
                 sendResponseMsg(cmdID,0,0);
                 break;
             }

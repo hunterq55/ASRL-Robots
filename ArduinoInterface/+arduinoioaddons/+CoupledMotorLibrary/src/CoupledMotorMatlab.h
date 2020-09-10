@@ -23,7 +23,10 @@ const char MSG_SETPOINT[]       PROGMEM = "Setpoint recieved: %d\n";
 #define GET_COUNTSSEC 0x04
 #define SET_RADSEC 0x05
 #define UPDATE_MOTORS 0x06
-#define UPDATE_STEPPERS 0x07
+
+#define STEPPER_CREATE 0x07
+#define SET_RADSEC_STEPPER == 0x08
+#define UPDATE_STEPPERS 0x09
 
 //GLOBAL VARIABLES
 double Kp = 2.5,Ki = 60.25,Kd = 0.0;

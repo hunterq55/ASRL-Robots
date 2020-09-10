@@ -8,7 +8,7 @@ pause(15);
 
 %NatNet Connection
 natnetclient = natnet;
-natnetclient.HostIP = '12f7.0.0.1';
+natnetclient.HostIP = '127.0.0.1';
 natnetclient.ClientIP = '127.0.0.1';
 natnetclient.ConnectionType = 'Multicast';
 natnetclient.connect;
@@ -89,6 +89,7 @@ while(toc <= path(end,1))
         
         setpointMetSec = pTheta*(trajectoryPrime - Kp*error - Ki*errorSum);
         setpointRadSec = setpointMetSec/R;
+        
         
         Motor1.updateMotors(setpointRadSec*1.2);
         

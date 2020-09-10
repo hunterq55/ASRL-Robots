@@ -1,7 +1,7 @@
 t=60;
-ts=t/1500;
+ts=t/3000;
 clear tv;
-for i=1:1500
+for i=1:3000
    tv(i)=i*ts; 
 end
 
