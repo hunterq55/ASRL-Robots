@@ -32,9 +32,13 @@ X0 = [q_init; err];
 %% Simulation Setup
 tspan = [0 10];
 options = odeset('RelTol',1e-8,'AbsTol',1e-10);
+tic
 [t, X] = ode45(@AR2KinDE, tspan, X0, options);
+toc
 %new solver
+tic
 [tRK, XRK]=RK4_angles(@AR2KinDE,X0);
+toc
 %% Output
 q = X(:,1:6);
 err = X(:,7:12);

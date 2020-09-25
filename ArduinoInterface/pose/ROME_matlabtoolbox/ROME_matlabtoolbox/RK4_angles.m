@@ -1,6 +1,6 @@
 function [t,x]=RK4_angles(AR2KinDE,x0)
 %stepsize 
-h=0.01;
+h=0.0155;
 %length that you will be solving to
 tspan=10;
 t = 0:h:tspan;
