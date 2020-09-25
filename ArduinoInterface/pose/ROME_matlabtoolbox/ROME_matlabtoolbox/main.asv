@@ -44,13 +44,12 @@ qRK=XRK(:,1:6);
 errRK=XRK(:,7:12);
 %% Plots
 figure(1)
-plot(t,q*180/pi)
+plot(t,q*180/p
 xlabel('time [sec]')
 ylabel('Configuration variables [deg]')
 legend('q_1', 'q_2', 'q_3', 'q_4', 'q_5', 'q_6')
 
 %new plot
-figure
 plot(tRK,qRK*180/pi)
 
 for i = 1:length(t)
@@ -61,7 +60,7 @@ for i = 1:length(t)
    eth2(i) = X(i,11);
    eth3(i) = X(i,12);
 end
-figure
+figure(2)
 plot(t,ex)
 hold on
 plot(t,ey)
@@ -70,8 +69,7 @@ plot(t,ez)
 xlabel('time [sec]')
 ylabel('Position error')
 legend('x error', 'y error', 'z error')
-
-figure
+figure(3)
 plot(t,eth1)
 hold on
 plot(t,eth2)
