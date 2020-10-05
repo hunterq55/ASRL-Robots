@@ -58,7 +58,7 @@ r=1/(2*sin(nuef) * [Rif(3,2)-Rif(2,3);Rif(1,3)-Rif(3,1);Rif(2,1)-Rif(1,2);]);   
 
 %eul vectors are defined by the orentation of the end effector in terms of zyx rotations
     %reference eul angle defined by PHI, THETA, PSI.
-eul0_ref=command0_AR2_w(4:6);
+eul0_ref=command0_AR2_W(4:6);
 euldot0_ref=[0;0;0;];
 
 Binv = eul2jac(eul0_ref);
@@ -67,7 +67,8 @@ C_ref = eul2r(eul0_ref');
 
 
 i=1;
-while(true)
+tic
+while(toc<60)
     data = natnetclient.getFrame;
     if (isempty(data.RigidBody(1)))
                 disp("AR2 Lost Connection");
@@ -85,7 +86,7 @@ while(true)
     quat = mtimes(quat,qRot);
     eul = EulerAngles(quat,'zyx');
     
-    Crot = eul2r(eul'); %measured from cameras
+    C = eul2r(eul'); %measured from cameras
     
     %on first iteration, initialize variables that constantly update
     if (i == 1)
@@ -93,46 +94,42 @@ while(true)
         err = getError_init(command0_AR2_W(1:3), eul0_ref, command0_AR2_J);
         ep=err(1:3);
         eo=err(4:6);
-        J = JacobionAR2(command0_AR2_J);
+        q=command0_AR2_J;
+        x=[q; ep; eo];
     end
     
-    % Vectors of the rotation matricies
-    nd = C_ref(:,1);
-    sd = C_ref(:,2);
-    ad = C_ref(:,3);
-    ne = C(:,1);
-    se = C(:,2);
-    ae = C(:,3);
-    % Skew Symmetric matrix representation
-    S_nd = Vec2Skew(nd);
-    S_sd = Vec2Skew(sd);
-    S_ad = Vec2Skew(ad);
-    S_ne = Vec2Skew(ne);
-    S_se = Vec2Skew(se);
-    S_ae = Vec2Skew(ae);
-    % Ouputs
-    eo = 0.5*(cross(ne,nd) + cross(se,sd) + cross(ae,ad));
-    L = -0.5*(S_nd*S_ne + S_sd*S_se + S_ad*S_ae);
+    xdot_ref = zeros(6,1);
+    theta_ref = command0_AR2_J;
+    thetadot_ref = zeros(6,1);
     
-    %Solving Diff Eq
-    qdot = pinv(J)*[xdot_ref + Kp*ep; pinv(L)*(L'*omega_ref + Ko*eo)]; %qdot - angle of joints vel
-    errdot = [xdot_ref; L'*omega_ref] - [eye(3), zeros(3); zeros(3), L]*J*qdot; %error vel
-    xdot = [qdot; errdot]; %full output vel
+    %timestep
+    h = 0.01;
     
-    %HOW DO I SOLVE THIS DIFF EQ?????
-    %
-    %
-    %
-    %
-    %
-    %
-    %
-    %
+    k_1 = AR2KinDE(x(i,:),xdot_ref,theta_ref,thetadot_ref);
+    q_dot=k_1(1:6);
+    k_2 = AR2KinDE(x(i,:)+0.5*h*k_1,xdot_ref,theta_ref,thetadot_ref);
+    k_3 = AR2KinDE((x(i,:)+0.5*h*k_2),xdot_ref,theta_ref,thetadot_ref);
+    k_4 = AR2KinDE((x(i,:)+k_3*h),xdot_ref,theta_ref,thetadot_ref);
+    x(i+1,:) = x(i,:) + ((1/6)*(k_1+2*k_2+2*k_3+k_4)*h); 
     
+
+%     k_1 = xdot;
+%     k_2 = xdot+0.5*h*k_1;
+%     k_3 = xdot+0.5*h*k_2;
+%     k_4 = xdot+k_3*h;
+%     x = xdot + ((1/6)*(k_1+2*k_2+2*k_3+k_4)*h); 
+%     
+    q=x(1:6);
+    err=x(7:12);
     
     ep=err(1:3);
     eo=err(4:6);
-    J = JacobionAR2(q);
+    
+%     J = JacobionAR2(q);
+    statesArray_AR2_J = [q(1),q(2),q(3),q(4),q(5),q(6)...
+                        q_dot(1),q_dot(2),q_dot(3),q_dot(4),q_dot(5),q_dot(6)];
+    Stepper1.updateStates(statesArray_AR2_J);
+
     i=i+1;
 end
 
