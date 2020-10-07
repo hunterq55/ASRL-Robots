@@ -7,9 +7,37 @@ function poseTrackingArm(path_AR2_J,Stepper1)
 %Stepper1 is the stepper motor object that defines the stepper motors in
 %matlab using the custom library
 
-pause(5);
+%% Arm initialization
+statesArray_AR2_J = [path_AR2_J(1),path_AR2_J(2),path_AR2_J(3)...
+               path_AR2_J(4),path_AR2_J(5),path_AR2_J(6)...
+               .25,.25,.25,.25,.25,.25];
+Stepper1.updateStates(statesArray_AR2_J);
+
+command0_AR2_J = path_AR2_J(1:6);
+
+[command0_AR2_W_pos, command0_AR2_W_ori] = AR2fk(command0_AR2_J);
+
+%Gains
+Kp = eye(3);
+Ko = eye(3);
 
 %% NatNet Connection
+
+%Before proceeding, final checks that experiment can be run
+
+disp('Final Checks Before Experiment')
+pause(2)
+disp(' ')
+disp('Press Any Key to Continue')
+disp(' ')
+disp('Rigid Body Defined in Motive?')
+pause
+disp('Weights In Place?')
+pause
+disp('Are you Ready? Experiment Will Start Immediately After Key Press.')
+pause
+disp('Executing!')
+
 natnetclient = natnet;
 natnetclient.HostIP = '127.0.0.1';
 natnetclient.ClientIP = '127.0.0.1';
@@ -28,22 +56,8 @@ if ( model.RigidBodyCount < 1 )
 	return
 end
 
-%% Setup
-% Arm initialization
-statesArray_AR2_J = [path_AR2_J(1,2),path_AR2_J(1,3),path_AR2_J(1,4)...
-               path_AR2_J(1,5),path_AR2_J(1,6),path_AR2_J(1,7)...
-               .25,.25,.25,.25,.25,.25];
-Stepper1.updateStates(statesArray_AR2_J);
 
-command0_AR2_J = path_AR2_J(1,1:6);
-
-command0_AR2_W = AR2fk(command0_AR2_J);
-
-%Gains
-Kp = eye(3);
-Ko = eye(3);
-
-%% Main
+%% Precalculations
 %Ri- inital orentation
 %Rf - final orentation
 
@@ -58,7 +72,7 @@ r=1/(2*sin(nuef) * [Rif(3,2)-Rif(2,3);Rif(1,3)-Rif(3,1);Rif(2,1)-Rif(1,2);]);   
 
 %eul vectors are defined by the orentation of the end effector in terms of zyx rotations
     %reference eul angle defined by PHI, THETA, PSI.
-eul0_ref=command0_AR2_W(4:6);
+eul0_ref=command0_AR2_W_ori;
 euldot0_ref=[0;0;0;];
 
 Binv = eul2jac(eul0_ref);
@@ -66,6 +80,9 @@ omega_ref = Binv*euldot0_ref;
 C_ref = eul2r(eul0_ref');
 
 
+%Precalculations are done.
+
+%% Main
 i=1;
 tic
 while(toc<60)
@@ -84,33 +101,34 @@ while(toc<60)
     quat = quaternion(roll_AR2,yaw_AR2,pitch_AR2,scalar);
     qRot = quaternion(0,0,0,1);
     quat = mtimes(quat,qRot);
-    eul = EulerAngles(quat,'zyx');
-    
-    C = eul2r(eul'); %measured from cameras
+%     eul = EulerAngles(quat,'zyx');
+    eul = quat2eul(quat,'zyx');
+
+    C = eul2r(eul); %measured from cameras
     
     %on first iteration, initialize variables that constantly update
     if (i == 1)
         %%FIX THESE VARIABLES
-        err = getError_init(command0_AR2_W(1:3), eul0_ref, command0_AR2_J);
+        err = getError_init(command0_AR2_W_pos, eul0_ref, command0_AR2_J);
         ep=err(1:3);
         eo=err(4:6);
         q=command0_AR2_J;
         x=[q; ep; eo];
     end
     
-    xdot_ref = zeros(6,1);
-    theta_ref = command0_AR2_J;
-    thetadot_ref = zeros(6,1);
+    xdot_ref = zeros(3,1);
+    theta_ref = command0_AR2_W_ori;
+    thetadot_ref = zeros(3,1);
     
     %timestep
     h = 0.01;
     
-    k_1 = AR2KinDE(x(i,:),xdot_ref,theta_ref,thetadot_ref);
+    k_1 = AR2KinDE(x,xdot_ref,theta_ref,thetadot_ref);
     q_dot=k_1(1:6);
-    k_2 = AR2KinDE(x(i,:)+0.5*h*k_1,xdot_ref,theta_ref,thetadot_ref);
-    k_3 = AR2KinDE((x(i,:)+0.5*h*k_2),xdot_ref,theta_ref,thetadot_ref);
-    k_4 = AR2KinDE((x(i,:)+k_3*h),xdot_ref,theta_ref,thetadot_ref);
-    x(i+1,:) = x(i,:) + ((1/6)*(k_1+2*k_2+2*k_3+k_4)*h); 
+    k_2 = AR2KinDE(x+0.5*h*k_1,xdot_ref,theta_ref,thetadot_ref);
+    k_3 = AR2KinDE((x+0.5*h*k_2),xdot_ref,theta_ref,thetadot_ref);
+    k_4 = AR2KinDE((x+k_3*h),xdot_ref,theta_ref,thetadot_ref);
+    x = x + ((1/6)*(k_1+2*k_2+2*k_3+k_4)*h); 
     
 
 %     k_1 = xdot;
