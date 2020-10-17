@@ -7,6 +7,8 @@ function poseTrackingOpen(path_AR2_J,Stepper1)
 %Stepper1 is the stepper motor object that defines the stepper motors in
 %matlab using the custom library
 
+
+
 %% Arm initialization
 statesArray_AR2_J = [path_AR2_J(1),path_AR2_J(2),path_AR2_J(3)...
                path_AR2_J(4),path_AR2_J(5),path_AR2_J(6)...
@@ -70,7 +72,7 @@ C_ref = eul2r(eul0_ref');
 %% Main
 i=1;
 tic
-while(toc<60)  
+while(toc<10)  
     %on first iteration, initialize variables that constantly update
     if (i == 1)
         %%FIX THESE VARIABLES
@@ -79,9 +81,14 @@ while(toc<60)
         eo=err(4:6);
         q=command0_AR2_J;
         x=[q; ep; eo];
-        xdot_ref=zeros(6,1);
+%         xdot_ref=zeros(6,1);
     end
-    
+
+    xdot_ref = [10*cos(toc); 10*cos(toc); 10*cos(toc)];
+    tr = 5*pi/180*sin(2*pi/10/4.*toc) + 60*pi/180;
+    theta_ref = [tr; tr; tr];
+    tr_dot = 5*pi/180.*cos(2*pi/10/4.*toc);
+    thetadot_ref = [tr_dot; tr_dot; tr_dot];
 %     calculate xdot_global theta_global(orientaiton) thetadot_(global) through forward kinematics
 %     this is where the loop will be closed
     
@@ -121,9 +128,9 @@ while(toc<60)
     %update after
     J = JacobionAR2(q);
     %these will be read from the camera system
-    xdot_ref=J*qdot;
-    [~, theta_ref] = AR2fk(q);
-    [~, thetadot_ref] = AR2fk(qdot);
+%     xdot_ref=J*qdot;
+%     [~, theta_ref] = AR2fk(q);
+%     [~, thetadot_ref] = AR2fk(qdot);
     
     i=i+1;
 end
