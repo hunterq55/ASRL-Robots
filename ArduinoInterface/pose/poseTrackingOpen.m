@@ -126,10 +126,7 @@ while(toc<5)
     ep=err(1:3);
     eo=err(4:6);
 
-    qSavedt=toc*h;
-    qSaved(i)= [qSavedt, q', q_dot'];
-    
-%     q=saturateq(q);
+    qSaved(i,:)= [toc, q', q_dot'];
    
     
     statesArray_AR2_J = [q(1),q(2),q(3),q(4),q(5),q(6)...
