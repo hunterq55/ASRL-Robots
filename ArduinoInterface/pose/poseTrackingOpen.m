@@ -1,4 +1,4 @@
-function poseTrackingOpen(path_AR2_J,Stepper1)
+function qSaved = poseTrackingOpen(path_AR2_J,Stepper1)
 %path is the position of the arm that you want to initially drive the arm
 %to and hold for the duration of the demonstration
 %path_AR2_J is of length (1,1:6)
@@ -72,7 +72,7 @@ C_ref = eul2r(eul0_ref');
 %% Main
 i=1;
 tic
-while(toc<10)  
+while(toc<5)  
     %on first iteration, initialize variables that constantly update
     if (i == 1)
         %%FIX THESE VARIABLES
@@ -83,11 +83,15 @@ while(toc<10)
         x=[q; ep; eo];
 %         xdot_ref=zeros(6,1);
     end
-
-    xdot_ref = [10*cos(toc); 10*cos(toc); 10*cos(toc)];
-    tr = 5*pi/180*sin(2*pi/10/4.*toc) + 60*pi/180;
+    xdot_coef=0;%original 10
+    tTime=toc;
+    
+    xdot_ref = [xdot_coef*cos(tTime); xdot_coef*cos(tTime); xdot_coef*cos(tTime)];
+    tr = 5*pi/180*sin(2*pi/10/4.*tTime) + 60*pi/180;
+    tr=0;
     theta_ref = [tr; tr; tr];
-    tr_dot = 5*pi/180.*cos(2*pi/10/4.*toc);
+    tr_dot = 5*pi/180.*cos(2*pi/10/4.*tTime);
+    tr_dot=0;
     thetadot_ref = [tr_dot; tr_dot; tr_dot];
 %     calculate xdot_global theta_global(orientaiton) thetadot_(global) through forward kinematics
 %     this is where the loop will be closed
@@ -113,14 +117,21 @@ while(toc<10)
 %     k_3 = xdot+0.5*h*k_2;
 %     k_4 = xdot+k_3*h;
 %     x = xdot + ((1/6)*(k_1+2*k_2+2*k_3+k_4)*h); 
-%     
+%   
+
+
     q=x(1:6);
     err=x(7:12);
 
     ep=err(1:3);
     eo=err(4:6);
-    
 
+    qSavedt=toc*h;
+    qSaved(i)= [qSavedt, q', q_dot'];
+    
+%     q=saturateq(q);
+   
+    
     statesArray_AR2_J = [q(1),q(2),q(3),q(4),q(5),q(6)...
                         q_dot(1),q_dot(2),q_dot(3),q_dot(4),q_dot(5),q_dot(6)];
     Stepper1.updateStates(statesArray_AR2_J);
