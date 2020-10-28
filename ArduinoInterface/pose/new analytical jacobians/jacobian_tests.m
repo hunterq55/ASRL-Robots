@@ -19,11 +19,16 @@ Robot = SerialLink(L);
 theta0=[0;-1.396263401595464;1.570796326794897;0;0;0];
 % J_analytic_new = Jacobian0_anal(theta0)
 J = AR2Jacobiantool(theta0, Robot)
-Jac1 = Jacobian0(theta0)
+Jac1 = Jacobian0_analytical(theta0)
 theta0=[.12323;-.396263401595464;.570796326794897;.7567;-2.3231324;3.75467];
 
 
 % J_analytic_new = Jacobian0_anal(theta0)
 J = AR2Jacobiantool(theta0, Robot)
-Jac1 = Jacobian0(theta0)
+Jac1 = Jacobian0_analytical(theta0)
 % J_analytic_old = JacobionAR2(theta0)
+
+
+[a,b]=AR2fk(theta0)
+[a,b]=AR2fkine(theta0,Robot)
+
