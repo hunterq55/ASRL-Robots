@@ -1,4 +1,6 @@
-function [states, orient] = AR2fkine(theta0,Robot)
+function [states, orient] = AR2fkine(theta0)
+
+global Robot
 
 theta1 = theta0(1);
 theta2 = theta0(2);

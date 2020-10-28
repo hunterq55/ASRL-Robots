@@ -1,6 +1,7 @@
 % Function to calculate the inital error in the effector pose
 
-function err_init = getError_init(x_ref, theta_ref, q_init,Robot)
+function err_init = getError_init(x_ref, theta_ref, q_init)
+global Robot
 [x_init, theta_init] = AR2fkine(q_init,Robot);
 ex_init = x_ref - x_init;
 C_ref = eul2r(theta_ref');

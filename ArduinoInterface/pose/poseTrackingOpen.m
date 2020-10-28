@@ -21,6 +21,7 @@ L(3) = Link([0 d3 a3 alpha3], 'R');
 L(4) = Link([0 d4 a4 alpha4], 'R');
 L(5) = Link([0 d5 a5 alpha5], 'R');
 L(6) = Link([0 d6 a6 alpha6], 'R');
+
 global Robot
 Robot = SerialLink(L);
 
@@ -32,7 +33,7 @@ Stepper1.updateStates(statesArray_AR2_J);
 
 command0_AR2_J = path_AR2_J(1:6);
 
-[command0_AR2_W_pos, command0_AR2_W_ori] = AR2fkine(command0_AR2_J,Robot);
+[command0_AR2_W_pos, command0_AR2_W_ori] = AR2fkine(command0_AR2_J);
 
 %Gains
 Kp = eye(3);
@@ -92,7 +93,7 @@ while(toc<5)
     %on first iteration, initialize variables that constantly update
     if (i == 1)
         %%FIX THESE VARIABLES
-        err = getError_init(command0_AR2_W_pos, eul0_ref, command0_AR2_J,Robot);
+        err = getError_init(command0_AR2_W_pos, eul0_ref, command0_AR2_J);
         ep=err(1:3);
         eo=err(4:6);
         q=command0_AR2_J;
@@ -120,11 +121,11 @@ while(toc<5)
     %timestep
     h = 0.01;
     
-    k_1 = AR2KinDE(x,xdot_ref,theta_ref,thetadot_ref,Robot);
+    k_1 = AR2KinDE(x,xdot_ref,theta_ref,thetadot_ref);
     q_dot=k_1(1:6);
-    k_2 = AR2KinDE(x+0.5*h*k_1,xdot_ref,theta_ref,thetadot_ref,Robot);
-    k_3 = AR2KinDE((x+0.5*h*k_2),xdot_ref,theta_ref,thetadot_ref,Robot);
-    k_4 = AR2KinDE((x+k_3*h),xdot_ref,theta_ref,thetadot_ref,Robot);
+    k_2 = AR2KinDE(x+0.5*h*k_1,xdot_ref,theta_ref,thetadot_ref);
+    k_3 = AR2KinDE((x+0.5*h*k_2),xdot_ref,theta_ref,thetadot_ref);
+    k_4 = AR2KinDE((x+k_3*h),xdot_ref,theta_ref,thetadot_ref);
     x = x + ((1/6)*(k_1+2*k_2+2*k_3+k_4)*h); 
     
 
