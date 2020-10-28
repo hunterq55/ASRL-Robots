@@ -99,6 +99,7 @@ Jw4 = [HT1(1:3,3) HT2(1:3,3) HT3(1:3,3) HT4(1:3,3) zeros(3,2)];
 Jw5 = [HT1(1:3,3) HT2(1:3,3) HT3(1:3,3) HT4(1:3,3) HT5(1:3,3) zeros(3,1)];
 Jw6 = [[0 0 1]' HT2(1:3,3) HT3(1:3,3) HT4(1:3,3) HT5(1:3,3) HT6(1:3,3)];
 
+
 J1 = [Jv1; Jw1];
 J2 = [Jv2; Jw2];
 J3 = [Jv3; Jw3];
@@ -110,67 +111,67 @@ J6 = [Jv6; Jw6];
 fid1 = fopen('Jacobian0.txt','wt');
 fprintf(fid1, '%s \n', char(J6));
 
-% J_GV_E = [1 1 0 0 0 -sq
-%           1 1 0 0 0 
-%           0 0 1 1 1 0;
-%           0 0 1 1 1 0;
-%           0 0 1 1 1 0;
-%           0 0 1 1 1 1];
-
-% multiply the GV to E Jacobian to translate the motion in the base to the
-% end effector. Inputs (Wheels) output (6dof end effector)
-
-
-M = m1*(Jv1.')*Jv1 + m2*(Jv2.')*Jv2 + m3*(Jv3.')*Jv3...
-    + m4*(Jv4.')*Jv4 + m5*(Jv5.')*Jv5 + m6*(Jv6.')*Jv6...
-    + (Jw1.')*Ic1*Jw1 + (Jw2.')*Ic2*Jw2 + (Jw3.')*Ic3*Jw3...
-    + (Jw4.')*Ic4*Jw4 + (Jw5.')*Ic5*Jw5 +(Jw6.')*Ic6*Jw6;
-
-for i = 1 : 6
-   for j = 1 : 6
-      for k = 1 : 6
-          b(i,j,k) = 0.5 * ( diff(M(i,j),theta(k)) + diff(M(i,k),theta(j)) - diff(M(i,k),theta(i)) ); 
-      end
-   end
-end
-
-for i = 1 : 6
-    for j = 1 : 6
-         C(i,j) = b(i,j,j); %there was something here and got deleted!! we call c for now
-    end
-end
-
-
-for i = 1 : 6
-    col = 1;
-    for j = 1 : 5
-        for k = j+1 : 6
-            B(i,col) = b(i,j,k);
-            col = col + 1;
-        end
-    end
-end
-
-G1 = - Jv1.' * m1 * g;
-G2 = - Jv2.' * m2 * g;
-G3 = - Jv3.' * m3 * g;
-G4 = - Jv4.' * m4 * g;
-G5 = - Jv5.' * m5 * g;
-G6 = - Jv6.' * m6 * g;
-
-G = [G1 G2 G3 G4 G5 G6];
-
-fid1 = fopen('Mtxt','wt');
-fprintf(fid1, '%s \n', char(M));
-
-fid2 = fopen('Ctxt','wt');
-fprintf(fid2, '%s \n', char(C));
-
-fid3 = fopen('Btxt','wt');
-fprintf(fid3, '%s \n', char(B));
-
-fid4 = fopen('Gtxt','wt');
-fprintf(fid4, '%s \n', char(G));
+% % J_GV_E = [1 1 0 0 0 -sq
+% %           1 1 0 0 0 
+% %           0 0 1 1 1 0;
+% %           0 0 1 1 1 0;
+% %           0 0 1 1 1 0;
+% %           0 0 1 1 1 1];
+% 
+% % multiply the GV to E Jacobian to translate the motion in the base to the
+% % end effector. Inputs (Wheels) output (6dof end effector)
+% 
+% 
+% M = m1*(Jv1.')*Jv1 + m2*(Jv2.')*Jv2 + m3*(Jv3.')*Jv3...
+%     + m4*(Jv4.')*Jv4 + m5*(Jv5.')*Jv5 + m6*(Jv6.')*Jv6...
+%     + (Jw1.')*Ic1*Jw1 + (Jw2.')*Ic2*Jw2 + (Jw3.')*Ic3*Jw3...
+%     + (Jw4.')*Ic4*Jw4 + (Jw5.')*Ic5*Jw5 +(Jw6.')*Ic6*Jw6;
+% 
+% for i = 1 : 6
+%    for j = 1 : 6
+%       for k = 1 : 6
+%           b(i,j,k) = 0.5 * ( diff(M(i,j),theta(k)) + diff(M(i,k),theta(j)) - diff(M(i,k),theta(i)) ); 
+%       end
+%    end
+% end
+% 
+% for i = 1 : 6
+%     for j = 1 : 6
+%          C(i,j) = b(i,j,j); %there was something here and got deleted!! we call c for now
+%     end
+% end
+% 
+% 
+% for i = 1 : 6
+%     col = 1;
+%     for j = 1 : 5
+%         for k = j+1 : 6
+%             B(i,col) = b(i,j,k);
+%             col = col + 1;
+%         end
+%     end
+% end
+% 
+% G1 = - Jv1.' * m1 * g;
+% G2 = - Jv2.' * m2 * g;
+% G3 = - Jv3.' * m3 * g;
+% G4 = - Jv4.' * m4 * g;
+% G5 = - Jv5.' * m5 * g;
+% G6 = - Jv6.' * m6 * g;
+% 
+% G = [G1 G2 G3 G4 G5 G6];
+% 
+% fid1 = fopen('Mtxt','wt');
+% fprintf(fid1, '%s \n', char(M));
+% 
+% fid2 = fopen('Ctxt','wt');
+% fprintf(fid2, '%s \n', char(C));
+% 
+% fid3 = fopen('Btxt','wt');
+% fprintf(fid3, '%s \n', char(B));
+% 
+% fid4 = fopen('Gtxt','wt');
+% fprintf(fid4, '%s \n', char(G));
 
 
 toc
