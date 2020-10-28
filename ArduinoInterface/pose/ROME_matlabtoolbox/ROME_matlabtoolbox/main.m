@@ -35,17 +35,20 @@ options = odeset('RelTol',1e-8,'AbsTol',1e-10);
 tic
 [t, X] = ode45(@AR2KinDE, tspan, X0, options);
 toc
-%new solver
 tic
-[tRK, XRK]=RK4_angles(@AR2KinDE,X0);
+[t2, X2] = ode45(@AR2KinDE_anal, tspan, X0, options);
 toc
+%new solver
+% tic
+% [tRK, XRK]=RK4_angles(@AR2KinDE,X0);
+% toc
 %% Output
 q = X(:,1:6);
 err = X(:,7:12);
 
 %new output
-qRK=XRK(:,1:6);
-errRK=XRK(:,7:12);
+q2=X2(:,1:6);
+err2=X2(:,7:12);
 %% Plots
 figure(1)
 plot(t,q*180/pi)
@@ -55,7 +58,7 @@ legend('q_1', 'q_2', 'q_3', 'q_4', 'q_5', 'q_6')
 
 %new plot
 figure
-plot(tRK,qRK*180/pi)
+plot(t2,q2*180/pi)
 
 for i = 1:length(t)
    ex(i) = X(i,7);
