@@ -29,6 +29,6 @@ Jac1 = Jacobian0_analytical(theta0)
 % J_analytic_old = JacobionAR2(theta0)
 
 
-[a,b]=AR2fk(theta0)
-[a,b]=AR2fkine(theta0,Robot)
+[pos,orient]=newfkfunc(theta0,"ZYZ")
+[pos,orient]=AR2fkine(theta0,Robot)
 

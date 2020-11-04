@@ -33,7 +33,7 @@ Stepper1.updateStates(statesArray_AR2_J);
 
 command0_AR2_J = path_AR2_J(1:6);
 
-[command0_AR2_W_pos, command0_AR2_W_ori] = AR2fkine(command0_AR2_J);
+[command0_AR2_W_pos, command0_AR2_W_ori] = AR2FKZYZ(command0_AR2_J);
 
 %Gains
 Kp = eye(3);

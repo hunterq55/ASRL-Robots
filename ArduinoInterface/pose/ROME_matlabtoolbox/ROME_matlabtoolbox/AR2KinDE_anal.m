@@ -17,11 +17,11 @@ q = x0(1:6);
 ep = x0(7:9);
 eo = x0(10:12);
 J = Jacobian0_analytical(q);
-[~, theta] = AR2fkine(q);
+[~, theta] = AR2FKZYZ(q);
 C_ref = eul2r(theta_ref');
 Crot = eul2r(theta');
 [~,L] = getOrientErr(C_ref, Crot);
-omega_ref
+omega_ref;
 Kp = eye(3);
 Ko = eye(3);
 %% Differential Equations

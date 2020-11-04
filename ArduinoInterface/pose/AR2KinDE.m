@@ -1,7 +1,6 @@
 % Function to propagte the kinematics of AR2 6 revolute joint robotic
 % mamipulator
 function xdot = AR2KinDE(x0,xdot_ref,theta_ref,thetadot_ref)
-global Robot
 %% Reference Pose and Velocities
 Binv = eul2jac(theta_ref);
 omega_ref = Binv*thetadot_ref;
@@ -11,7 +10,7 @@ ep = x0(7:9);
 eo = x0(10:12);
 % J = JacobionAR2(q);
 J = Jacobian0_analytical(q);
-[~, theta] = AR2fkine(q);
+[~, theta] = AR2FKZYZ(q);
 C_ref = eul2r(theta_ref');
 Crot = eul2r(theta');
 [~,L] = getOrientErr(C_ref, Crot);
