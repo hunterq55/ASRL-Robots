@@ -40,7 +40,7 @@ toc
 % toc
 %new solver
 tic
-[tRK, XRK]=RK4_angles(@AR2KinDE,X0);
+[tRK, XRK]=RK4_angles(@ExpAR2KinDE,X0);
 toc
 %% Output
 q = X(:,1:6);
