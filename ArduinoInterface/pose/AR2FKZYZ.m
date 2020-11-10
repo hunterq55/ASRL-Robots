@@ -42,7 +42,7 @@ DH6 = [cos(theta6) -sin(theta6)*cos(alpha6) sin(theta6)*sin(alpha6) a6*cos(theta
     0 sin(alpha6) cos(alpha6) d6;
     0 0 0 1];
 
-HT1 = DH1;      %look at the order ofd the mulatiplication 
+HT1 = DH1;      %look at the order of the multiplication 
 HT2 = HT1*DH2;
 HT3 = HT2*DH3;
 HT4 = HT3*DH4;
