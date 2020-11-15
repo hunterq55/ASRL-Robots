@@ -1,5 +1,5 @@
 %% AR2 robotic manipulator closed loop resolved rate algorithm
-clear; close all; clc;
+close all; clc;
 %% Robot Definition
 d1 = 169.77;    a1 = 64.2;  alpha1 = -90*pi/180;    
 d2 = 0;         a2 = 305;   alpha2 = 0;             
@@ -27,24 +27,25 @@ xdot_ref_init = [10*cos(ti); 10*cos(ti); 10*cos(ti)];
 tr = 5*pi/180.*(2*pi/10/4*ti) + 60*pi/180;
 theta_ref_init = [tr; tr; tr];
 q_init = [28 -28 145 25 30 30]'*pi/180;
+q_init = [0;-1.396263401595464;1.570796326794897;0;0;0];
 err = getError_init(x_ref_init, theta_ref_init, q_init);
 X0 = [q_init; err];
 %% Simulation Setup
 tspan = [0 10];
 options = odeset('RelTol',1e-8,'AbsTol',1e-10);
 tic
-[t, X] = ode45(@AR2KinDE, tspan, X0, options);
+% [t, X] = ode45(@AR2KinDE, tspan, X0, options);
 toc
 % tic
 % [t2, X2] = ode45(@AR2KinDE_anal, tspan, X0, options);
 % toc
 %new solver
 tic
-[tRK, XRK]=RK4_angles(@ExpAR2KinDE,X0);
+[tRK, XRK]=RK4_angles(@AR2KinDE,X0);
 toc
 %% Output
-q = X(:,1:6);
-err = X(:,7:12);
+% q = X(:,1:6);
+% err = X(:,7:12);
 
 % %new output
 % q2=X2(:,1:6);
@@ -53,12 +54,13 @@ err = X(:,7:12);
 % even newer output
 qRK=XRK(:,1:6);
 errRK=XRK(:,7:12);
+qExp=qSaved(:,2:7)
 %% Plots
-figure(1)
-plot(t,q*180/pi)
-xlabel('time [sec]')
-ylabel('Configuration variables [deg]')
-legend('q_1', 'q_2', 'q_3', 'q_4', 'q_5', 'q_6')
+% figure(1)
+% plot(t,q*180/pi)
+% xlabel('time [sec]')
+% ylabel('Configuration variables [deg]')
+% legend('q_1', 'q_2', 'q_3', 'q_4', 'q_5', 'q_6')
 
 %new plot
 % figure

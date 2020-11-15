@@ -21,7 +21,7 @@ J = AR2Jacobiantool(q, Robot);
 C_ref = eul2r(theta_ref');
 Crot = eul2r(theta');
 [~,L] = getOrientErr(C_ref, Crot);
-omega_ref;
+omega_ref
 Kp = eye(3);
 Ko = eye(3);
 %% Differential Equations

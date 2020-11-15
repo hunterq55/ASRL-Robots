@@ -42,18 +42,18 @@ Ko = eye(3);
 %% Path Definitons - updated per experiment, need a better implementation for this
 function xdot_r = xdot_ref(t)
     xdot_coef = 10;
-    xdot_coef = 0;
+%     xdot_coef = 0;
     xdot_r = [xdot_coef*cos(t); xdot_coef*cos(t); xdot_coef*cos(t)];
 end
 
 function theta_ref = theta_ref(t)
-    thetr = 5*pi/180*sin(2*pi/10/4.*t) + 60*pi/180;
+%     thetr = 5*pi/180*sin(2*pi/10/4.*t) + 60*pi/180;
     thetr=0;
     theta_ref = [thetr; thetr; thetr];
 end
 
 function thetadot_ref = thetadot_ref(t)
-    thetr_dot = 5*pi/180.*cos(2*pi/10/4.*t);
+%     thetr_dot = 5*pi/180.*cos(2*pi/10/4.*t);
     thetr_dot=0;
     thetadot_ref = [thetr_dot; thetr_dot; thetr_dot];
 end
@@ -123,7 +123,7 @@ disp('Executing!')
 %% Main
 i=1;
 tic
-while(toc<5)  
+while(toc<10)  
     %on first iteration, initialize variables that constantly update
     if (i == 1)
         %%FIX THESE VARIABLES
@@ -191,7 +191,12 @@ while(toc<5)
     
     i=i+1;
 end
-
+Stepper1.default("REST");
+figure(1)
+plot(qSaved(:,1),qSaved(:,2:7)*180/pi)
+xlabel('time [sec]')
+ylabel('Configuration variables [deg]')
+legend('q_1', 'q_2', 'q_3', 'q_4', 'q_5', 'q_6')
 
 
 end
