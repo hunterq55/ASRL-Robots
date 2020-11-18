@@ -22,8 +22,9 @@ Robot = SerialLink(L);
 
 %% Initial conditions and error calculations
 ti = 0;
-x_ref_init = [10*sin(ti)+200; 10*sin(ti)+100; 10*sin(ti)+200]; 
-xdot_ref_init = [10*cos(ti); 10*cos(ti); 10*cos(ti)];
+x_ref_coef = 10;
+x_ref_init = [x_ref_coef*sin(ti)+200; x_ref_coef*sin(ti)+100; x_ref_coef*sin(ti)+200]; 
+xdot_ref_init = [x_ref_coef*cos(ti); x_ref_coef*cos(ti); x_ref_coef*cos(ti)];
 tr = 5*pi/180.*(2*pi/10/4*ti) + 60*pi/180;
 theta_ref_init = [tr; tr; tr];
 q_init = [28 -28 145 25 30 30]'*pi/180;
