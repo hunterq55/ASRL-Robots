@@ -1,9 +1,0 @@
-disp('Final Checks Before Experiment')
-disp('Rigid Body Defined?')
-disp('Rigid Body Defined?')
-
-
-
-disp('Are you Ready? Press Enter to Continue....')
-pause
-disp('Executing!')

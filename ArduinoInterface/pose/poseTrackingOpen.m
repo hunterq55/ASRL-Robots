@@ -40,6 +40,10 @@ Kp = eye(3);
 Ko = eye(3);
 
 %% Path Definitons - updated per experiment, need a better implementation for this
+function x_r=x_ref(t)
+x_ref_coef = 10;
+x_r = [x_ref_coef*sin(t)+200; 0*sin(t)+100; 0*sin(t)+200]; 
+end
 function xdot_r = xdot_ref(t)
     xdot_coef = 10;
 %     xdot_coef = 0;
@@ -47,14 +51,14 @@ function xdot_r = xdot_ref(t)
 end
 
 function theta_ref = theta_ref(t)
-%     thetr = 5*pi/180*sin(2*pi/10/4.*t) + 60*pi/180;
-    thetr=0;
+    thetr = 5*pi/180*sin(2*pi/10/4.*t) + 60*pi/180;
+%     thetr=0;
     theta_ref = [thetr; thetr; thetr];
 end
 
 function thetadot_ref = thetadot_ref(t)
-%     thetr_dot = 5*pi/180.*cos(2*pi/10/4.*t);
-    thetr_dot=0;
+    thetr_dot = 5*pi/180.*cos(2*pi/10/4.*t);
+%     thetr_dot=0;
     thetadot_ref = [thetr_dot; thetr_dot; thetr_dot];
 end
 
@@ -127,23 +131,13 @@ while(toc<10)
     %on first iteration, initialize variables that constantly update
     if (i == 1)
         %%FIX THESE VARIABLES
-        err = getError_init(command0_AR2_W_pos, eul0_ref, command0_AR2_J);
+        err = getError_init(x_ref(0), theta_ref(0), command0_AR2_J);
         ep=err(1:3);
         eo=err(4:6);
         q=command0_AR2_J;
         x=[q; ep; eo];
     end
     tTime=toc;
-    
-%     xdot_ref = [xdot_coef*cos(tTime); xdot_coef*cos(tTime); xdot_coef*cos(tTime)];
-%     tr = 5*pi/180*sin(2*pi/10/4.*tTime) + 60*pi/180;
-%     tr=0;
-%     theta_ref = [tr; tr; tr];
-%     tr_dot = 5*pi/180.*cos(2*pi/10/4.*tTime);
-%     tr_dot=0;
-%     thetadot_ref = [tr_dot; tr_dot; tr_dot];
-
-
 
 %     calculate xdot_global theta_global(orientaiton) thetadot_(global) through forward kinematics
 %     this is where the loop will be closed
@@ -151,7 +145,7 @@ while(toc<10)
     
 
     %timestep
-    h = 0.01;
+    h = 0.0155;
     
 %     basis for RK4 solver
 %     k_1 = xdot;
@@ -160,11 +154,14 @@ while(toc<10)
 %     k_4 = xdot+k_3*h;
 %     x = xdot + ((1/6)*(k_1+2*k_2+2*k_3+k_4)*h); 
 
+% RK4 Solver
     k_1 = AR2KinDE(x,xdot_ref(tTime),theta_ref(tTime),thetadot_ref(tTime));
-    k_2 = AR2KinDE(x+0.5*h*k_1,xdot_ref(tTime+0.5*h),theta_ref(tTime+0.5*h),thetadot_ref(tTime+0.5*h));
+    k_2 = AR2KinDE((x+0.5*h*k_1),xdot_ref(tTime+0.5*h),theta_ref(tTime+0.5*h),thetadot_ref(tTime+0.5*h));
     k_3 = AR2KinDE((x+0.5*h*k_2),xdot_ref(tTime+0.5*h),theta_ref(tTime+0.5*h),thetadot_ref(tTime+0.5*h));
     k_4 = AR2KinDE((x+k_3*h),xdot_ref(tTime+h),theta_ref(tTime+h),thetadot_ref(tTime+h));
     x = x + ((1/6)*(k_1+2*k_2+2*k_3+k_4)*h); 
+    
+    
 
     q=x(1:6);
     q_dot=k_1(1:6);
@@ -192,7 +189,7 @@ while(toc<10)
     i=i+1;
 end
 Stepper1.default("REST");
-figure(1)
+figure
 plot(qSaved(:,1),qSaved(:,2:7)*180/pi)
 xlabel('time [sec]')
 ylabel('Configuration variables [deg]')

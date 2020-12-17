@@ -1,5 +1,5 @@
 %% AR2 robotic manipulator closed loop resolved rate algorithm
-close all; clc;
+
 %% Robot Definition
 d1 = 169.77;    a1 = 64.2;  alpha1 = -90*pi/180;    
 d2 = 0;         a2 = 305;   alpha2 = 0;             
@@ -34,9 +34,9 @@ X0 = [q_init; err];
 %% Simulation Setup
 tspan = [0 10];
 options = odeset('RelTol',1e-8,'AbsTol',1e-10);
-tic
+% tic
 % [t, X] = ode45(@AR2KinDE, tspan, X0, options);
-toc
+% toc
 % tic
 % [t2, X2] = ode45(@AR2KinDE_anal, tspan, X0, options);
 % toc
@@ -69,6 +69,9 @@ errRK=XRK(:,7:12);
 %new plot
 figure
 plot(tRK,qRK*180/pi)
+xlabel('time [sec]')
+ylabel('Configuration variables [deg]')
+legend('q_1', 'q_2', 'q_3', 'q_4', 'q_5', 'q_6')
 
 for i = 1:length(t)
    ex(i) = X(i,7);
