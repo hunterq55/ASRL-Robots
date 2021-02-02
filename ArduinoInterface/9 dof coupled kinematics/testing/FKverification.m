@@ -1,4 +1,4 @@
-intitialStates = [10,10,10,10,10,10,300,100,0];
+intitialStates = [0,10,10,10,10,10,0,0,0];
 
 [position1,orientation1] = ROMEFK(intitialStates);
 
