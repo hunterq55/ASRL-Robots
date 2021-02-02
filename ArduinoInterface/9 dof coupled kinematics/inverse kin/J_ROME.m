@@ -1,49 +1,53 @@
-function J = J_ROME_UPDATED(theta0)
+function J = J_ROME(jointStates)
+% INPUT - takes in the 9 joint states of the ROME platform, in the format
+%         of the first 6 being the joint states of the arm, and the last 3
+%         being the x, y, and yaw/psi of the gv in mm.
+% OUTPUT - outputs the 6x9 jacobian for the ROME platform
 d1 = 169.77;    a1 = 64.2;  alpha1 = -90*pi/180;
 d2 = 0;         a2 = 305;   alpha2 = 0;
 d3 = 0;         a3 = 0;     alpha3 = 90*pi/180;
 d4 = -222.63;   a4 = 0;     alpha4 = -90*pi/180;
 d5 = 0;         a5 = 0;     alpha5 = 90*pi/180;
 d6 = -36.25;    a6 = 0;     alpha6 = 0;
-theta1 = theta0(1);
+theta1 = jointStates(1);
 cth1 = cos(theta1);
 sal1 = sin(alpha1);
 sth1 = sin(theta1);
 cal1 = cos(alpha1);
 
-theta2 = theta0(2);
+theta2 = jointStates(2);
 cth2 = cos(theta2);
 sal2 = sin(alpha2);
 sth2 = sin(theta2);
 cal2 = cos(alpha2);
 
-theta3 = theta0(3);
+theta3 = jointStates(3);
 cth3 = cos(theta3);
 sal3 = sin(alpha3);
 sth3 = sin(theta3);
 cal3 = cos(alpha3);
 
-theta4 = theta0(4);
+theta4 = jointStates(4);
 cth4 = cos(theta4);
 sal4 = sin(alpha4);
 sth4 = sin(theta4);
 cal4 = cos(alpha4);
 
-theta5 = theta0(5);
+theta5 = jointStates(5);
 cth5 = cos(theta5);
 sal5 = sin(alpha5);
 sth5 = sin(theta5);
 cal5 = cos(alpha5);
 
-theta6 = theta0(6);
+theta6 = jointStates(6);
 cth6 = cos(theta6);
 sal6 = sin(alpha6);
 sth6 = sin(theta6);
 cal6 = cos(alpha6);
 
-pc6_1 = theta0(7);
-pc6_2 = theta0(8);
-psi = theta0(9);
+pc6_1 = jointStates(7);
+pc6_2 = jointStates(8);
+psi = jointStates(9);
 
 L = 0.23*1000;
 
