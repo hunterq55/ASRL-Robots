@@ -2,25 +2,25 @@ clear all; close all; clc;
 tic
 %% Inputs
 syms m1 m2 m3 m4 m5 m6 g
-DH parameters symbolic
+% DH parameters symbolic
 syms theta1 theta2 theta3 theta4 theta5 theta6
 syms alpha1 alpha2 alpha3 alpha4 alpha5 alpha6
 syms d1 d2 d3 d4 d5 d6
 syms a1 a2 a3 a4 a5 a6
 % Center of mass coordinates for 6 links
-syms('pc1_',[3 1]);
-syms('pc2_',[3 1]);
-syms('pc3_',[3 1]);
-syms('pc4_',[3 1]);
-syms('pc5_',[3 1]);
-syms('pc6_',[3 1]);
+pc1 = sym('pc1_',[3 1]);
+pc2 = sym('pc2_',[3 1]);
+pc3 = sym('pc3_',[3 1]);
+pc4 = sym('pc4_',[3 1]);
+pc5 = sym('pc5_',[3 1]);
+pc6 = sym('pc6_',[3 1]);
 % Inertia matrix for link 1
-syms ('Ic1_',[3 3])
-syms ('Ic2_',[3 3])
-syms ('Ic3_',[3 3])
-syms ('Ic4_',[3 3])
-syms ('Ic5_',[3 3])
-syms ('Ic6_',[3 3])
+Ic1 = sym('Ic1_',[3 3]);
+Ic2 = sym('Ic2_',[3 3]);
+Ic3 = sym('Ic3_',[3 3]);
+Ic4 = sym('Ic4_',[3 3]);
+Ic5 = sym('Ic5_',[3 3]);
+Ic6 = sym('Ic6_',[3 3]);
 
 DH1 = [cos(theta1) -sin(theta1)*cos(alpha1) sin(theta1)*sin(alpha1) a1*cos(theta1);
     sin(theta1) cos(theta1)*cos(alpha1) -cos(theta1)*sin(alpha1) a1*sin(theta1);
@@ -134,13 +134,13 @@ G = [G1 G2 G3 G4 G5 G6];
 fid1 = fopen('Mtxt','wt');
 fprintf(fid1, '%s \n', char(M));
 
-fid2 = fopen('Mtxt','wt');
+fid2 = fopen('Ctxt','wt');
 fprintf(fid2, '%s \n', char(C));
 
-fid3 = fopen('Mtxt','wt');
+fid3 = fopen('Btxt','wt');
 fprintf(fid3, '%s \n', char(B));
 
-fid4 = fopen('Mtxt','wt');
+fid4 = fopen('Gtxt','wt');
 fprintf(fid4, '%s \n', char(G));
 
 
