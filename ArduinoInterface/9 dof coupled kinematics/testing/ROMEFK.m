@@ -82,7 +82,7 @@ TIGv = [cos(psiGV)  sin(psiGV) 0  xGV;
 
 % the total tranformation matrix from the inertia frame to the end effector
 % of the ROME platform
-TIE = TIGv * TGvB * TBE;
+TIE = TIGv * TGvB * TBE
 
 xEndEff = TIE(1,4);
 yEndEff = TIE(2,4);
