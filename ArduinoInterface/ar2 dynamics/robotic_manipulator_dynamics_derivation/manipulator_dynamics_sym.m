@@ -14,7 +14,7 @@ pc3 = sym('pc3_',[3 1]);
 pc4 = sym('pc4_',[3 1]);
 pc5 = sym('pc5_',[3 1]);
 pc6 = sym('pc6_',[3 1]);
-% Inertia matrix for link 1
+% Inertia matrix for each link
 Ic1 = sym('Ic1_',[3 3]);
 Ic2 = sym('Ic2_',[3 3]);
 Ic3 = sym('Ic3_',[3 3]);
