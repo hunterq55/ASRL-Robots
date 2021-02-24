@@ -1,10 +1,10 @@
-# import B
-# import C
+import B
+import C
 import M
-# import G
+import G
 
 
-# B.main
-# C.main
+B.main
+C.main
 M.main
-# G.main
+G.main

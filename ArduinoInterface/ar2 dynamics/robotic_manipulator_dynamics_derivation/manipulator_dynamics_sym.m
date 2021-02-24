@@ -131,16 +131,16 @@ G6 = - Jv6.' * m6 * g;
 
 G = [G1 G2 G3 G4 G5 G6];
 
-fid1 = fopen('Mtxt','wt');
+fid1 = fopen('M.txt','wt');
 fprintf(fid1, '%s \n', char(M));
 
-fid2 = fopen('Ctxt','wt');
+fid2 = fopen('C.txt','wt');
 fprintf(fid2, '%s \n', char(C));
 
-fid3 = fopen('Btxt','wt');
+fid3 = fopen('B.txt','wt');
 fprintf(fid3, '%s \n', char(B));
 
-fid4 = fopen('Gtxt','wt');
+fid4 = fopen('G.txt','wt');
 fprintf(fid4, '%s \n', char(G));
 
 
