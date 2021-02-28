@@ -6,21 +6,43 @@ d5 = 0;         a5 = 0;     alpha5 = 90*pi/180;
 d6 = -36.25;    a6 = 0;     alpha6 = 0;  
 
 
+% phantom link -- needed for 
+L(1) = Link([0*pi/180 0 0 90*pi/180], 'R');
+L(2) = Link([90*pi/180 0 0 90*pi/180], 'P');
+L(3) = Link([90*pi/180 0 0 90*pi/180], 'P');
 
-L(1) = Prismatic('theta',0,'a',0,'alpha',0);
-L(2) = Prismatic('theta',0*pi/180,'a',0,'alpha',0);
-L(3) = Link([0 0 0 0], 'R');
-L(4) = Link([0 d1 a1 alpha1], 'R');
-L(5) = Link([0 d2 a2 alpha2], 'R');
-L(6) = Link([0 d3 a3 alpha3], 'R');
-L(7) = Link([0 d4 a4 alpha4], 'R');
-L(8) = Link([0 d5 a5 alpha5], 'R');
-L(9) = Link([0 d6 a6 alpha6], 'R');
+L(2).jointtype = 'P';
+L(3).jointtype = 'P';
+
+L(4) = Link([90*pi/180 0 0 0*pi/180], 'R');
+L(5) = Link([0 d1 a1 alpha1], 'R');
+L(6) = Link([0 d2 a2 alpha2], 'R');
+L(7) = Link([0 d3 a3 alpha3], 'R');
+L(8) = Link([0 d4 a4 alpha4], 'R');
+L(9) = Link([0 d5 a5 alpha5], 'R');
+L(10) = Link([0 d6 a6 alpha6], 'R');
 
 Robot = SerialLink(L);
 
-robotq = [0,0,0,0,0,0];
-gvlocation = [0,0,0];
 
-Robot.fkine([gvlocation, robotq])
-ROMEFK([robotq, gvlocation])
+rev1AngleLock = 90 * pi/180;
+
+% in mm and degrees
+gvStates = [10 10 10];
+% in degrees
+armStates = [10 10 10 10 10 10];
+robotqAnalytical = [gvStates,armStates];
+robotqAnalytical(3:end) = robotqAnalytical(3:end)* pi/180;
+robotqToolbox = [rev1AngleLock,robotqAnalytical];
+
+RoboticsToolboxHTMAnswer = Robot.fkine(robotqToolbox);
+AnalyticalHTMAnswer = ROMEFK(robotqAnalytical);
+
+% FK of coupled system verified
+
+RoboticsToolboxJacobianAnswer = Robot.jacobe(robotqToolbox)
+AnalyticalJacobianAnswer = J_ROME_0(robotqAnalytical)
+
+
+
+

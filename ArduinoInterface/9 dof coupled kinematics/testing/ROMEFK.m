@@ -1,22 +1,25 @@
 function [endEffPos, endEffOrient] = ROMEFK(jointStates)
 % INPUT - takes in the 9 joint states of the ROME platform, in the format
-%         of the first 6 being the joint states of the arm, and the last 3
-%         being the x, y, and yaw/psi of the gv in mm.
+%         of the the first 3 being the x, y, and yaw/psi of the gv in mm and 
+%         the last 6 being the joint states of the arm.
 
 % OUTPUT - outputs the pose - position and orientation of the end effector
 %          using the ZYZ rotation
 
 % MAKE SURE ROBOTICS TOOLBOX IS ADDED TO PATH
-theta1 = jointStates(1);
-theta2 = jointStates(2);
-theta3 = jointStates(3);
-theta4 = jointStates(4);
-theta5 = jointStates(5);
-theta6 = jointStates(6);
+% needs to be in mm
+xGV = jointStates(1);
+yGV = jointStates(2);
+psiGV = jointStates(3);
 
-xGV = jointStates(7);
-yGV = jointStates(8);
-psiGV = jointStates(9);
+
+theta1 = jointStates(4);
+theta2 = jointStates(5);
+theta3 = jointStates(6);
+theta4 = jointStates(7);
+theta5 = jointStates(8);
+theta6 = jointStates(9);
+
 
 % DH parameters for AR2
 d1 = 169.77;    a1 = 64.2;  alpha1 = -90*pi/180;    
@@ -32,6 +35,9 @@ d6 = -36.25;    a6 = 0;     alpha6 = 0;
 X_ORIGIN_DIST = 0;
 Y_ORIGIN_DIST = 21.12; % in mm
 PSI_ORIGIN_ROT = 0;
+
+Y_ORIGIN_DIST = 0; % in mm
+
 
 % DH matrices for AR2
 DH1AR2 = [cos(theta1) -sin(theta1)*cos(alpha1) sin(theta1)*sin(alpha1) a1*cos(theta1);
@@ -75,14 +81,14 @@ TGvB = [cos(PSI_ORIGIN_ROT)  sin(PSI_ORIGIN_ROT) 0  X_ORIGIN_DIST;
 
 % transformation matrix from the inertia frame to the GV 
 % taking into account the distance and rotation difference between the interial frame and the gv
-TIGv = [cos(psiGV)  sin(psiGV) 0  xGV;
-        -sin(psiGV) cos(psiGV) 0  yGV;
+TIGv = [cos(psiGV)  -sin(psiGV) 0  xGV;
+        sin(psiGV) cos(psiGV) 0  yGV;
         0           0          1  0;
         0           0          0  1];
 
 % the total tranformation matrix from the inertia frame to the end effector
 % of the ROME platform
-TIE = TIGv * TGvB * TBE
+TIE = TIGv * TGvB * TBE;
 
 xEndEff = TIE(1,4);
 yEndEff = TIE(2,4);
