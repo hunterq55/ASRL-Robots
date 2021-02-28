@@ -14,6 +14,7 @@ clear all; close all; clc;
 % the distance from the base frames of the gv to the ar2
 X_ORIGIN_DIST = 0;
 Y_ORIGIN_DIST = 21.12; % in mm
+Y_ORIGIN_DIST = 0;
 
 %% Inputs
 syms m1 m2 m3 m4 m5 m6 g
@@ -128,7 +129,7 @@ J_ROME = [J Jve*Jv];
 
 fid1 = fopen('J_ROME.txt','wt');
 fprintf(fid1, '%s \n', char(J_ROME));
-
+fclose('all');
 
 
   
