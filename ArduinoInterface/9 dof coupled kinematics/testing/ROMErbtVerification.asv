@@ -36,7 +36,7 @@ gvStates = [10 10 10];
 armStates = [10 10 10 10 10 10];
 
 robotqAnalytical = [gvStates,armStates];
-% convert the angles from degrees to radians
+% convert the angles from degrees to r
 robotqAnalytical(3:end) = robotqAnalytical(3:end)* pi/180;
 robotqToolbox = [rev1AngleLock,robotqAnalytical];
 
