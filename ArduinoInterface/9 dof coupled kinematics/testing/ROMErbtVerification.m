@@ -47,13 +47,26 @@ AnalyticalHTMAnswer = ROMEFK(robotqAnalytical);
 
 %% IK Verification
 
-gvMotorVel = [0;0;0] * pi/180;
-armAngleVel = [0;0;0;0;0;0] * pi/180;
+% in mm and degrees
+% X,Y, yaw
+gvStates = [10 0 0];
+% in degrees
+% joints 1 - 6
+armStates = [0 0 0 0 0 0];
+
+robotqAnalytical = [gvStates,armStates];
+% convert the angles from degrees to radians
+robotqAnalytical(3:end) = robotqAnalytical(3:end)* pi/180;
+robotqToolbox = [rev1AngleLock,robotqAnalytical];
+
+gvMotorVel = [10;0;0];
+armAngleVel = [0;0;0;0;0;0];
 jointAngleVel = [gvMotorVel;armAngleVel];
+jointAngleVel(3:end) = jointAngleVel(3:end) * pi/180;
 jointAngleVelToolbox = [0;jointAngleVel];
 
-RoboticsToolboxJacobianAnswer = Robot.jacobe(robotqToolbox) * jointAngleVelToolbox
-AnalyticalJacobianAnswer = J_ROME_0(robotqAnalytical) * jointAngleVel
+RoboticsToolboxJacobianAnswer = Robot.jacob0(robotqToolbox) * jointAngleVelToolbox
+AnalyticalJacobianAnswer = J_ROME(robotqAnalytical) * jointAngleVel
 
 
 
