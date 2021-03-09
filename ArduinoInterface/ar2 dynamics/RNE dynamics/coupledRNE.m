@@ -123,7 +123,7 @@ plot(tGraph,qddot(:,1))
 hold on;
 plot(tGraph,qddotSimulated(:,1))
 
-l = legend('Analytical Generation $\ddot{\theta_1}$','Simulation $\ddot{\theta_1}$');
+l = legend('Reference Trajectory $\ddot{\theta_1}$','Simulated Trajectory $\ddot{\theta_1}$');
 
 set(l, 'Interpreter', 'latex','FontSize',12);
 grid on

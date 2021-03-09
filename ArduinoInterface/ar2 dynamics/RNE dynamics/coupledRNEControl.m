@@ -63,9 +63,9 @@ Robot.gravity = [0 0 9.81]';
 h = 0.1;
 t = 0;
 
-Kpval = 0.003;
-Kdval = 2*Kpval;
-Kival = 1;
+Kpval = 0.0003;
+Kdval = 7*Kpval;
+Kival = 1.04;
 
 % Kpval = 0;
 % Kdval = 0;
@@ -90,9 +90,15 @@ while t < time
 % qdotR(index,:) = [   10*cos(t)   10*cos(t)  10*cos(t)         10*cos(t)       10*cos(t)   10*cos(t)];
 % qddotR(index,:) = [  -10*sin(t)  -10*sin(t)  -10*sin(t)        -10*sin(t)           -10*sin(t)    -10*sin(t) ];
 
-qR(index,:) = [      10*sin(t) .5*t^3 .5*t^3 .5*t^3 .5*t^3 .5*t^3  ]; % rad
-qdotR(index,:) = [   10*cos(t)   1.5*t^2 1.5*t^2 1.5*t^2 1.5*t^2 1.5*t^2];
-qddotR(index,:) = [  -10*sin(t)  3*t  3*t        3*t           3*t    3*t ];
+qR(index,:) = [      .5*t^3 .5*t^3 .5*t^3 .5*t^3 .5*t^3 .5*t^3  ]; % rad
+qdotR(index,:) = [   1.5*t^2   1.5*t^2 1.5*t^2 1.5*t^2 1.5*t^2 1.5*t^2];
+qddotR(index,:) = [  3*t  3*t  3*t        3*t           3*t    3*t ];
+
+GVx(index) = -cos(t);
+GVy(index) = sin(t);
+
+GVForces = [GVx(index),GVy(index),9.81]';
+GVForcesNoGrav = [GVx(index),GVy(index),0]';
 
 if index == 1
     qSim(index,:) = qIC;
@@ -110,7 +116,7 @@ Robot.gravity = [0 0 0]';
 for i = 1:6
     qddotMass = zeros(1,6);
     qddotMass(i) = 1;
-    M(index,:,i) = Robot.rne(qSim(index,:),zeros(1,6),qddotMass);
+    M(index,:,i) = Robot.rne(qSim(index,:),zeros(1,6),qddotMass,GVForcesNoGrav);
 end
 
 MMat = squeeze(M(index,:,:));
