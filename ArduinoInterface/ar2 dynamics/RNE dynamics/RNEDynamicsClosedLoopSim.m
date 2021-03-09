@@ -60,38 +60,72 @@ Robot.name = 'AR2';
 Robot.nofriction('all');
 Robot.gravity = [0 0 9.81]';
 
-
+h = 0.1;
 t = 0;
+
+Kp = 1;
+Ki = 0;
+Kd = 0;
+
 index = 1;
 while t < 10
 %     inverse starts
-t = t + 0.1;
-q(index,:) = [      10*sin(t)   10*cos(t)   10*sin(t+180)         0.5*t^3       -10*sin(t)   -0.5*t^3  ]; % rad
-qdot(index,:) = [   10*cos(t)   10*-sin(t)  10*cos(t+180)         1.5*t^2       -10*cos(t)   -1.5*t^2];
-qddot(index,:) = [  -10*sin(t)  -10*cos(t)  -10*sin(t+180)        3*t           10*sin(t)    -3*t ];
+t = t + h;
+qR(index,:) = [      10*sin(t)   10*sin(t)   10*sin(t)         10*sin(t)       10*sin(t)  10*sin(t)  ]; % rad
+qdotR(index,:) = [   10*cos(t)   10*cos(t)  10*cos(t)         10*cos(t)       10*cos(t)   10*cos(t)];
+qddotR(index,:) = [  -10*sin(t)  -10*sin(t)  -10*sin(t)        -10*sin(t)           -10*sin(t)    -10*sin(t) ];
 
-GVx(index) = 10*sin(t);
-GVy(index) = 10*cos(t);
+qSim(index,:) = [0, 0, 0, 0, 0, 0];
+qdotSim(index,:) = [10, 10, 10, 10, 10, 10];
+qddotSim(index,:) = [14, 14, 14, 14 ,14 ,14];
 
-tau(index,:) = Robot.rne(q(index,:),qdot(index,:),qddot(index,:));
+
+qddot(index,:) = qddotSim(index,:) - qddotR(index,:);    
+
+
+if index == 1
+    qddotCorr = Kp*qddot(index,:) + Ki*(qddot(index,:)*h);
+else
+    qddotCorr = Kp*qddot(index,:) + Ki*(qddot(index,:)*h + qddot(index-1,:) + Kd/h*(qddot(index,:)-qddot(index-1,:)));
+end
+
+
+
+% tau(index,:) = Robot.rne(q(index,:),qdot(index,:),qddot(index,:));
+tau(index,:) = Robot.rne(qSim(index,:),qdotSim(index,:),qddotCorr);
 % inverse ends
 
 % forward starts
-CandGVectors(index,:) = Robot.rne(q(index,:),qdot(index,:),zeros(1,6));
+CandGVectors(index,:) = Robot.rne(qR(index,:),qdotR(index,:),zeros(1,6));
+% CandGVectors(index,:) = Robot.rne(qCorr,qdotCorr,zeros(1,6));
 
 Robot.gravity = [0 0 0]';
 
 for i = 1:6
     qddotMass = zeros(1,6);
     qddotMass(i) = 1;
-    M(index,:,i) = Robot.rne(q(index,:),zeros(1,6),qddotMass);
-    
+    M(index,:,i) = Robot.rne(qR(index,:),zeros(1,6),qddotMass);
+%     M(index,:,i) = Robot.rne(qCorr,zeros(1,6),qddotMass);
 end
 
 MMat = squeeze(M(index,:,:));
-qddotSimulated(index,:) = pinv(MMat)*(tau(index,:)' - CandGVectors(index,:)');
+qddotSim(index,:) = pinv(MMat)*(tau(index,:)' - CandGVectors(index,:)');
+
+if index == 1
+    qdotSim(index,:) = h*qddotSim(index,:);
+	qSim(index,:) = h*qdotSim(index,:);
+
+else
+    qdotSim(index,:) = h*qddotSim(index,:) + qdotSim(index-1,:);
+	qSim(index,:) = h*qdotSim(index,:) + qSim(index-1,:);
+
+end
 
 % forward ends
+
+
+
+
 
 % reset 
 Robot.gravity = [0 0 9.81]';
@@ -100,25 +134,25 @@ index = index + 1;
     
 end
 
+
 tGraph = 0:0.1:10;
 tGraph = tGraph';
-% 
+
+angleToView = 6;
+
 figure
-% plot(tGraph,qddot)
+plot(qddotR(:,angleToView))
 hold on;
-plot(tGraph,tau(:,1))
+plot(qddotSim(:,angleToView))
 % l = legend('Analytical Generation $\ddot{\theta_1}$','Analytical Generation $\ddot{\theta_2}$','Analytical Generation $\ddot{\theta_3}$','Analytical Generation $\ddot{\theta_4}$','Analytical Generation $\ddot{\theta_5}$','Analytical Generation $\ddot{\theta_6}$',...
 %     'Simulation $\ddot{\theta_1}$','Simulation $\ddot{\theta_2}$','Simulation $\ddot{\theta_3}$','Simulation $\ddot{\theta_4}$','Simulation $\ddot{\theta_5}$','Simulation $\ddot{\theta_6}$');
-
+% 
 % set(l, 'Interpreter', 'latex','FontSize',12);
 grid on
 
 xlabel('Time [sec]','FontSize',12)
 ylabel('Acceleration [rad/s^2]','FontSize',12)
 
-% %
 
 
-% [T,qDyn,qdotDyn] = Robot.fdyn(10,@torqfun);
 
-% qddot = [-10*sin(t) -10*sin(t) -10*sin(t) -10*sin(t) -10*sin(t) -10*sin(t)];

@@ -70,10 +70,12 @@ q(index,:) = [      10*sin(t)   10*cos(t)   10*sin(t+180)         0.5*t^3       
 qdot(index,:) = [   10*cos(t)   10*-sin(t)  10*cos(t+180)         1.5*t^2       -10*cos(t)   -1.5*t^2];
 qddot(index,:) = [  -10*sin(t)  -10*cos(t)  -10*sin(t+180)        3*t           10*sin(t)    -3*t ];
 
-GVx(index) = 10*sin(t);
-GVy(index) = 10*cos(t);
+GVx(index) = -cos(t);
+GVy(index) = sin(t);
 
-tau(index,:) = Robot.rne(q(index,:),qdot(index,:),qddot(index,:));
+GVForces = [GVx(index),GVy(index),9.81]';
+
+tau(index,:) = Robot.rne(q(index,:),qdot(index,:),qddot(index,:),GVForces);
 % inverse ends
 
 % forward starts
@@ -84,7 +86,7 @@ Robot.gravity = [0 0 0]';
 for i = 1:6
     qddotMass = zeros(1,6);
     qddotMass(i) = 1;
-    M(index,:,i) = Robot.rne(q(index,:),zeros(1,6),qddotMass);
+    M(index,:,i) = Robot.rne(q(index,:),zeros(1,6),qddotMass,GVForces);
     
 end
 
@@ -103,22 +105,28 @@ end
 tGraph = 0:0.1:10;
 tGraph = tGraph';
 % 
-figure
+% figure
 % plot(tGraph,qddot)
-hold on;
-plot(tGraph,tau(:,1))
+% hold on;
+% plot(tGraph,qddotSimulated)
 % l = legend('Analytical Generation $\ddot{\theta_1}$','Analytical Generation $\ddot{\theta_2}$','Analytical Generation $\ddot{\theta_3}$','Analytical Generation $\ddot{\theta_4}$','Analytical Generation $\ddot{\theta_5}$','Analytical Generation $\ddot{\theta_6}$',...
 %     'Simulation $\ddot{\theta_1}$','Simulation $\ddot{\theta_2}$','Simulation $\ddot{\theta_3}$','Simulation $\ddot{\theta_4}$','Simulation $\ddot{\theta_5}$','Simulation $\ddot{\theta_6}$');
-
+% 
 % set(l, 'Interpreter', 'latex','FontSize',12);
+% grid on
+% 
+% xlabel('Time [sec]','FontSize',12)
+% ylabel('Acceleration [rad/s^2]','FontSize',12)
+
+figure
+plot(tGraph,qddot(:,1))
+hold on;
+plot(tGraph,qddotSimulated(:,1))
+
+l = legend('Analytical Generation $\ddot{\theta_1}$','Simulation $\ddot{\theta_1}$');
+
+set(l, 'Interpreter', 'latex','FontSize',12);
 grid on
 
 xlabel('Time [sec]','FontSize',12)
 ylabel('Acceleration [rad/s^2]','FontSize',12)
-
-% %
-
-
-% [T,qDyn,qdotDyn] = Robot.fdyn(10,@torqfun);
-
-% qddot = [-10*sin(t) -10*sin(t) -10*sin(t) -10*sin(t) -10*sin(t) -10*sin(t)];
