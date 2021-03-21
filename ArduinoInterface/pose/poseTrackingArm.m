@@ -147,7 +147,7 @@ while(toc<10)
 %     k_2 = xdot+0.5*h*k_1;
 %     k_3 = xdot+0.5*h*k_2;
 %     k_4 = xdot+k_3*h;
-%     x = xdot + ((1/6)*(k_1+2*k_2+2*k_3+k_4)*h); 
+%     x+1 = x + ((1/6)*(k_1+2*k_2+2*k_3+k_4)*h); 
 
 % RK4 Solver
     k_1 = AR2KinDE(x,xdot_ref(tTime),theta_ref(tTime),thetadot_ref(tTime));
