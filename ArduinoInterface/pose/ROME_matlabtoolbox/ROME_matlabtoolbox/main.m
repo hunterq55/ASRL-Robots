@@ -22,17 +22,32 @@ Robot = SerialLink(L);
 
 %% Initial conditions and error calculations
 ti = 0;
-x_ref_coef = 10;
-x_ref_init = [x_ref_coef*sin(ti)+200; x_ref_coef*sin(ti)+100; x_ref_coef*sin(ti)+200]; 
-xdot_ref_init = [x_ref_coef*cos(ti); x_ref_coef*cos(ti); x_ref_coef*cos(ti)];
-tr = 5*pi/180.*(2*pi/10/4*ti) + 60*pi/180;
-theta_ref_init = [tr; tr; tr];
+global manueverTime
+manueverTime = 10;
+% x_ref_coef = 10;
+% x_ref_init = [x_ref_coef*sin(ti)+200; x_ref_coef*sin(ti)+100; x_ref_coef*sin(ti)+200]; 
+% xdot_ref_init = [x_ref_coef*cos(ti); x_ref_coef*cos(ti); x_ref_coef*cos(ti)];
+% tr = 5*pi/180.*(2*pi/10/4*ti) + 60*pi/180;
+% theta_ref_init = [tr; tr; tr];
+
+x_ref_coef = 100;
+x_ref_init = [0*sin(ti)+200; 0*sin(ti)+200; x_ref_coef*cos(pi*ti/manueverTime)+200]; 
+
+xdot_coef = 100;
+xdot_ref_init = [0*cos(ti); 0*cos(ti); -xdot_coef*pi/manueverTime*sin(pi*ti/manueverTime)];
+
+thetr = 105*(pi/180)*(sin((pi*ti/manueverTime)-90*(pi/180)));
+theta_ref_init = [0; thetr; 0];
+
+thetr_dot = 105*(pi/180)*pi/manueverTime*(cos((pi*ti/manueverTime)-90*(pi/180)));
+thetadot_ref_init = [0; thetr_dot; 0];
+
 q_init = [28 -28 145 25 30 30]'*pi/180;
 q_init = [0;-1.396263401595464;1.570796326794897;0;0;0];
 err = getError_init(x_ref_init, theta_ref_init, q_init);
 X0 = [q_init; err];
 %% Simulation Setup
-tspan = [0 10];
+tspan = [0 manueverTime];
 options = odeset('RelTol',1e-8,'AbsTol',1e-10);
 % tic
 % [t, X] = ode45(@AR2KinDE, tspan, X0, options);

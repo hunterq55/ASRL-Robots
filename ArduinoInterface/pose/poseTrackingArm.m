@@ -39,27 +39,37 @@ command0_AR2_J = path_AR2_J(1:6);
 Kp = eye(3);
 Ko = eye(3);
 
+global manueverTime;
+manueverTime = 10;
+
 %% Path Definitons - updated per experiment, need a better implementation for this
 function x_r=x_ref(t)
-x_ref_coef = 10;
-x_r = [x_ref_coef*sin(t)+200; 0*sin(t)+100; 0*sin(t)+200]; 
+x_ref_coef = 100;
+% x_r = [0*sin(t)+200; 0*sin(t)+200; x_ref_coef*sin(t)+200];
+x_r = [0*sin(t)+200; 0*sin(t)+200; x_ref_coef*cos(pi*t/manueverTime)+200]; 
 end
 function xdot_r = xdot_ref(t)
-    xdot_coef = 10;
+    xdot_coef = 100;
 %     xdot_coef = 0;
-    xdot_r = [xdot_coef*cos(t); xdot_coef*cos(t); xdot_coef*cos(t)];
+    xdot_r = [0*cos(t); 0*cos(t); -xdot_coef*pi/manueverTime*sin(pi*t/manueverTime)];
 end
 
 function theta_ref = theta_ref(t)
-    thetr = 5*pi/180*sin(2*pi/10/4.*t) + 60*pi/180;
+%     thetr = 5*pi/180*sin(2*pi/10/4.*t) + 60*pi/180;
 %     thetr=0;
-    theta_ref = [thetr; thetr; thetr];
+%     theta_ref = [thetr; thetr; thetr];
+    thetr = 105*(pi/180)*(sin((pi*t/manueverTime)-90*(pi/180)));
+    theta_ref = [0; thetr; 0];
+
 end
 
 function thetadot_ref = thetadot_ref(t)
-    thetr_dot = 5*pi/180.*cos(2*pi/10/4.*t);
+%     thetr_dot = 5*pi/180.*cos(2*pi/10/4.*t);
 %     thetr_dot=0;
-    thetadot_ref = [thetr_dot; thetr_dot; thetr_dot];
+%     thetadot_ref = [thetr_dot; thetr_dot; thetr_dot];
+    thetr_dot = 105*(pi/180)*pi/manueverTime*(cos((pi*t/manueverTime)-90*(pi/180)));
+    thetadot_ref = [0; thetr_dot; 0];
+    
 end
 
 %% NatNet Connection
@@ -122,7 +132,7 @@ disp('Executing!')
 %% Main
 i=1;
 tic
-while(toc<10)  
+while(toc<manueverTime)  
     %on first iteration, initialize variables that constantly update
     if (i == 1)
         %%FIX THESE VARIABLES
