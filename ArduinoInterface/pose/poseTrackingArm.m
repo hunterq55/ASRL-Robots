@@ -45,11 +45,13 @@ manueverTime = 10;
 %% Path Definitons - updated per experiment, need a better implementation for this
 function x_r=x_ref(t)
 x_ref_coef = 100;
+x_ref_coef = 0;
 % x_r = [0*sin(t)+200; 0*sin(t)+200; x_ref_coef*sin(t)+200];
-x_r = [0*sin(t)+200; 0*sin(t)+200; x_ref_coef*cos(pi*t/manueverTime)+200]; 
+x_r = [0*sin(t)+command0_AR2_W_pos(1); 0*sin(t)+command0_AR2_W_pos(2); x_ref_coef*cos(pi*t/manueverTime)+command0_AR2_W_pos(3)]; 
 end
 function xdot_r = xdot_ref(t)
     xdot_coef = 100;
+    xdot_coef = 0;
 %     xdot_coef = 0;
     xdot_r = [0*cos(t); 0*cos(t); -xdot_coef*pi/manueverTime*sin(pi*t/manueverTime)];
 end
@@ -59,7 +61,8 @@ function theta_ref = theta_ref(t)
 %     thetr=0;
 %     theta_ref = [thetr; thetr; thetr];
     thetr = 105*(pi/180)*(sin((pi*t/manueverTime)-90*(pi/180)));
-    theta_ref = [0; thetr; 0];
+    thetr = 0;
+    theta_ref = [command0_AR2_W_ori(1); thetr+command0_AR2_W_ori(2); command0_AR2_W_ori(3)];
 
 end
 
@@ -68,6 +71,7 @@ function thetadot_ref = thetadot_ref(t)
 %     thetr_dot=0;
 %     thetadot_ref = [thetr_dot; thetr_dot; thetr_dot];
     thetr_dot = 105*(pi/180)*pi/manueverTime*(cos((pi*t/manueverTime)-90*(pi/180)));
+    thetr_dot = 0;
     thetadot_ref = [0; thetr_dot; 0];
     
 end

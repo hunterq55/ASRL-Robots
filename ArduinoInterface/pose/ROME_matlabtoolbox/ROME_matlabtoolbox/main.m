@@ -1,5 +1,5 @@
 %% AR2 robotic manipulator closed loop resolved rate algorithm
-
+clear
 %% Robot Definition
 d1 = 169.77;    a1 = 64.2;  alpha1 = -90*pi/180;    
 d2 = 0;         a2 = 305;   alpha2 = 0;             
@@ -30,28 +30,50 @@ manueverTime = 10;
 % tr = 5*pi/180.*(2*pi/10/4*ti) + 60*pi/180;
 % theta_ref_init = [tr; tr; tr];
 
+q_init = [0.175;-1.396263401595464;1.570796326794897;0.175;0.175;0.175];
+
+
+[initPos,initOri] = AR2FKZYZ(q_init);
+
+
 x_ref_coef = 100;
-x_ref_init = [0*sin(ti)+200; 0*sin(ti)+200; x_ref_coef*cos(pi*ti/manueverTime)+200]; 
+x_ref_init = [0*sin(ti)+initPos(1); 0*sin(ti)+initPos(2); x_ref_coef*cos(pi*ti/manueverTime)+initPos(3)]; 
+x_ref_init = [x_ref_coef*sin(ti)+initPos(1); x_ref_coef*sin(ti)+initPos(2); x_ref_coef*sin(ti)+initPos(3)]; 
+% x_ref_init = [initPos(1);initPos(2);initPos(3)];
 
 xdot_coef = 100;
 xdot_ref_init = [0*cos(ti); 0*cos(ti); -xdot_coef*pi/manueverTime*sin(pi*ti/manueverTime)];
+xdot_ref_init = [xdot_coef*cos(ti);xdot_coef*cos(ti); xdot_coef*cos(ti)];
+
+% xdot_ref_init = [0;0;0];
 
 thetr = 105*(pi/180)*(sin((pi*ti/manueverTime)-90*(pi/180)));
-theta_ref_init = [0; thetr; 0];
+theta_ref_init = [initOri(1); thetr+initOri(2); initOri(3)];
+thetr = pi/4*sin(ti);
+theta_ref = [thetr+initOri(1); thetr+initOri(2); thetr+initOri(3)];
+
+% theta_ref_init = [initOri(1);initOri(2);initOri(3)];
 
 thetr_dot = 105*(pi/180)*pi/manueverTime*(cos((pi*ti/manueverTime)-90*(pi/180)));
 thetadot_ref_init = [0; thetr_dot; 0];
 
-q_init = [28 -28 145 25 30 30]'*pi/180;
-q_init = [0;-1.396263401595464;1.570796326794897;0;0;0];
+thetr_dot = pi/4*cos(ti);
+thetadot_ref = [thetr_dot; thetr_dot; thetr_dot];
+
+
+% thetadot_ref_init = [0;0;0];
+
+% q_init = [28 -28 145 25 30 30]'*pi/180;
+% q_init = 0*[0;-1.396263401595464;1.570796326794897;0;0;0];
+
 err = getError_init(x_ref_init, theta_ref_init, q_init);
 X0 = [q_init; err];
 %% Simulation Setup
 tspan = [0 manueverTime];
 options = odeset('RelTol',1e-8,'AbsTol',1e-10);
-% tic
-% [t, X] = ode45(@AR2KinDE, tspan, X0, options);
-% toc
+tic
+[t, X] = ode45(@AR2KinDE, tspan, X0, options);
+toc
 % tic
 % [t2, X2] = ode45(@AR2KinDE_anal, tspan, X0, options);
 % toc
@@ -60,8 +82,8 @@ tic
 [tRK, XRK]=RK4_angles(@AR2KinDE,X0);
 toc
 %% Output
-% q = X(:,1:6);
-% err = X(:,7:12);
+q = X(:,1:6);
+err = X(:,7:12);
 
 % %new output
 % q2=X2(:,1:6);
@@ -88,30 +110,36 @@ xlabel('time [sec]')
 ylabel('Configuration variables [deg]')
 legend('q_1', 'q_2', 'q_3', 'q_4', 'q_5', 'q_6')
 
-for i = 1:length(t)
-   ex(i) = X(i,7);
-   ey(i) = X(i,8);
-   ez(i) = X(i,9);
-   eth1(i) = X(i,10);
-   eth2(i) = X(i,11);
-   eth3(i) = X(i,12);
+figure
+plot(t,q*180/pi)
+xlabel('time [sec]')
+ylabel('Configuration variables [deg]')
+legend('q_1', 'q_2', 'q_3', 'q_4', 'q_5', 'q_6')
+
+for i = 1:length(tRK)
+   ex(i) = XRK(i,7);
+   ey(i) = XRK(i,8);
+   ez(i) = XRK(i,9);
+   eth1(i) = XRK(i,10);
+   eth2(i) = XRK(i,11);
+   eth3(i) = XRK(i,12);
 end
 figure
-plot(t,ex)
+plot(tRK,ex)
 hold on
-plot(t,ey)
+plot(tRK,ey)
 hold on
-plot(t,ez)
+plot(tRK,ez)
 xlabel('time [sec]')
 ylabel('Position error')
 legend('x error', 'y error', 'z error')
 
 figure
-plot(t,eth1)
+plot(tRK,eth1)
 hold on
-plot(t,eth2)
+plot(tRK,eth2)
 hold on
-plot(t,eth3)
+plot(tRK,eth3)
 xlabel('time [sec]')
 ylabel('Orientation error')
 legend('\theta_4 error', '\theta_5 error', '\theta_6 error')
