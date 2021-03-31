@@ -119,6 +119,12 @@ Binv = eul2jac(eul0_ref);
 omega_ref = Binv*euldot0_ref;
 C_ref = eul2r(eul0_ref');
 
+offsetTemp = getTransformationMatrix(command0_AR2_J,0);
+
+offset = offsetTemp(1:3);
+offsetAng = offsetTemp(4:6);
+
+
 %% Final Checks - Before proceeding, make sure you don't break anything 
 disp('Final Checks Before Experiment')
 pause(2)
@@ -151,9 +157,28 @@ while(toc<manueverTime)
 %     calculate xdot_global theta_global(orientaiton) thetadot_(global) through forward kinematics
 %     this is where the loop will be closed
 
-    
+    yaw = data.RigidBody(1).qy;
+    pitch = data.RigidBody(1).qz;
+    roll = data.RigidBody(1).qx;
+    scalar = data.RigidBody(1).qw;
+    quat = quaternion(roll,yaw,pitch,scalar);
+    qRot = quaternion(0,0,0,1);
+    quat = mtimes(quat,qRot);
+    anglesFromCamera = EulerAngles(quat,'zyz');
+    positionFromCamera = [data.RigidBody(1).x;data.RigidBody(1).z;data.RigidBody(1).y;];
 
+    actualWorkPos = positionFromCamera - offset;
+    actualWorkOri = anglesFromCamera - offsetAng;
     %timestep
+    
+    J = Jacobian0_analytical(q);
+    
+    qActual = pinv(J)*[actualWorkPos;actualWorkOri];
+    
+    err = getError_init(x_ref(t), theta_ref(t), qActual);
+    
+    x = [qActual;err];
+    
     h = 0.0155;
     
 %     basis for RK4 solver
