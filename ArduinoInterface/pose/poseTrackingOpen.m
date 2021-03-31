@@ -35,6 +35,9 @@ Stepper1.updateStates(statesArray_AR2_J);
 
 command0_AR2_J = path_AR2_J(1:6);
 
+[command0_AR2_W_pos, command0_AR2_W_ori] = AR2FKZYZ(command0_AR2_J);
+
+
 % %Gains
 % Kp = eye(3);
 % Ko = eye(3);
@@ -42,7 +45,7 @@ command0_AR2_J = path_AR2_J(1:6);
 %% Path Definitons - updated per experiment, need a better implementation for this
 function x_r=position_ref_W(t)
 x_ref_coef = 10;
-x_r = [x_ref_coef*sin(t)+200; 0*sin(t)+100; 0*sin(t)+200]; 
+x_r = [x_ref_coef*sin(t)+command0_AR2_W_pos(1); 0*sin(t)+command0_AR2_W_pos(2); 0*sin(t)+command0_AR2_W_pos(3)]; 
 end
 function xdot_r = velocity_ref_W(t)
     xdot_coef = 10;
@@ -53,7 +56,7 @@ end
 function theta_ref = orientation_ref_W(t)
     thetr = 5*pi/180*sin(2*pi/10/4.*t) + 60*pi/180;
 %     thetr=0;
-    theta_ref = [thetr; thetr; thetr];
+    theta_ref = [thetr+command0_AR2_W_ori(1); thetr+command0_AR2_W_ori(2); thetr+command0_AR2_W_ori(6)];
 end
 
 function thetadot_ref = orientation_dot_ref_W(t)
