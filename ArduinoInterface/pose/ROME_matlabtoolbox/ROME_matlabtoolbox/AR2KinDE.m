@@ -22,24 +22,24 @@ q_init = [0.2;-1.396263401595464;1.570796326794897;0.2;0.2;0.2];
 x_ref_coef = 100;
 x_ref = [0*sin(t)+initPos(1); 0*sin(t)+initPos(2); x_ref_coef*cos(pi*t/manueverTime)+initPos(3)]; 
 x_ref = [x_ref_coef*sin(t)+initPos(1); x_ref_coef*sin(t)+initPos(2); x_ref_coef*sin(t)+initPos(3)]; 
-% x_ref = [initPos(1);initPos(2);initPos(3)];
+x_ref = [initPos(1);initPos(2);initPos(3)];
 
 
 xdot_coef = 100;
 xdot_ref = [0*cos(t); 0*cos(t); -xdot_coef*pi/manueverTime*sin(pi*t/manueverTime)];
 xdot_ref = [xdot_coef*cos(t);xdot_coef*cos(t); xdot_coef*cos(t)];
-% xdot_ref = [0;0;0];
+xdot_ref = [0;0;0];
 
 thetr = 105*(pi/180)*(sin((pi*t/manueverTime)-90*(pi/180)));
 thetr = pi/4*sin(t);
 theta_ref = [initOri(1); thetr+initOri(2); initOri(3)];
 theta_ref = [thetr+initOri(1); thetr+initOri(2); thetr+initOri(3)];
-% theta_ref = [initOri(1);initOri(2);initOri(3)];
+theta_ref = [initOri(1);initOri(2);initOri(3)];
 
 thetr_dot = 105*(pi/180)*pi/manueverTime*(cos((pi*t/manueverTime)-90*(pi/180)));
 thetr_dot = pi/4*cos(t);
 thetadot_ref = [thetr_dot; thetr_dot; thetr_dot];
-% thetadot_ref = [0; 0; 0];
+thetadot_ref = [0; 0; 0];
 
 Binv = eul2jac(theta_ref);
 omega_ref = Binv*thetadot_ref;
