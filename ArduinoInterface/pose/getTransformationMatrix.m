@@ -42,7 +42,7 @@ while toc <= 10
     q = quaternion(roll,yaw,pitch,scalar);
     qRot = quaternion(0,0,0,1);
     q = mtimes(q,qRot);
-    a = EulerAngles(q,'zyx'); %radian output
+    a = EulerAngles(q,'zyz'); %radian output
 
     statesWorldPos(index,1:3) = [data.LabeledMarker(1).z data.LabeledMarker(1).x data.LabeledMarker(1).y]*1000;
     statesWorldPosRot(index,1:3)=rotz*statesWorldPos(index,1:3)';

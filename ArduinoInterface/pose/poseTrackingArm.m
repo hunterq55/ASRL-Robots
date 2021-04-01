@@ -45,11 +45,13 @@ manueverTime = 10;
 %% Path Definitons - updated per experiment, need a better implementation for this
 function x_r=x_ref(t)
 x_ref_coef = 100;
+x_ref_coef = 0;
 % x_r = [0*sin(t)+200; 0*sin(t)+200; x_ref_coef*sin(t)+200];
-x_r = [0*sin(t)+200; 0*sin(t)+200; x_ref_coef*cos(pi*t/manueverTime)+200]; 
+x_r = [0*sin(t)+command0_AR2_W_pos(1); 0*sin(t)+command0_AR2_W_pos(2); x_ref_coef*cos(pi*t/manueverTime)+command0_AR2_W_pos(3)]; 
 end
 function xdot_r = xdot_ref(t)
     xdot_coef = 100;
+    xdot_coef = 0;
 %     xdot_coef = 0;
     xdot_r = [0*cos(t); 0*cos(t); -xdot_coef*pi/manueverTime*sin(pi*t/manueverTime)];
 end
@@ -59,7 +61,8 @@ function theta_ref = theta_ref(t)
 %     thetr=0;
 %     theta_ref = [thetr; thetr; thetr];
     thetr = 105*(pi/180)*(sin((pi*t/manueverTime)-90*(pi/180)));
-    theta_ref = [0; thetr; 0];
+    thetr = 0;
+    theta_ref = [command0_AR2_W_ori(1); thetr+command0_AR2_W_ori(2); command0_AR2_W_ori(3)];
 
 end
 
@@ -68,6 +71,7 @@ function thetadot_ref = thetadot_ref(t)
 %     thetr_dot=0;
 %     thetadot_ref = [thetr_dot; thetr_dot; thetr_dot];
     thetr_dot = 105*(pi/180)*pi/manueverTime*(cos((pi*t/manueverTime)-90*(pi/180)));
+    thetr_dot = 0;
     thetadot_ref = [0; thetr_dot; 0];
     
 end
@@ -115,6 +119,12 @@ Binv = eul2jac(eul0_ref);
 omega_ref = Binv*euldot0_ref;
 C_ref = eul2r(eul0_ref');
 
+offsetTemp = getTransformationMatrix(command0_AR2_J,0);
+
+offset = offsetTemp(1:3);
+offsetAng = offsetTemp(4:6);
+
+
 %% Final Checks - Before proceeding, make sure you don't break anything 
 disp('Final Checks Before Experiment')
 pause(2)
@@ -147,9 +157,28 @@ while(toc<manueverTime)
 %     calculate xdot_global theta_global(orientaiton) thetadot_(global) through forward kinematics
 %     this is where the loop will be closed
 
-    
+    yaw = data.RigidBody(1).qy;
+    pitch = data.RigidBody(1).qz;
+    roll = data.RigidBody(1).qx;
+    scalar = data.RigidBody(1).qw;
+    quat = quaternion(roll,yaw,pitch,scalar);
+    qRot = quaternion(0,0,0,1);
+    quat = mtimes(quat,qRot);
+    anglesFromCamera = EulerAngles(quat,'zyz');
+    positionFromCamera = [data.RigidBody(1).x;data.RigidBody(1).z;data.RigidBody(1).y;];
 
+    actualWorkPos = positionFromCamera - offset;
+    actualWorkOri = anglesFromCamera - offsetAng;
     %timestep
+    
+    J = Jacobian0_analytical(q);
+    
+    qActual = pinv(J)*[actualWorkPos;actualWorkOri];
+    
+    err = getError_init(x_ref(t), theta_ref(t), qActual);
+    
+    x = [qActual;err];
+    
     h = 0.0155;
     
 %     basis for RK4 solver
