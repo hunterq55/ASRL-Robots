@@ -30,38 +30,46 @@ manueverTime = 10;
 % tr = 5*pi/180.*(2*pi/10/4*ti) + 60*pi/180;
 % theta_ref_init = [tr; tr; tr];
 
-q_init = [0.175;-1.396263401595464;1.570796326794897;0.175;0.175;0.175];
-
+q_init = [0 -80 90 0 0 0]'*pi/180;
 
 [initPos,initOri] = AR2FKZYZ(q_init);
 
 
-x_ref_coef = 100;
+x_ref_coef = 10;
 x_ref_init = [0*sin(ti)+initPos(1); 0*sin(ti)+initPos(2); x_ref_coef*cos(pi*ti/manueverTime)+initPos(3)]; 
 x_ref_init = [x_ref_coef*sin(ti)+initPos(1); x_ref_coef*sin(ti)+initPos(2); x_ref_coef*sin(ti)+initPos(3)]; 
 x_ref_init = [initPos(1);initPos(2);initPos(3)];
 
-xdot_coef = 100;
+xdot_coef = 10;
 xdot_ref_init = [0*cos(ti); 0*cos(ti); -xdot_coef*pi/manueverTime*sin(pi*ti/manueverTime)];
 xdot_ref_init = [xdot_coef*cos(ti);xdot_coef*cos(ti); xdot_coef*cos(ti)];
 
-xdot_ref_init = [0;0;0];
+% xdot_ref_init = [0;0;0];
 
 thetr = 105*(pi/180)*(sin((pi*ti/manueverTime)-90*(pi/180)));
-theta_ref_init = [initOri(1); thetr+initOri(2); initOri(3)];
+% theta_ref_init = [initOri(1); thetr+initOri(2); initOri(3)];
 thetr = pi/4*sin(ti);
-theta_ref = [thetr+initOri(1); thetr+initOri(2); thetr+initOri(3)];
+theta_ref_init = [thetr+initOri(1); thetr+initOri(2); thetr+initOri(3)];
 
 theta_ref_init = [initOri(1);initOri(2);initOri(3)];
 
 thetr_dot = 105*(pi/180)*pi/manueverTime*(cos((pi*ti/manueverTime)-90*(pi/180)));
-thetadot_ref_init = [0; thetr_dot; 0];
+% thetadot_ref_init = [0; thetr_dot; 0];
 
 thetr_dot = pi/4*cos(ti);
-thetadot_ref = [thetr_dot; thetr_dot; thetr_dot];
+thetadot_ref_init = [thetr_dot; thetr_dot; thetr_dot];
+
+x_ref_coef = 10;
+x_ref_init = [x_ref_coef*sin(ti)+initPos(1); x_ref_coef*sin(ti)+initPos(2); x_ref_coef*sin(ti)+initPos(3)]; 
+xdot_ref_init = [x_ref_coef*cos(ti); x_ref_coef*cos(ti); x_ref_coef*cos(ti)];
+tr = 5*pi/180*sin(2*pi/10/4.*ti) + 60*pi/180;
+theta_ref_init = [tr; tr; tr];
+tr_dot = 5*pi/180.*cos(2*pi/10/4.*ti);
+thetadot_ref_init = [tr_dot; tr_dot; tr_dot];
 
 
-thetadot_ref_init = [0;0;0];
+
+% thetadot_ref_init = [0;0;0];
 
 % q_init = [28 -28 145 25 30 30]'*pi/180;
 % q_init = 0*[0;-1.396263401595464;1.570796326794897;0;0;0];
@@ -70,9 +78,9 @@ err = getError_init(x_ref_init, theta_ref_init, q_init);
 X0 = [q_init; err];
 %% Simulation Setup
 tspan = [0 manueverTime];
-options = odeset('RelTol',1e-8,'AbsTol',1e-10);
+options = odeset('RelTol',1e-3,'AbsTol',1e-5);
 tic
-[t, X] = ode45(@AR2KinDE, tspan, X0, options);
+% [t, X] = ode45(@AR2KinDE, tspan, X0, options);
 toc
 % tic
 % [t2, X2] = ode45(@AR2KinDE_anal, tspan, X0, options);
@@ -82,8 +90,8 @@ tic
 [tRK, XRK]=RK4_angles(@AR2KinDE,X0);
 toc
 %% Output
-q = X(:,1:6);
-err = X(:,7:12);
+% q = X(:,1:6);
+% err = X(:,7:12);
 
 % %new output
 % q2=X2(:,1:6);
