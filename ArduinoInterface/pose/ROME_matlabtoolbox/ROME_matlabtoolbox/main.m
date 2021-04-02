@@ -30,42 +30,50 @@ manueverTime = 10;
 % tr = 5*pi/180.*(2*pi/10/4*ti) + 60*pi/180;
 % theta_ref_init = [tr; tr; tr];
 
-q_init = [0 -80 90 0 0 0]'*pi/180;
+global q_init;
+q_init = [0 -80 80 0 0 0]'*pi/180;
 
+global initPos;
+global initOri;
 [initPos,initOri] = AR2FKZYZ(q_init);
 
 
-x_ref_coef = 10;
-x_ref_init = [0*sin(ti)+initPos(1); 0*sin(ti)+initPos(2); x_ref_coef*cos(pi*ti/manueverTime)+initPos(3)]; 
-x_ref_init = [x_ref_coef*sin(ti)+initPos(1); x_ref_coef*sin(ti)+initPos(2); x_ref_coef*sin(ti)+initPos(3)]; 
-x_ref_init = [initPos(1);initPos(2);initPos(3)];
+% x_ref_coef = 10;
+% x_ref_init = [0*sin(ti)+initPos(1); 0*sin(ti)+initPos(2); x_ref_coef*cos(pi*ti/manueverTime)+initPos(3)]; 
+% x_ref_init = [x_ref_coef*sin(ti)+initPos(1); x_ref_coef*sin(ti)+initPos(2); x_ref_coef*sin(ti)+initPos(3)]; 
+% x_ref_init = [initPos(1);initPos(2);initPos(3)];
+% 
+% xdot_coef = 10;
+% xdot_ref_init = [0*cos(ti); 0*cos(ti); -xdot_coef*pi/manueverTime*sin(pi*ti/manueverTime)];
+% xdot_ref_init = [xdot_coef*cos(ti);xdot_coef*cos(ti); xdot_coef*cos(ti)];
+% 
+% % xdot_ref_init = [0;0;0];
+% 
+% thetr = 105*(pi/180)*(sin((pi*ti/manueverTime)-90*(pi/180)));
+% % theta_ref_init = [initOri(1); thetr+initOri(2); initOri(3)];
+% thetr = pi/4*sin(ti);
+% theta_ref_init = [thetr+initOri(1); thetr+initOri(2); thetr+initOri(3)];
+% 
+% theta_ref_init = [initOri(1);initOri(2);initOri(3)];
+% 
+% thetr_dot = 105*(pi/180)*pi/manueverTime*(cos((pi*ti/manueverTime)-90*(pi/180)));
+% % thetadot_ref_init = [0; thetr_dot; 0];
+% 
+% thetr_dot = pi/4*cos(ti);
+% thetadot_ref_init = [thetr_dot; thetr_dot; thetr_dot];
+% 
+% x_ref_coef = 10;
+% x_ref_init = [x_ref_coef*sin(ti)+initPos(1); x_ref_coef*sin(ti)+initPos(2); x_ref_coef*sin(ti)+initPos(3)]; 
+% xdot_ref_init = [x_ref_coef*cos(ti); x_ref_coef*cos(ti); x_ref_coef*cos(ti)];
+% tr = 5*pi/180*sin(2*pi/10/4.*ti) + 60*pi/180;
+% theta_ref_init = [tr; tr; tr];
+% tr_dot = 5*pi/180.*cos(2*pi/10/4.*ti);
+% thetadot_ref_init = [tr_dot; tr_dot; tr_dot];
 
-xdot_coef = 10;
-xdot_ref_init = [0*cos(ti); 0*cos(ti); -xdot_coef*pi/manueverTime*sin(pi*ti/manueverTime)];
-xdot_ref_init = [xdot_coef*cos(ti);xdot_coef*cos(ti); xdot_coef*cos(ti)];
-
-% xdot_ref_init = [0;0;0];
-
-thetr = 105*(pi/180)*(sin((pi*ti/manueverTime)-90*(pi/180)));
-% theta_ref_init = [initOri(1); thetr+initOri(2); initOri(3)];
-thetr = pi/4*sin(ti);
-theta_ref_init = [thetr+initOri(1); thetr+initOri(2); thetr+initOri(3)];
-
-theta_ref_init = [initOri(1);initOri(2);initOri(3)];
-
-thetr_dot = 105*(pi/180)*pi/manueverTime*(cos((pi*ti/manueverTime)-90*(pi/180)));
-% thetadot_ref_init = [0; thetr_dot; 0];
-
-thetr_dot = pi/4*cos(ti);
-thetadot_ref_init = [thetr_dot; thetr_dot; thetr_dot];
-
-x_ref_coef = 10;
-x_ref_init = [x_ref_coef*sin(ti)+initPos(1); x_ref_coef*sin(ti)+initPos(2); x_ref_coef*sin(ti)+initPos(3)]; 
-xdot_ref_init = [x_ref_coef*cos(ti); x_ref_coef*cos(ti); x_ref_coef*cos(ti)];
-tr = 5*pi/180*sin(2*pi/10/4.*ti) + 60*pi/180;
-theta_ref_init = [tr; tr; tr];
-tr_dot = 5*pi/180.*cos(2*pi/10/4.*ti);
-thetadot_ref_init = [tr_dot; tr_dot; tr_dot];
+x_ref_init = x_ref(ti);
+xdot_ref_init = xdot_ref(ti);
+theta_ref_init = theta_ref(ti);
+thetadot_ref_init = thetadot_ref(ti);
 
 
 
@@ -118,11 +126,11 @@ xlabel('time [sec]')
 ylabel('Configuration variables [deg]')
 legend('q_1', 'q_2', 'q_3', 'q_4', 'q_5', 'q_6')
 
-figure
-plot(t,q*180/pi)
-xlabel('time [sec]')
-ylabel('Configuration variables [deg]')
-legend('q_1', 'q_2', 'q_3', 'q_4', 'q_5', 'q_6')
+% figure
+% plot(t,q*180/pi)
+% xlabel('time [sec]')
+% ylabel('Configuration variables [deg]')
+% legend('q_1', 'q_2', 'q_3', 'q_4', 'q_5', 'q_6')
 
 for i = 1:length(tRK)
    ex(i) = XRK(i,7);
