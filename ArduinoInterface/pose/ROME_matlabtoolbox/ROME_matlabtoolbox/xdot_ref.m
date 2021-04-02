@@ -1,5 +1,8 @@
 function xdot_r = xdot_ref(t)
-    xdot_coef = 100;
+global manueverTime
+global q_init
+global initPos
+global initOri
+    xdot_coef = 10;
 %     xdot_coef = 0;
-    xdot_r = [0*cos(t); 0*cos(t); -xdot_coef*pi/manueverTime*sin(pi*t/manueverTime)];
-end
+    xdot_r = [0; 0; xdot_coef*cos(t)];
