@@ -132,7 +132,7 @@ while(toc<manueverTime)
     qRot = quaternion(0,0,0,1);
     quat = mtimes(quat,qRot);
     anglesFromCamera = EulerAngles(quat,'zyz');
-    positionFromCamera = [data.RigidBody(1).x;data.RigidBody(1).z;data.RigidBody(1).y;];
+    positionFromCamera = 1000*[data.RigidBody(1).x;data.RigidBody(1).z;data.RigidBody(1).y;];
 
     actualWorkPos = positionFromCamera - offset;
     actualWorkOri = anglesFromCamera - offsetAng;
