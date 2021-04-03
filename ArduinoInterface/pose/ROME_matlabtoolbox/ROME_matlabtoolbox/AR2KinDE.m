@@ -2,11 +2,7 @@
 % mamipulator
 function xdot = AR2KinDE(t, x0)
 %% Reference Pose and Velocities
-global manueverTime
-global Robot
-global q_init
-global initPos
-global initOri
+
 
 
 % x_ref_coef = 50;

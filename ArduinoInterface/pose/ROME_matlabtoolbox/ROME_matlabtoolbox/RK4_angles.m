@@ -33,5 +33,12 @@ for i=1:(length(t)-1)
     k_3 = AR2KinDE((t(i)+0.5*h),(x(i,:)'+0.5*h*k_2));
     k_4 = AR2KinDE((t(i)+h),(x(i,:)'+k_3*h));
     x(i+1,:) = x(i,:) + ((1/6)*(k_1+2*k_2+2*k_3+k_4)*h)'; 
+%     for j = 1:length(x(i,1:6))
+%         if x(i,j) < 1e-10
+%             x(i,j) = 0;
+%         end
+%     end
+    
+        
 end
 
