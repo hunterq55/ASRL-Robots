@@ -15,8 +15,8 @@ C_ref = eul2r(theta_ref');
 Crot = eul2r(theta');
 [~,L] = getOrientErr(C_ref, Crot);
 % omega_ref;
-Kp = eye(3);
-Ko = eye(3);
+Kp = 1*eye(3);
+Ko = 1*eye(3);
 %% Differential Equations
 qdot = pinv(J)*[xdot_ref + Kp*ep; pinv(L)*(L'*omega_ref + Ko*eo)];
 errdot = [xdot_ref; L'*omega_ref] - [eye(3), zeros(3); zeros(3), L]*J*qdot;

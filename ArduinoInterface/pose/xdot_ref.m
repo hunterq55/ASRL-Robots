@@ -3,6 +3,6 @@ global manueverTime
 global q_init
 global initPos
 global initOri
-    xdot_coef = 10;
+    xdot_coef = 40;
 %     xdot_coef = 0;
-    xdot_r = [0; 0; xdot_coef*cos(t)];
+    xdot_r = [initPos(1)*pi*tmanueverTime*cos(pi*t/manueverTime); initPos(1)*pi*tmanueverTime*-sin(pi*t/manueverTime); 0]; 

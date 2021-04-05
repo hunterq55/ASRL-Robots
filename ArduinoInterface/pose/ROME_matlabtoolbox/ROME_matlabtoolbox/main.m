@@ -23,7 +23,7 @@ Robot = SerialLink(L);
 %% Initial conditions and error calculations
 ti = 0;
 global manueverTime
-manueverTime = 10;
+manueverTime = 30;
 % x_ref_coef = 10;
 % x_ref_init = [x_ref_coef*sin(ti)+200; x_ref_coef*sin(ti)+100; x_ref_coef*sin(ti)+200]; 
 % xdot_ref_init = [x_ref_coef*cos(ti); x_ref_coef*cos(ti); x_ref_coef*cos(ti)];
@@ -31,7 +31,7 @@ manueverTime = 10;
 % theta_ref_init = [tr; tr; tr];
 
 global q_init;
-q_init = [0 -80 80 0 0 0]'*pi/180;
+q_init = [-90 -80 80 0 0 0]'*pi/180;
 
 global initPos;
 global initOri;

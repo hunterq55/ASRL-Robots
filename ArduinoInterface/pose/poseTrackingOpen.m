@@ -36,34 +36,18 @@ Stepper1.updateStates(statesArray_AR2_J);
 command0_AR2_J = path_AR2_J(1:6);
 
 [command0_AR2_W_pos, command0_AR2_W_ori] = AR2FKZYZ(command0_AR2_J);
+global initPos
+global initOri
 
+initPos = command0_AR2_W_pos;
+initOri = command0_AR2_W_ori;
 
 % %Gains
 % Kp = eye(3);
 % Ko = eye(3);
 
 %% Path Definitons - updated per experiment, need a better implementation for this
-function x_r=position_ref_W(t)
-x_ref_coef = 10;
-x_r = [x_ref_coef*sin(t)+command0_AR2_W_pos(1); 0*sin(t)+command0_AR2_W_pos(2); 0*sin(t)+command0_AR2_W_pos(3)]; 
-end
-function xdot_r = velocity_ref_W(t)
-    xdot_coef = 10;
-%     xdot_coef = 0;
-    xdot_r = [xdot_coef*cos(t); xdot_coef*cos(t); xdot_coef*cos(t)];
-end
 
-function theta_ref = orientation_ref_W(t)
-    thetr = 5*pi/180*sin(2*pi/10/4.*t) + 60*pi/180;
-%     thetr=0;
-    theta_ref = [thetr+command0_AR2_W_ori(1); thetr+command0_AR2_W_ori(2); thetr+command0_AR2_W_ori(6)];
-end
-
-function thetadot_ref = orientation_dot_ref_W(t)
-    thetr_dot = 5*pi/180.*cos(2*pi/10/4.*t);
-%     thetr_dot=0;
-    thetadot_ref = [thetr_dot; thetr_dot; thetr_dot];
-end
 
 %% NatNet Connection
 % not needed for open loop
@@ -124,19 +108,22 @@ tic
 while(toc<10)  
     %on first iteration, initialize variables that constantly update
     if (i == 1)
-        AR2_error_W = getError_init(position_ref_W(0), orientation_ref_W(0), command0_AR2_J);
+        AR2_error_W = getError_init(command0_AR2_W_pos, command0_AR2_W_ori, command0_AR2_J);
         errorPostition_W=AR2_error_W(1:3);
         errorOrientation_W=AR2_error_W(4:6);
         configuration=[command0_AR2_J; errorPostition_W; errorOrientation_W];
         
         %timestep for RK4
         h = 0.0155;
+%     else
+%         
+%         h = qSaved(:,i-1) - tTime;
     end
 %   during calculations of the RK4 solver, there needs to be a universal
 %   time value used for each element of the RK4 variables k1, k2, k3, and
 %   k4
 
-    tTime=toc;
+   tTime=toc;
 
 %     calculate xdot_global theta_global(orientaiton) thetadot_(global) through forward kinematics
 %     this is where the loop will be closed
@@ -144,10 +131,10 @@ while(toc<10)
 
 % RK4 Solver
 
-    k_1 = AR2KinDE(configuration,velocity_ref_W(tTime),orientation_ref_W(tTime),orientation_dot_ref_W(tTime));
-    k_2 = AR2KinDE((configuration+0.5*h*k_1),velocity_ref_W(tTime+0.5*h),orientation_ref_W(tTime+0.5*h),orientation_dot_ref_W(tTime+0.5*h));
-    k_3 = AR2KinDE((configuration+0.5*h*k_2),velocity_ref_W(tTime+0.5*h),orientation_ref_W(tTime+0.5*h),orientation_dot_ref_W(tTime+0.5*h));
-    k_4 = AR2KinDE((configuration+k_3*h),velocity_ref_W(tTime+h),orientation_ref_W(tTime+h),orientation_dot_ref_W(tTime+h));
+    k_1 = AR2KinDE(configuration,xdot_ref(tTime),theta_ref(tTime),thetadot_ref(tTime));
+    k_2 = AR2KinDE((configuration+0.5*h*k_1),xdot_ref(tTime+0.5*h),theta_ref(tTime+0.5*h),thetadot_ref(tTime+0.5*h));
+    k_3 = AR2KinDE((configuration+0.5*h*k_2),xdot_ref(tTime+0.5*h),theta_ref(tTime+0.5*h),thetadot_ref(tTime+0.5*h));
+    k_4 = AR2KinDE((configuration+k_3*h),xdot_ref(tTime+h),theta_ref(tTime+h),thetadot_ref(tTime+h));
     configuration = configuration + ((1/6)*(k_1+2*k_2+2*k_3+k_4)*h); 
     % output configuration is a large vector that solves for q, and error with AR2KinDE
     % having the output of q dot and error dot
